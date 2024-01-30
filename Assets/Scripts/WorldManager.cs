@@ -35,7 +35,7 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(null, TileID.Sand | TileID.Alt);
     }
     void Update(){
-        if(Input.GetMouseButton(0)){
+        if(Input.GetMouseButtonDown(0)){
             Vector3 input = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             floor.CreateGround(input);
         }
