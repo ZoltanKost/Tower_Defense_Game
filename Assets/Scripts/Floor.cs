@@ -15,7 +15,7 @@ public class Floor {
     readonly TileID shadowID = TileID.Shadow;
     private TileID groundID = TileID.Ground;
     private TileID grassID = TileID.Grass;
-    private readonly Vector3Int y1 = Vector3Int.up;
+    private readonly Vector3Int z1 = Vector3Int.forward;
     private FloorCell[,] floorCells;
 
     public Floor(Tilemap map, int width, int height){
@@ -59,20 +59,20 @@ public class Floor {
     }
     public void CreateGround(Vector3Int pos)
     {
-        pos.y = 0;
-        CellToXY(pos, out int x, out int z);
-        if(x < 0 || x >= width || z < 1 || z >= height) return;
-        int floor = floorCells[x,z].currentFloor;
+        pos.z = 0;
+        CellToXY(pos, out int x, out int y);
+        if(x < 0 || x >= width || y < 1 || y >= height) return;
+        int floor = floorCells[x,y].currentFloor;
         // if(floor > 2) return;
-        Vector3Int downPos = pos + Vector3Int.back + y1 * floor * 4;
-        Vector3Int upPos = pos + Vector3Int.forward + y1 * floor * 4;
-        if(floorCells[x, z].currentFloor == 0)
+        Vector3Int downPos = pos + Vector3Int.down + z1 * floor * 4;
+        Vector3Int upPos = pos + Vector3Int.up + z1 * floor * 4;
+        if(floorCells[x, y].currentFloor == 0)
         {
-            map.SetTile(pos + y1 * FOAMLAYER + y1 * floor, StaticTiles.GetTile(shadowID | TileID.Alt));
-            map.SetTile(pos + y1 * SHADOWLAYER + y1 * floor, StaticTiles.GetTile(shadowID));
-            map.SetTile(pos + y1 * GROUNDLAYER + y1 * floor, StaticTiles.GetTile(TileID.Sand));
-            floorCells[x, z].currentFloor++;
-            Debug.Log("SAND SET: " + pos + y1 * floor);
+            map.SetTile(pos + z1 * FOAMLAYER + z1 * floor, StaticTiles.GetTile(shadowID | TileID.Alt));
+            map.SetTile(pos + z1 * SHADOWLAYER + z1 * floor, StaticTiles.GetTile(shadowID));
+            map.SetTile(pos + z1 * GROUNDLAYER + z1 * floor, StaticTiles.GetTile(TileID.Sand));
+            floorCells[x, y].currentFloor++;
+            Debug.Log("SAND SET: " + pos + z1 * floor);
             return;
         }
         TileBase groundAlt = StaticTiles.GetTile(groundID | TileID.Alt);
@@ -88,21 +88,21 @@ public class Floor {
         //     // map.SetTile(pos + z1 * SHADOWLAYER + z1 * floor * 4, shadow);
         //     // map.SetTile(pos + z1 * GROUNDLAYER + z1 * floor * 4, groundAlt);
         // }else 
-        if(floorCells[x,z].currentFloor < floorCells[x,z-1].currentFloor){
+        if(floorCells[x,y].currentFloor < floorCells[x,y-1].currentFloor){
             // Bulid ground on this tile
-            map.SetTile(pos + y1 * SHADOWLAYER + y1 * floor * 4, shadow);
-            map.SetTile(pos + y1 * GROUNDLAYER + y1 * floor * 4, ground);
-            map.SetTile(pos + y1 * GRASSLAYER + y1 * floor * 4, grass);
-            floorCells[x,z].currentFloor ++;
-        }else if(floorCells[x,z].currentFloor == floorCells[x,z-1].currentFloor){
+            map.SetTile(pos + z1 * SHADOWLAYER + z1 * floor * 4, shadow);
+            map.SetTile(pos + z1 * GROUNDLAYER + z1 * floor * 4, ground);
+            map.SetTile(pos + z1 * GRASSLAYER + z1 * floor * 4, grass);
+            floorCells[x,y].currentFloor ++;
+        }else if(floorCells[x,y].currentFloor == floorCells[x,y-1].currentFloor){
             // Build ground on this tile;
-            map.SetTile(pos + y1 * SHADOWLAYER + y1 * floor * 4,  shadow);
-            map.SetTile(pos + y1 * GROUNDLAYER + y1 * floor * 4, ground);
-            map.SetTile(pos + y1 * GRASSLAYER + y1 * floor * 4, grass);
-            floorCells[x, z].currentFloor ++;
+            map.SetTile(pos + z1 * SHADOWLAYER + z1 * floor * 4,  shadow);
+            map.SetTile(pos + z1 * GROUNDLAYER + z1 * floor * 4, ground);
+            map.SetTile(pos + z1 * GRASSLAYER + z1 * floor * 4, grass);
+            floorCells[x, y].currentFloor ++;
             // Build Rock on down tile 
-            map.SetTile(downPos + y1 * SHADOWLAYER, shadow);
-            map.SetTile(downPos + y1 * GROUNDLAYER, groundAlt);
+            map.SetTile(downPos + z1 * SHADOWLAYER, shadow);
+            map.SetTile(downPos + z1 * GROUNDLAYER, groundAlt);
         }
     }
     public void CreateGround(Vector3 input){
@@ -125,8 +125,8 @@ public class Floor {
         }
         return map.GetTile(pos);
     }
-    public void CellToXY(Vector3Int cell, out int x, out int z){
+    public void CellToXY(Vector3Int cell, out int x, out int y){
         x = cell.x;
-        z = cell.z;
+        y = cell.y;
     }
 }
