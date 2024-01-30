@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class WorldManager : MonoBehaviour {
     public static WorldManager singleton{get;private set;}
 
     [Header("Dependencies")]
-    // private List<Floor> visuals;
     [SerializeField] private BuildingManager buildingManager;
 
     [Header("Dimensions")]
@@ -16,41 +14,35 @@ public class WorldManager : MonoBehaviour {
     [Header("Tiles")]
     public TileBase FOAM;
     public TileBase GROUND;
+    public TileBase ROCK;
     public TileBase GRASS;
     public TileBase SHADOW;
     public TileBase FLOOR_CONNECTION;
+    public TileBase GRASS_SHADOW;
+    public TileBase SAND;
     [SerializeField] private Tilemap prefab;
-    private Floor lastFloor;
-
-    //[Header("private")] 
-    
-    Cell[,] grid;
+    private Floor floor;
     
     void Start(){
         singleton = this;
-        grid = new Cell[halfWidth*2,halfHeight*2];
         Tilemap map = Instantiate(prefab,transform);
         map.transform.localPosition = Vector3.zero;
-        lastFloor = new Floor(map);
-        StaticTiles.Bind(SHADOW);
-        StaticTiles.Bind(GROUND);
-        StaticTiles.Bind(GRASS);
-        
+        floor = new Floor(map, halfWidth * 2, halfHeight * 2);
+        StaticTiles.Init();
+        StaticTiles.Bind(SHADOW, TileID.Shadow);
+        StaticTiles.Bind(GROUND, TileID.Ground);
+        StaticTiles.Bind(GRASS, TileID.Grass);
+        StaticTiles.Bind(FOAM, TileID.Shadow | TileID.Alt);
+        StaticTiles.Bind(ROCK, TileID.Ground | TileID.Alt);
+        StaticTiles.Bind(GRASS_SHADOW, TileID.Grass | TileID.Alt);
+        StaticTiles.Bind(SAND, TileID.Sand);
+        StaticTiles.Bind(null, TileID.Sand | TileID.Alt);
     }
     void Update(){
         if(Input.GetMouseButtonDown(0)){
-            // Tilemap map = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-            // lastFloor = new Floor(map);
-            lastFloor.ClearAllTiles();
-            lastFloor.SetFloor(-halfWidth,-halfHeight,halfWidth*2,halfHeight*2);
+            Vector3 input = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(input);
+            floor.CreateGround(input);
         }
-    }
-    void VisualToLogic(int x, int y, out int lx, out int ly){
-        lx = x - halfWidth;
-        ly = y - halfHeight;
-    }
-    void VisualToLogic(Vector3Int pos, out int x, out int y){
-        x = pos.x - halfWidth;
-        y = pos.y - halfHeight;
     }
 }
