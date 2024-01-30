@@ -1,10 +1,10 @@
-public struct FloorCell{
-    public readonly int x;
-    public readonly int y;
+public class FloorCell{
+    public const int botNeigh = 0;
     public int currentFloor;
-    public FloorCell(int x, int y, int lastFloor = 0){
-        this.x = x;
-        this.y = y;
-        this.currentFloor = lastFloor;
+    public FloorCell(int lastFloor = 0){
+        currentFloor = lastFloor;
     }
+    // public void SetBotNeigh(FloorCell neighbour){
+    //     neigh[botNeigh] = neighbour;
+    // }
 }
