@@ -3,10 +3,6 @@ using UnityEngine.Tilemaps;
 
 public class WorldManager : MonoBehaviour {
     public static WorldManager singleton{get;private set;}
-
-    [Header("Dependencies")]
-    [SerializeField] private BuildingManager buildingManager;
-
     [Header("Dimensions")]
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
