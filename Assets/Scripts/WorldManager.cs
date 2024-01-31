@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class WorldManager : MonoBehaviour {
-    public static WorldManager singleton{get;private set;}
     [Header("Dimensions")]
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
@@ -16,14 +15,9 @@ public class WorldManager : MonoBehaviour {
     public TileBase FLOOR_CONNECTION;
     public TileBase GRASS_SHADOW;
     public TileBase SAND;
-    [SerializeField] private Tilemap prefab;
-    private Floor floor;
+    [SerializeField] private FloorManager floorManager;
     
-    void Start(){
-        singleton = this;
-        Tilemap map = Instantiate(prefab,transform);
-        map.transform.localPosition = Vector3.zero;
-        floor = new Floor(map, halfWidth * 2, halfHeight * 2);
+    void Awake(){
         StaticTiles.Init();
         StaticTiles.Bind(SHADOW, TileID.Shadow);
         StaticTiles.Bind(GROUND, TileID.Ground);
@@ -33,11 +27,12 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(GRASS_SHADOW, TileID.Grass | TileID.Alt);
         StaticTiles.Bind(SAND, TileID.Sand);
         StaticTiles.Bind(null, TileID.Sand | TileID.Alt);
+        StaticTiles.Bind(FLOOR_CONNECTION, TileID.None | TileID.Alt);
     }
     void Update(){
         if(Input.GetMouseButtonDown(0)){
             Vector3 input = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            floor.CreateGround(input);
+            floorManager.CreateGround(input);
         }
     }
 }
