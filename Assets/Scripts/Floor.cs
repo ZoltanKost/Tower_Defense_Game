@@ -89,14 +89,6 @@ public class Floor : MonoBehaviour{
     public Vector3Int WorldToCell(Vector3 input){
         return visuals[0].WorldToCell(input);
     }
-    //Will be implemented in next commit
-    //
-    // public bool HasTileBounds(Vector3Int start, Vector3Int end){
-    //     int tiles = visuals[GROUNDLAYER].GetTilesRangeCount(start, end);
-    //     int road = visuals[SANDLAYER].GetTilesRangeCount(start, end);
-    //     return tiles + road != 0;
-    // }
-    //
     // Jelly Animation. Probably should be moved somewhere else
     public void Animate(){
         Tween tween = transform.DOScale(.99f, .05f);

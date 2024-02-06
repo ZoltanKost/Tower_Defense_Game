@@ -4,16 +4,15 @@ public class TemporalFloor : Floor
 {
     Vector3Int currentPosition;
     Vector3Int temp;
-    int w,h;
-    GroundArray groundArray;
+    GroundArray ground;
     // Is used for generating temporal visuals.
-    public void CreateGroundArray(Vector3Int start){
-        w = groundArray.width;
-        h = groundArray.height;
-        layer = groundArray.floor;    
-        for(int x = start.x; x < start.x + w; x ++){
-            for(int y = start.y; y < start.y + h; y++){
-                CreateGround(new Vector3Int(x,y,0));
+    public void CreateGroundArray(Vector3Int position,  GroundArray groundArray){
+        foreach(var g in groundArray.grounds){
+            layer = groundArray.floor;    
+            for(int x = g.xMin; x < g.xMax; x++){
+                for(int y = g.yMin; y < g.yMax; y++){
+                    CreateGround(position + new Vector3Int(x,y,0));
+                }
             }
         }
     }
@@ -22,14 +21,14 @@ public class TemporalFloor : Floor
         temp = WorldToCell(position);
         if (temp != currentPosition){
             ClearAllTiles();
-            CreateGroundArray(temp);
+            CreateGroundArray(temp, ground);
             currentPosition = temp;
         }
     }
     // Is used for generating temporal visuals.
     public void SetGroundArray(GroundArray array){
-        groundArray = array;
+        ground = array;
         ClearAllTiles();
-        CreateGroundArray(currentPosition);
+        CreateGroundArray(currentPosition, array);
     }
 }

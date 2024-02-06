@@ -31,29 +31,31 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int currentFloor = floorCells[posX,posY].currentFloor;
-        int w = groundArray.width;
-        int h = groundArray.height;
-        for(int x = 0; x < w; x++){
-            for(int y = 0; y < h; y++){
-                if(currentFloor != groundArray.floor - 1) return false;
-                if(floorCells[posX + x,posY + y].currentFloor >= floors.Count -1) return false;
-                if(floorCells[posX + x,posY + y].currentFloor > floorCells[posX + x,posY-1 + y].currentFloor) return false;
-                if(floorCells[posX + x, posY + y].road) return false;
-                if(floorCells[posX + x,posY + y].currentFloor != currentFloor) return false;
-            }
-        }
-        floors[++floorCells[posX,posY].currentFloor].CreateGroundArray(pos, w, h);
-        for(int x = 0; x < w; x++){
-            for(int y = 0; y < h; y++){
-                if(y == 0){
-                    if(floorCells[posX + x, posY - 1].road){
-                        floors[floorCells[posX,posY].currentFloor].PlaceRoad(pos + Vector3Int.down + Vector3Int.right * x);
-                    }
-                    if(x == 0) continue;
+        foreach(GroundStruct g in groundArray.grounds){
+            for(int x = g.xMin; x < g.xMax; x++){
+                for(int y = g.yMin; y < g.yMax; y++){
+                    if(currentFloor != groundArray.floor - 1) return false;
+                    if(floorCells[posX + x,posY + y].currentFloor >= floors.Count -1) return false;
+                    if(floorCells[posX + x,posY + y].currentFloor > floorCells[posX + x,posY-1 + y].currentFloor) return false;
+                    if(floorCells[posX + x, posY + y].road) return false;
+                    if(floorCells[posX + x,posY + y].currentFloor != currentFloor) return false;
                 }
-                floorCells[posX + x,posY + y].currentFloor ++;
             }
         }
+        currentFloor++;
+        foreach(GroundStruct g in groundArray.grounds){
+            int w = g.width;
+            int h = g.height;
+            floors[currentFloor].CreateGroundArray(pos + g.position, w, h);
+            for(int x = g.xMin; x < g.xMax; x++){
+                for(int y = g.yMin; y < g.yMax; y++){
+                    floorCells[posX + x,posY + y].currentFloor = currentFloor;
+                    if(y != 0 || !floorCells[posX + x, posY - 1].road ) continue;
+                    floors[floorCells[posX,posY].currentFloor].PlaceRoad(pos + Vector3Int.down + Vector3Int.right * x);
+                }
+            }
+        }
+            
         Debug.Log("Ground Created!");
         return true;
     }
