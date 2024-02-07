@@ -8,12 +8,14 @@ public class FloorManager : MonoBehaviour{
     List<Floor> floors;
     private FloorCell[,] floorCells;
     Vector3Int offset;
+    
     void Awake(){
         floors = new List<Floor>();
-        for(int i = 0; i < layers; i++){
-            floors.Add(Instantiate(floorPrefab, transform));
-            if(i == 0) floors[i].Init(0,TileID.Sand);
-            else floors[i].Init(i,TileID.Ground,TileID.Grass);
+        floors.Add(Instantiate(floorPrefab, transform)); 
+        floors[0].Init(0, 0);
+        for(int i = 1; i < layers; i++){
+            floors.Add(Instantiate(floorPrefab, transform)); 
+            floors[i].Init(i, i);
         }
         floorCells = new FloorCell[width,height];
         for(int x = 0; x < width; x++){
@@ -34,7 +36,7 @@ public class FloorManager : MonoBehaviour{
         foreach(GroundStruct g in groundArray.grounds){
             for(int x = g.xMin; x < g.xMax; x++){
                 for(int y = g.yMin; y < g.yMax; y++){
-                    if(currentFloor != groundArray.floor - 1) return false;
+                    if(currentFloor != groundArray.layer - 1) return false;
                     if(floorCells[posX + x,posY + y].currentFloor >= floors.Count -1) return false;
                     if(floorCells[posX + x,posY + y].currentFloor > floorCells[posX + x,posY-1 + y].currentFloor) return false;
                     if(floorCells[posX + x, posY + y].road) return false;
@@ -55,8 +57,13 @@ public class FloorManager : MonoBehaviour{
                 }
             }
         }
-            
-        Debug.Log("Ground Created!");
+        // foreach(GroundStruct g in groundArray.roads){
+        //     int w = g.width;
+        //     int h = g.height;
+        //     floors[currentFloor].PlaceRoadArray(pos + g.position, w, h);
+        //     floorCells[posX + w, posY + h].road = true;
+        // }
+        floors[currentFloor].Animate();
         return true;
     }
     // Creates single road. Refactor.

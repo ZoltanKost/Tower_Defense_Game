@@ -8,7 +8,7 @@ public class TemporalFloor : Floor
     // Is used for generating temporal visuals.
     public void CreateGroundArray(Vector3Int position,  GroundArray groundArray){
         foreach(var g in groundArray.grounds){
-            layer = groundArray.floor;    
+            layer = groundArray.layer;    
             for(int x = g.xMin; x < g.xMax; x++){
                 for(int y = g.yMin; y < g.yMax; y++){
                     CreateGround(position + new Vector3Int(x,y,0));

@@ -22,17 +22,14 @@ public class Floor : MonoBehaviour{
             return layer == 0? TileID.None : TileID.Grass;
         }
     }
-    private TileID grassAlternate;
     public int layer;
     protected void Awake(){
         visuals = GetComponentsInChildren<Tilemap>();
     }
-    // Legacy? Think if could be refactored
-    public void Init(int layer, TileID groundID = TileID.Ground, TileID grass = TileID.None, TileID grassAlternate = TileID.Grass | TileID.Alt){
+    public void Init(int layer, int RenderOrderOffset){
         this.layer = layer;
-        this.grassAlternate = grassAlternate;
         for(int i = 0; i < visuals.Length; i++){
-            visuals[i].GetComponent<TilemapRenderer>().sortingOrder = layer * 5 + i;
+            visuals[i].GetComponent<TilemapRenderer>().sortingOrder = RenderOrderOffset * 5 + i;
         }
     }
     // Checks if there's a ground or a road on the floor. Refactor.
@@ -61,24 +58,18 @@ public class Floor : MonoBehaviour{
         }else {
             SetTile(pos, SANDLAYER,TileID.Sand);
         }
-        Debug.Log(pos + " layer: " + layer);
-        Animate();
         return true;
     }
-    // Creates single road on the floot w * h times. Refactor.
-    public bool CreateGroundArray(Vector3Int start, int w, int h){
-        for(int posX = 0; posX < w; posX++){
-            for(int posY = 0; posY < h; posY++){
-                if(HasTile(new Vector3Int{x = start.x + posX, y = start.y + posY})) return false;
-            }
-        }
+    public void PlaceRoadArray(Vector3Int pos, int w, int h){
+        pos.x+=w;
+        pos.y+=h;
+        PlaceRoad(pos);
+    }    public void CreateGroundArray(Vector3Int start, int w, int h){
         for(int posX = 0; posX < w; posX++){
             for(int posY = 0; posY < h; posY++){
                 CreateGround(new Vector3Int{x = start.x + posX, y = start.y + posY});
             }
         }
-        Animate();
-        return true;
     }
     // Shortcut. After refactoring probably isn't required.
     void SetTile(Vector3Int pos, int LAYER, TileID ID){
