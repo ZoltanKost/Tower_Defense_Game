@@ -6,12 +6,21 @@ public class TemporalFloor : Floor
     Vector3Int temp;
     GroundArray ground;
     // Is used for generating temporal visuals.
-    public void CreateGroundArray(Vector3Int position,  GroundArray groundArray){
+    public void CreateGroundArray(Vector3Int pos,  GroundArray groundArray){
+        pos.z = 0;
         foreach(var g in groundArray.grounds){
             layer = groundArray.layer;    
             for(int x = g.xMin; x < g.xMax; x++){
                 for(int y = g.yMin; y < g.yMax; y++){
-                    CreateGround(position + new Vector3Int(x,y,0));
+                    CreateGround(pos + new Vector3Int(x,y,0));
+                }
+            }
+        if(!(groundArray.layer == 0))
+            foreach(Vector3Int road in groundArray.roads){
+                if(!HasTile(pos + road)){
+                    PlaceBridge(pos + road);
+                }else{
+                    PlaceRoad(pos + road);
                 }
             }
         }

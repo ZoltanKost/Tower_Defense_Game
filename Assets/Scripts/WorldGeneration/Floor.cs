@@ -1,11 +1,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
-using System.Data;
 
 public class Floor : MonoBehaviour{
-    [SerializeField] Tilemap[] visuals;
-    private const TileID ROCK_ROAD = TileID.Sand | TileID.Alt;
+    [SerializeField] public Tilemap[] visuals;
     private const int FOAMLAYER = 0;
     private const int SHADOWLAYER = 1;
     private const int GROUNDLAYER = 2;
@@ -38,33 +36,46 @@ public class Floor : MonoBehaviour{
         return visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(ground) 
             || visuals[SANDLAYER].HasTile(start);
     }
+    public bool HasGround(Vector3Int start){
+        start.z = 0;
+        return visuals[GROUNDLAYER].HasTile(start);
+    }
     // Spawns one cell on the floor
     public void CreateGround(Vector3Int pos){
         pos.z = 0;
-        if(layer == 0) SetTile(pos, FOAMLAYER, TileID.Shadow | TileID.Alt);
+        if(layer == 0) SetTile(pos, FOAMLAYER, TileID.Foam);
         SetTile(pos, SHADOWLAYER, TileID.Shadow);
         SetTile(pos,GROUNDLAYER, ground);
         if(layer > 0 && !HasTile(pos + Vector3Int.down)){
-            SetTile(pos + Vector3Int.down,GROUNDLAYER, ground | TileID.Alt);
+            SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.Rock);
             SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.Shadow);
         }
         SetTile(pos,GRASSLAYER, grass);
     }
     // Spawns a single road ontop of the floor
-    public bool PlaceRoad(Vector3Int pos){
+    public void PlaceRoad(Vector3Int pos){
         pos.z = 0;
-        if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Ground | TileID.Alt)){
-            SetTile(pos, SANDLAYER,ROCK_ROAD);          
-        }else {
-            SetTile(pos, SANDLAYER,TileID.Sand);
+        for(int x = -1; x < 2; x++){
+            for(int y = -1; y < 2; y++){
+                if(visuals[SANDLAYER].GetTile(pos + new Vector3Int(x, y)) == StaticTiles.GetTile(TileID.Bridge)){
+                    SetTile(pos, SANDLAYER,TileID.Bridge);
+                    return;
+                }
+            }
         }
-        return true;
+        SetTile(pos, SANDLAYER,TileID.Sand);
     }
-    public void PlaceRoadArray(Vector3Int pos, int w, int h){
-        pos.x+=w;
-        pos.y+=h;
-        PlaceRoad(pos);
-    }    public void CreateGroundArray(Vector3Int start, int w, int h){
+    public void PlaceLadder(Vector3Int pos){
+        if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Rock)){
+            SetTile(pos, SANDLAYER,TileID.Ladder);          
+        }
+    }
+    public void PlaceBridge(Vector3Int pos){
+        pos.z = 0;
+        SetTile(pos,SANDLAYER, TileID.Bridge);
+        return;
+    }
+    public void CreateGroundArray(Vector3Int start, int w, int h){
         for(int posX = 0; posX < w; posX++){
             for(int posY = 0; posY < h; posY++){
                 CreateGround(new Vector3Int{x = start.x + posX, y = start.y + posY});
@@ -79,6 +90,9 @@ public class Floor : MonoBehaviour{
     // Shortcut
     public Vector3Int WorldToCell(Vector3 input){
         return visuals[0].WorldToCell(input);
+    }
+    public Vector3 CellToWorld(Vector3Int cell){
+        return visuals[0].CellToWorld(cell);
     }
     // Jelly Animation. Probably should be moved somewhere else
     public void Animate(){

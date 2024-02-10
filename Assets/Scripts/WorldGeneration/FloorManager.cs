@@ -25,8 +25,6 @@ public class FloorManager : MonoBehaviour{
         }
         offset = new Vector3Int(width/2, height/2);
     }
-    // Creates ground block on the floor. Refactor.
-    // Should use BoundsInt for interacting with floor.
     public bool CreateGround(Vector3 input, GroundArray groundArray){
         Vector3Int pos = floors[0].WorldToCell(input);
         if(pos.x < - offset.x || pos.x >= offset.x || pos.y < 1 - offset.y || pos.y >= offset.y) return false;
@@ -41,6 +39,7 @@ public class FloorManager : MonoBehaviour{
                     if(floorCells[posX + x,posY + y].currentFloor > floorCells[posX + x,posY-1 + y].currentFloor) return false;
                     if(floorCells[posX + x, posY + y].road) return false;
                     if(floorCells[posX + x,posY + y].currentFloor != currentFloor) return false;
+                    if(floorCells[posX + x,posY + y].ocqupied) return false;
                 }
             }
         }
@@ -52,31 +51,56 @@ public class FloorManager : MonoBehaviour{
             for(int x = g.xMin; x < g.xMax; x++){
                 for(int y = g.yMin; y < g.yMax; y++){
                     floorCells[posX + x,posY + y].currentFloor = currentFloor;
-                    if(y != 0 || !floorCells[posX + x, posY - 1].road ) continue;
-                    floors[floorCells[posX,posY].currentFloor].PlaceRoad(pos + Vector3Int.down + Vector3Int.right * x);
+                    if(!floorCells[posX + x, posY - 1].road ) continue;
+                    if(y == 0)floors[floorCells[posX,posY].currentFloor].PlaceRoad(pos + Vector3Int.down + Vector3Int.right * x);
+                    else floors[currentFloor].PlaceRoad(pos + new Vector3Int(x,y));
                 }
             }
         }
-        // foreach(GroundStruct g in groundArray.roads){
-        //     int w = g.width;
-        //     int h = g.height;
-        //     floors[currentFloor].PlaceRoadArray(pos + g.position, w, h);
-        //     floorCells[posX + w, posY + h].road = true;
-        // }
+        if(!(groundArray.layer == 0))
+            foreach(Vector3Int road in groundArray.roads){
+                if(!floors[currentFloor].HasGround(pos + road)){
+                    floors[currentFloor].PlaceBridge(pos + road);
+                }else{
+                    floors[currentFloor].PlaceRoad(pos + road);
+                }
+                floorCells[posX + road.x,posY + road.y].currentFloor = currentFloor;
+                floorCells[posX + road.x, posY + road.y].road = true;
+            }
         floors[currentFloor].Animate();
         return true;
     }
-    // Creates single road. Refactor.
     public void CreateRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
         if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        if(floor < 0 || floor > floors.Count) return;
+        if(floor < 0 || floor > floors.Count || floorCells[posX,posY].ocqupied) return;
         if(floorCells[posX, posY + 1].currentFloor == floor + 1)
             floors[floor + 1].PlaceRoad(pos);
+        else if(floor == 0) return;
         floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
+    }
+    public void PlaceBuilding(Vector3 input, Building b){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX,posY].currentFloor;
+        if(floor <= 0) return;
+        for(int x = posX; x < posX + b.width; x++){
+            for(int y = posY; y < posY + b.height; y++){
+                if(floorCells[x, y].road || floorCells[x, y].ocqupied) return;
+                if(floorCells[x, y].currentFloor != floor) return;
+            }
+        }
+        for(int x = posX; x < posX + b.width; x++){
+            for(int y = posY; y < posY + b.height; y++){
+                floorCells[x,y].ocqupied = true;
+            }
+        }
+        b.Build(pos,floor * 5 + 5);
     }
 }
