@@ -23,8 +23,10 @@ public class WorldManager : MonoBehaviour {
     public TileBase BRIDGE;
     [SerializeField] private FloorManager floorManager;
     // [SerializeField] private Floor nextTile;
+    [SerializeField] private Building castle;
     [SerializeField] private TemporalFloor temporalFloor;
     [SerializeField] private GroundPiecesUIManager uIManager;
+    [SerializeField] private Pathfinding pathfinding;
     bool chosenGround;
     GroundArray groundArray;
     EventSystem currentEventSystem;
@@ -46,12 +48,21 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(GRASS_SHADOW, TileID.GrassPieces);
         StaticTiles.Bind(SAND, TileID.Sand);
         StaticTiles.Bind(LADDER, TileID.Ladder);
-        StaticTiles.Bind(BRIDGE, TileID.Bridge); 
+        StaticTiles.Bind(BRIDGE, TileID.Bridge);
         temporalFloor.Init(0,100);
 
         for(int i = 0; i < 5; i++){
             uIManager.AddGroundArray(OnClickUICallBack);
         }
+    }
+    void Start(){
+        Vector3 input = mCamera.transform.position;
+        GroundArray ga = new GroundArray(new Vector3Int(10,10),0);
+        floorManager.CreateGroundArray(input, ga);
+        GroundArray ga1 = new GroundArray(new Vector3Int(5,2),1);
+        Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
+        floorManager.CreateGroundArray(mid, ga1);
+        floorManager.CreateCastle(mid,castle);
     }
     void OnClickUICallBack(GroundUI uI, GroundArray g){
         canceled?.Invoke(groundArray);
@@ -71,22 +82,22 @@ public class WorldManager : MonoBehaviour {
                 return;
             }
             if(chosenGround){
-                if(floorManager.CreateGround(input, groundArray)){
-                    foreach(GroundStruct g in groundArray.grounds){
-                        string s = "";
-                        foreach(Vector3Int r in g.roads){
-                            s += r + ", ";
-                        }
-                        Debug.Log(g.position + " " + g.size + "\n" + s);
-                    }
+                if(floorManager.CreateGroundArray(input, groundArray)){
+                    // foreach(GroundStruct g in groundArray.grounds){
+                    //     string s = "";
+                    //     foreach(Vector3Int r in g.roads){
+                    //         s += r + ", ";
+                    //     }
+                    //     Debug.Log(g.position + " " + g.size + "\n" + s);
+                    // }
                     placed?.Invoke();
                     canceled = null;
                     ClearGroundArrayVisuals();
+                    pathfinding.FindPathToCastle();
                 }
             }else if(choosenBuilding){
                 floorManager.PlaceBuilding(input,building);
             }
-            
             
         }else if(Input.GetMouseButton(1)){
             if(currentEventSystem.IsPointerOverGameObject()) return;
@@ -116,7 +127,7 @@ public class WorldManager : MonoBehaviour {
         }
     }
     public void ChangeGroundArray(){
-        groundArray = new GroundArray(8,2);
+        groundArray = new GroundArray(8);
         UpdateGroundArrayVisuals();
     }
     public void UpdateGroundArrayVisuals(){

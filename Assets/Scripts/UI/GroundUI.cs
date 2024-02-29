@@ -5,8 +5,12 @@ public class GroundUI : MonoBehaviour{
     public OnClick onClick;
     public Floor floor;
     GroundArray currentGA;
+    private int groundMaxDimension;
     void Awake(){
         floor.Init(0,GetComponentInParent<Canvas>().sortingOrder + 1);
+    }
+    public void Init(int groundMaxDimension){
+        this.groundMaxDimension = groundMaxDimension;
     }
     public void SetGroundArray(GroundArray ga){
         currentGA = ga;
@@ -27,7 +31,7 @@ public class GroundUI : MonoBehaviour{
         floor.transform.localPosition = pos;
     }
     public void CreateGroundArray(){
-        GroundArray ga = new GroundArray(4,2);
+        GroundArray ga = new GroundArray(groundMaxDimension);
         SetGroundArray(ga);
     }
     public void ClearAllTiles(){

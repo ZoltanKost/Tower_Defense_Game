@@ -7,13 +7,13 @@ public struct GroundArray{
     public int layer;
     public readonly GroundStruct[] grounds;
     public HashSet<Vector3Int> roads;
-    public GroundArray(int maxExclusive, int maxLayer){
+    public GroundArray(int maxExclusive){
         width = 0;
         height = 0;
-        layer = Random.Range(0,maxLayer);
-        int min = layer == 0? 2 : 1; 
+        layer = Random.Range(0,2);
+        int min = layer == 0 ? 2 : 1; 
         int num = Random.Range(min, maxExclusive);
-        grounds = new GroundStruct[num];
+        grounds = new GroundStruct[1];
         roads = new();
         grounds[0] = new GroundStruct(){
             position = Vector3Int.zero,
@@ -22,7 +22,7 @@ public struct GroundArray{
                 y = Random.Range(2,maxExclusive)
             }
         };
-        grounds[0].Init();
+        grounds[0].Init((grounds[0].width + grounds[0].height)/2);
         roads.UnionWith(grounds[0].roads);
         width = grounds[0].width;
         height = grounds[0].height;
@@ -38,7 +38,7 @@ public struct GroundArray{
                     y = Random.Range(2,maxExclusive)
                 }
             };
-            grounds[i].Init();
+            grounds[i].Init((grounds[i].width + grounds[i].height)/2);
             roads.UnionWith(grounds[i].roads);
             width += grounds[i-1].xMax > grounds[i].xMin
                 ?grounds[i].width - (grounds[i-1].xMax - grounds[i].xMin)  
@@ -47,6 +47,18 @@ public struct GroundArray{
                 ?grounds[i].height - (grounds[i-1].yMax - grounds[i].yMin) 
                 :grounds[i].height + (grounds[i].yMin - grounds[i-1].yMax);
         }
+    }
+    public GroundArray(Vector3Int dimensions, int layer){
+        grounds = new GroundStruct[1];
+        grounds[0] = new GroundStruct(){
+            position = Vector3Int.zero,
+            size = dimensions
+        };
+        grounds[0].Init((grounds[0].width + grounds[0].height)/2);
+        roads = new();
+        this.layer = layer;
+        width = grounds[0].width;
+        height = width = grounds[0].height;
     }
 }
 public struct GroundStruct{
@@ -59,8 +71,7 @@ public struct GroundStruct{
     public int yMin => Mathf.Min(position.y, position.y + size.y);
     public int xMax => Mathf.Max(position.x, position.x + size.x);
     public int yMax => Mathf.Max(position.y, position.y + size.y);
-    public void Init(){
-        Debug.Log("Initialization!");
+    public void Init(int maxRoads){
         roads = new();
         Vector3Int pos = new(){
             x = Random.Range(xMin,xMax),
@@ -68,9 +79,7 @@ public struct GroundStruct{
         };
         int m = Random.Range(0 ,Mathf.Min(width, height)/2);
         roads.Add(pos);
-        Debug.Log(m + " roads!");
         for(int i = 0; i < m; i++){
-            Debug.Log(i + "st!");
             pos += new Vector3Int(){
                 x = Random.Range(-1,2),
                 y = Random.Range(-1,2)

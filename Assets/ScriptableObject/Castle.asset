@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b32d24cb3dfa3147926692c329e85df, type: 3}
   m_Name: Castle
   m_EditorClassIdentifier: 
-  width: 4
+  width: 5
   height: 2
   sprite: {fileID: 5929532673901106855, guid: a00236f66b1fe864593318fc78a20c19, type: 3}

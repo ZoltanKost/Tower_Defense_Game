@@ -9,6 +9,7 @@ public class Floor : MonoBehaviour{
     private const int GROUNDLAYER = 2;
     private const int GRASSLAYER = 3;
     private const int SANDLAYER = 4;
+    private const int BRIDGELAYER = 5;
     private TileID ground{
         get
         {
@@ -36,10 +37,6 @@ public class Floor : MonoBehaviour{
         return visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(ground) 
             || visuals[SANDLAYER].HasTile(start);
     }
-    public bool HasGround(Vector3Int start){
-        start.z = 0;
-        return visuals[GROUNDLAYER].HasTile(start);
-    }
     // Spawns one cell on the floor
     public void CreateGround(Vector3Int pos){
         pos.z = 0;
@@ -55,24 +52,15 @@ public class Floor : MonoBehaviour{
     // Spawns a single road ontop of the floor
     public void PlaceRoad(Vector3Int pos){
         pos.z = 0;
-        for(int x = -1; x < 2; x++){
-            for(int y = -1; y < 2; y++){
-                if(visuals[SANDLAYER].GetTile(pos + new Vector3Int(x, y)) == StaticTiles.GetTile(TileID.Bridge)){
-                    SetTile(pos, SANDLAYER,TileID.Bridge);
-                    return;
-                }
-            }
-        }
         SetTile(pos, SANDLAYER,TileID.Sand);
     }
-    public void PlaceLadder(Vector3Int pos){
-        if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Rock)){
-            SetTile(pos, SANDLAYER,TileID.Ladder);          
-        }
+    public void PlaceStairs(Vector3Int pos){
+        if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Rock))
+            SetTile(pos, SANDLAYER,TileID.Ladder);
     }
     public void PlaceBridge(Vector3Int pos){
         pos.z = 0;
-        SetTile(pos,SANDLAYER, TileID.Bridge);
+        SetTile(pos,BRIDGELAYER, TileID.Bridge);
         return;
     }
     public void CreateGroundArray(Vector3Int start, int w, int h){

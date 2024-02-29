@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GroundPiecesUIManager : MonoBehaviour{
     public delegate void AddArray(GroundUI ui, GroundArray g);
     [SerializeField] private GroundUI prefab;
+    [SerializeField] private int groundMaxDimension = 4;
     Canvas canvas;
     public bool hided = false;
     float height;
@@ -22,6 +23,7 @@ public class GroundPiecesUIManager : MonoBehaviour{
     public List<GroundUI> grounds_visuals;
     public void AddGroundArray(AddArray func){
         GroundUI ui = Instantiate(prefab, transform);
+        ui.Init(groundMaxDimension);
         ui.CreateGroundArray();
         ui.onClick += func.Invoke;
         grounds_visuals.Add(ui);
