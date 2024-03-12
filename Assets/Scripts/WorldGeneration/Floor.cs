@@ -55,13 +55,17 @@ public class Floor : MonoBehaviour{
         SetTile(pos, SANDLAYER,TileID.Sand);
     }
     public void PlaceStairs(Vector3Int pos){
+        pos.z = 0;
         if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Rock))
-            SetTile(pos, SANDLAYER,TileID.Ladder);
+            SetTile(pos, GROUNDLAYER,TileID.Ladder);
     }
     public void PlaceBridge(Vector3Int pos){
         pos.z = 0;
         SetTile(pos,BRIDGELAYER, TileID.Bridge);
-        return;
+    }
+    public void SetBridge(Vector3Int pos){
+        pos.z = 0;
+        SetTile(pos, BRIDGELAYER, TileID.BridgeOnGround);
     }
     public void CreateGroundArray(Vector3Int start, int w, int h){
         for(int posX = 0; posX < w; posX++){

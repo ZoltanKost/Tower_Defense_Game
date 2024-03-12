@@ -21,17 +21,20 @@ public class WorldManager : MonoBehaviour {
     public TileBase GRASS_SHADOW;
     public TileBase SAND;
     public TileBase BRIDGE;
+    public TileBase BRIDGE_ON_GROUND;
+    [Header("Managers")]
     [SerializeField] private FloorManager floorManager;
     // [SerializeField] private Floor nextTile;
     [SerializeField] private Building castle;
     [SerializeField] private TemporalFloor temporalFloor;
-    [SerializeField] private GroundPiecesUIManager uIManager;
+    [SerializeField] private GroundPiecesUIManager groundUIManager;
+    [SerializeField] private PlayerBuildingManager buildingManager;
     [SerializeField] private Pathfinding pathfinding;
-    bool chosenGround;
+    [Header("Other")]
     GroundArray groundArray;
     EventSystem currentEventSystem;
     public Building building;
-    public bool choosenBuilding;
+    public BuildMode buildMode;
     Camera mCamera;
     Vector3 camMovePosition;
     Vector3 fixedCameraPosition;
@@ -49,10 +52,11 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(SAND, TileID.Sand);
         StaticTiles.Bind(LADDER, TileID.Ladder);
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
+        StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,100);
 
         for(int i = 0; i < 5; i++){
-            uIManager.AddGroundArray(OnClickUICallBack);
+            groundUIManager.AddGroundArray(OnClickUICallBack);
         }
     }
     void Start(){
@@ -68,40 +72,22 @@ public class WorldManager : MonoBehaviour {
         canceled?.Invoke(groundArray);
         groundArray = g;
         UpdateGroundArrayVisuals();
-        chosenGround = true;
-        if(uI == null) return;
+        buildingManager.ChooseGround(g);
+        temporalFloor.ActivateFloor();
         placed = uI.CreateGroundArray;
+        placed += temporalFloor.DeactivateFloor;
         canceled = uI.SetGroundArray;
+        canceled += (g) => temporalFloor.DeactivateFloor();
     }
     void Update(){
         Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
-        if(chosenGround)temporalFloor.MoveTempFloor(input);
-        if(Input.GetMouseButtonDown(0)){
+        temporalFloor.MoveTempFloor(input);
+        if(Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)){
             if(currentEventSystem.IsPointerOverGameObject()){ 
                // currentEventSystem.currentSelectedGameObject.GetComponentInChildren<Floor>().Animate();
                 return;
             }
-            if(chosenGround){
-                if(floorManager.CreateGroundArray(input, groundArray)){
-                    // foreach(GroundStruct g in groundArray.grounds){
-                    //     string s = "";
-                    //     foreach(Vector3Int r in g.roads){
-                    //         s += r + ", ";
-                    //     }
-                    //     Debug.Log(g.position + " " + g.size + "\n" + s);
-                    // }
-                    placed?.Invoke();
-                    canceled = null;
-                    ClearGroundArrayVisuals();
-                    pathfinding.FindPathToCastle();
-                }
-            }else if(choosenBuilding){
-                floorManager.PlaceBuilding(input,building);
-            }
-            
-        }else if(Input.GetMouseButton(1)){
-            if(currentEventSystem.IsPointerOverGameObject()) return;
-            floorManager.CreateRoad(input);
+           buildingManager.Build(input);
         }else if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;
             fixedCameraPosition = mCamera.transform.position;
@@ -112,13 +98,13 @@ public class WorldManager : MonoBehaviour {
         else if(Input.GetKeyDown(KeyCode.Space)){
             canceled = null;
             ClearGroundArrayVisuals();
-            uIManager.Reset();
+            groundUIManager.Reset();
         }else if(Input.GetKeyDown(KeyCode.Escape)){
-            if(uIManager.hided){
-                uIManager.Show();
+            if(groundUIManager.hided){
+                groundUIManager.Show();
             }else{
-                if(!chosenGround){
-                    uIManager.Hide();
+                if(!(buildMode == BuildMode.Ground)){
+                    groundUIManager.Hide();
                 }else{
                     canceled?.Invoke(groundArray);
                     ClearGroundArrayVisuals();
@@ -134,7 +120,7 @@ public class WorldManager : MonoBehaviour {
         temporalFloor.SetGroundArray(groundArray);
     }
     public void ClearGroundArrayVisuals(){
-        chosenGround = false;
+        buildMode = BuildMode.None;
         temporalFloor.ClearAllTiles();
     }
 }

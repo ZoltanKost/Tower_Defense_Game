@@ -7,6 +7,7 @@ public struct GroundArray{
     public int layer;
     public readonly GroundStruct[] grounds;
     public HashSet<Vector3Int> roads;
+    public HashSet<Vector3Int> bridges;
     public GroundArray(int maxExclusive){
         width = 0;
         height = 0;
@@ -15,6 +16,7 @@ public struct GroundArray{
         int num = Random.Range(min, maxExclusive);
         grounds = new GroundStruct[1];
         roads = new();
+        bridges = new();
         grounds[0] = new GroundStruct(){
             position = Vector3Int.zero,
             size = new Vector3Int(){
@@ -24,6 +26,7 @@ public struct GroundArray{
         };
         grounds[0].Init((grounds[0].width + grounds[0].height)/2);
         roads.UnionWith(grounds[0].roads);
+        bridges.UnionWith(grounds[0].bridges);
         width = grounds[0].width;
         height = grounds[0].height;
         for(int i = 1; i < grounds.Length; i++){
@@ -40,6 +43,7 @@ public struct GroundArray{
             };
             grounds[i].Init((grounds[i].width + grounds[i].height)/2);
             roads.UnionWith(grounds[i].roads);
+            bridges.UnionWith(grounds[i].bridges);
             width += grounds[i-1].xMax > grounds[i].xMin
                 ?grounds[i].width - (grounds[i-1].xMax - grounds[i].xMin)  
                 :grounds[i].width + (grounds[i].xMin - grounds[i-1].xMax);
@@ -54,7 +58,9 @@ public struct GroundArray{
             position = Vector3Int.zero,
             size = dimensions
         };
+        
         grounds[0].Init((grounds[0].width + grounds[0].height)/2);
+        bridges = new();
         roads = new();
         this.layer = layer;
         width = grounds[0].width;
@@ -65,6 +71,7 @@ public struct GroundStruct{
     public Vector3Int position;
     public Vector3Int size;
     public HashSet<Vector3Int> roads;
+    public HashSet<Vector3Int> bridges;
     public int width => size.x;
     public int height => size.y;
     public int xMin => Mathf.Min(position.x, position.x + size.x);
@@ -73,6 +80,12 @@ public struct GroundStruct{
     public int yMax => Mathf.Max(position.y, position.y + size.y);
     public void Init(int maxRoads){
         roads = new();
+        bridges = new();
+        bool w = Random.Range(0,2) == 0;
+        bridges.Add(new Vector3Int(){
+            x = w?Random.Range(xMin, xMax):0,
+            y = w?0:Random.Range(yMin,yMax)
+        });
         Vector3Int pos = new(){
             x = Random.Range(xMin,xMax),
             y = Random.Range(yMin, yMax)
@@ -84,6 +97,7 @@ public struct GroundStruct{
                 x = Random.Range(-1,2),
                 y = Random.Range(-1,2)
             };
+            if(bridges.Contains(pos)) continue;
             if(pos.x > xMax) {
                 Debug.Log(pos.x + " " + xMax);
                 pos.x--;
@@ -103,38 +117,4 @@ public struct GroundStruct{
             roads.Add(pos);
         }
     }
-
-    // public void AlignWith(GroundStruct g){
-    //     if(Touchs(g)) return;
-    //     Debug.Log(position);
-    //     position += DistanceToMove(g);
-    //     Debug.Log(position);
-    // }
-    // public Vector3Int DistanceToMove(GroundStruct g){
-    //     if(Intersects(g))
-    //         return size - (position - g.position);
-    //     Vector3Int res = new Vector3Int();
-    //     if(xMax < g.xMin){
-    //         res.x = g.xMin - xMax;
-    //     }else if(xMin > g.xMax){
-    //         res.x = g.xMax - xMin;
-    //     }
-    //     if(yMax < g.yMin){
-    //         res.y = g.yMin - yMax;
-    //     }else if(yMin > g.yMax){
-    //         res.y = g.yMax - yMin;
-    //     }
-    //     if(Touchs(g)) return res;
-    //     Vector3Int add = new(){
-    //         x = Mathf.Clamp(position.x - g.position.x, -1, -1),
-    //         y = Mathf.Clamp(position.y - g.position.y, -1, -1),
-    //     };
-    //     return res + add;
-    // }
-    // public bool Intersects(GroundStruct g){
-    //     return xMin < g.xMax && xMax > g.xMin && yMin < g.yMax && yMax > g.yMin;
-    // }
-    // public bool Touchs(GroundStruct g){
-    //     return xMax == g.xMin || xMin == g.xMax && yMax == g.yMin || yMin == g.yMax;
-    // }
 }

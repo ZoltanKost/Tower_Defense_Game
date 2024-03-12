@@ -35,9 +35,9 @@ public class GroundPiecesUIManager : MonoBehaviour{
         }
     }
     public void Hide(){
-        currentTween?.Kill(false);
         Vector3 pos = canvas.transform.parent.position + downPosition;
         pos.z = 0;
+        currentTween?.Complete();
         currentTween = canvas.transform.DOMove( pos,1f);
         hided = true;
     }
