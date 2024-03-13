@@ -1,3 +1,4 @@
+using System.Data;
 using UnityEngine;
 
 public class TemporalFloor : Floor
@@ -28,9 +29,11 @@ public class TemporalFloor : Floor
     public void MoveTempFloor(Vector3 position){
         if(!activated) return;
         temp = WorldToCell(position);
+        temp.z = 0; 
         if (temp != currentPosition){
-            ClearAllTiles();
-            CreateGroundArray(temp, ground);
+            Vector3Int delta = temp - currentPosition;
+            delta *= Mathf.FloorToInt(visuals[0].cellSize.x); 
+            transform.position = Vector3.Lerp(transform.position, transform.position + temp,1f);
             currentPosition = temp;
         }
     }
@@ -40,10 +43,12 @@ public class TemporalFloor : Floor
         ClearAllTiles();
         CreateGroundArray(currentPosition, array);
     }
-    public void ActivateFloor(){
+    public void ActivateFloor(GroundArray ga){
         activated = true;
+        SetGroundArray(ga);
     }
     public void DeactivateFloor(){
+        ClearAllTiles();
         activated = false;
     }
 }

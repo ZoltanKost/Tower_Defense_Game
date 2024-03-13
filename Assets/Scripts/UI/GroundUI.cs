@@ -1,10 +1,10 @@
 using UnityEngine;
 
 public class GroundUI : MonoBehaviour{
-    public delegate void OnClick(GroundUI gUI, GroundArray g);
+    public delegate void OnClick(GroundUI gUI);
     public OnClick onClick;
     public Floor floor;
-    GroundArray currentGA;
+    public GroundArray currentGA{get;private set;}
     private int groundMaxDimension;
     void Awake(){
         floor.Init(0,GetComponentInParent<Canvas>().sortingOrder + 1);
@@ -40,8 +40,14 @@ public class GroundUI : MonoBehaviour{
     public GroundArray GetGroundArray(){
         return currentGA;
     }
+    public void ActivateVisuals(){
+        floor.gameObject.SetActive(true);
+    }
+    public void DeactivateVisuals(){
+        floor.gameObject.SetActive(false);
+    }
     public void OnGroundsChoosen(){
-        onClick?.Invoke(this, currentGA);
-        ClearAllTiles();
+        onClick?.Invoke(this);
+        DeactivateVisuals();
     }
 }

@@ -1,12 +1,7 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class WorldManager : MonoBehaviour {
-    delegate void OnPlaced();
-    delegate void OnCanceled(GroundArray g);
-    OnPlaced placed;
-    OnCanceled canceled;
     [Header("Dimensions")]
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
@@ -29,19 +24,10 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private TemporalFloor temporalFloor;
     [SerializeField] private GroundPiecesUIManager groundUIManager;
     [SerializeField] private PlayerBuildingManager buildingManager;
+    [SerializeField] private PlayerInputManager inputManager;
     [SerializeField] private Pathfinding pathfinding;
-    [Header("Other")]
-    GroundArray groundArray;
-    EventSystem currentEventSystem;
-    public Building building;
-    public BuildMode buildMode;
-    Camera mCamera;
-    Vector3 camMovePosition;
-    Vector3 fixedCameraPosition;
     
     void Awake(){
-        mCamera = Camera.main;
-        currentEventSystem = FindObjectOfType<EventSystem>();
         StaticTiles.Init();
         StaticTiles.Bind(SHADOW, TileID.Shadow);
         StaticTiles.Bind(GROUND, TileID.Ground);
@@ -55,12 +41,14 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,100);
 
-        for(int i = 0; i < 5; i++){
-            groundUIManager.AddGroundArray(OnClickUICallBack);
-        }
+        PlayerInputManager.ResetCallback callback = buildingManager.ResetMode;
+        callback += groundUIManager.Reset;
+        callback += temporalFloor.DeactivateFloor;
+
+        inputManager.Init(temporalFloor,callback, buildingManager.Build);
     }
     void Start(){
-        Vector3 input = mCamera.transform.position;
+        Vector3 input = Camera.main.transform.position;
         GroundArray ga = new GroundArray(new Vector3Int(10,10),0);
         floorManager.CreateGroundArray(input, ga);
         GroundArray ga1 = new GroundArray(new Vector3Int(5,2),1);
@@ -68,59 +56,8 @@ public class WorldManager : MonoBehaviour {
         floorManager.CreateGroundArray(mid, ga1);
         floorManager.CreateCastle(mid,castle);
     }
-    void OnClickUICallBack(GroundUI uI, GroundArray g){
-        canceled?.Invoke(groundArray);
-        groundArray = g;
-        UpdateGroundArrayVisuals();
-        buildingManager.ChooseGround(g);
-        temporalFloor.ActivateFloor();
-        placed = uI.CreateGroundArray;
-        placed += temporalFloor.DeactivateFloor;
-        canceled = uI.SetGroundArray;
-        canceled += (g) => temporalFloor.DeactivateFloor();
-    }
-    void Update(){
-        Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
-        temporalFloor.MoveTempFloor(input);
-        if(Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)){
-            if(currentEventSystem.IsPointerOverGameObject()){ 
-               // currentEventSystem.currentSelectedGameObject.GetComponentInChildren<Floor>().Animate();
-                return;
-            }
-           buildingManager.Build(input);
-        }else if(Input.GetMouseButtonDown(2)){
-            camMovePosition = Input.mousePosition;
-            fixedCameraPosition = mCamera.transform.position;
-        }else if(Input.GetMouseButton(2)){
-            Vector3 pos = Input.mousePosition;
-            mCamera.transform.position = fixedCameraPosition + (camMovePosition - pos) * Time.fixedDeltaTime;
-        }
-        else if(Input.GetKeyDown(KeyCode.Space)){
-            canceled = null;
-            ClearGroundArrayVisuals();
-            groundUIManager.Reset();
-        }else if(Input.GetKeyDown(KeyCode.Escape)){
-            if(groundUIManager.hided){
-                groundUIManager.Show();
-            }else{
-                if(!(buildMode == BuildMode.Ground)){
-                    groundUIManager.Hide();
-                }else{
-                    canceled?.Invoke(groundArray);
-                    ClearGroundArrayVisuals();
-                }
-            }
-        }
-    }
     public void ChangeGroundArray(){
-        groundArray = new GroundArray(8);
-        UpdateGroundArrayVisuals();
-    }
-    public void UpdateGroundArrayVisuals(){
+        var groundArray = new GroundArray(8);
         temporalFloor.SetGroundArray(groundArray);
-    }
-    public void ClearGroundArrayVisuals(){
-        buildMode = BuildMode.None;
-        temporalFloor.ClearAllTiles();
     }
 }

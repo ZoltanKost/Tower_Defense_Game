@@ -133,17 +133,17 @@ public class FloorManager : MonoBehaviour{
             SetBridge(pos + b);
         }
     }
-    public void PlaceBuilding(Vector3 input, Building b){
+    public bool PlaceBuilding(Vector3 input, Building b){
         Vector3Int pos = floors[0].WorldToCell(input);
-        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return;
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        if(floor <= 0) return;
+        if(floor <= 0) return false;
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
-                if(floorCells[x, y].road || floorCells[x, y].occupied) return;
-                if(floorCells[x, y].currentFloor != floor) return;
+                if(floorCells[x, y].road || floorCells[x, y].occupied) return false;
+                if(floorCells[x, y].currentFloor != floor) return false;
             }
         }
         for(int x = posX; x < posX + b.width; x++){
@@ -152,6 +152,7 @@ public class FloorManager : MonoBehaviour{
             }
         }
         b.Build(pos,floor * 5 + 5);
+        return true;
     }
     public void SetBridge(Vector3Int pos){
         FloorCell target = floorCells[pos.x + offset.x, pos.y + offset.y];

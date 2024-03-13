@@ -7,29 +7,35 @@ public class PlayerBuildingManager : MonoBehaviour{
     GroundArray chosenGround;
     Building chosenBuilding;
     BuildMode mode;
-    public void Build(Vector3 position){
+    // Returns True if chosen object can be built once per click
+    public bool Build(Vector3 position){
         switch(mode){
             case BuildMode.Ground:
-                floor.CreateGroundArray(position,chosenGround);
+                if(floor.CreateGroundArray(position,chosenGround)){
+                    mode = 0;
+                    return true;
+                }
                 break;
             case BuildMode.Road:
                 floor.PlaceRoad(position);
                 break;
             case BuildMode.Building:
-                floor.PlaceBuilding(position,chosenBuilding);
+                if(floor.PlaceBuilding(position,chosenBuilding)){
+                    mode = 0;
+                    return true;
+                }
                 break;
             case BuildMode.Bridge:
                 floor.PlaceBridge(position);
                 break;
         }
+        return false;
     }
     public void ChooseMode(BuildMode m){
         mode = m;
     }
-    public bool ResetMode(){
-        if(mode == 0) return false;
+    public void ResetMode(){
         mode = 0;
-        return true;
     }
     public void ChooseBuilding(Building b){
         mode = BuildMode.Building;
