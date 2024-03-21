@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 647510513473006261}
   - component: {fileID: 1325746399686741614}
   - component: {fileID: 7266588368055346098}
+  - component: {fileID: 9071115895459296981}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &647510513473006261
 Transform:
   m_ObjectHideFlags: 0
@@ -101,3 +102,29 @@ MonoBehaviour:
   active: 0
   speed: 5
   HP: 100
+--- !u!114 &9071115895459296981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  animations:
+  - action:
+      m_PersistentCalls:
+        m_Calls: []
+    actionPoint: 0
+    sprites:
+    - {fileID: -1278766764, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: 2030248817, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: -1188127737, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: 1885176748, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    duration: 0.75

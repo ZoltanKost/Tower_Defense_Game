@@ -12,10 +12,14 @@ public class ArrayList<T> {
             values[index] = value;
         }
     }
-    public int lastIndex{get; private set;}
+    public int Count{get; private set;}
     public ArrayList(){
         values = new T[4];
-        lastIndex = 0;
+        Count = 0;
+    }
+    public ArrayList(int Count){
+        values = new T[Count];
+        this.Count = 0;
     }
     public ArrayList(ArrayList<T> copy){
         T[] temp = copy.values;
@@ -25,19 +29,8 @@ public class ArrayList<T> {
         }
     }
     public void Add(T item){
-        if(lastIndex >= values.Length) Array.Resize(ref values,values.Length*2);
-        values[lastIndex] = item;
-        lastIndex++;
-    }
-    public T GetLast(){
-        if(lastIndex == 0) return default;
-        return values[lastIndex - 1];
-    }
-    public T[] Reverse(){
-        T[] result = new T[lastIndex];
-        for(int i = 1; i <= lastIndex; i++){
-            result[lastIndex - i] = values[lastIndex];
-        }
-        return result;
+        if(Count >= values.Length) Array.Resize(ref values,values.Length*2);
+        values[Count] = item;
+        Count++;
     }
 }

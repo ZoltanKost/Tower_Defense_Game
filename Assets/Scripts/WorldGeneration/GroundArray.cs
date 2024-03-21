@@ -4,15 +4,15 @@ using System.Collections.Generic;
 public struct GroundArray{
     public float width{get; private set;}
     public float height{get; private set;}
-    public int layer;
+    public int targetFloor;
     public readonly GroundStruct[] grounds;
     public HashSet<Vector3Int> roads;
     public HashSet<Vector3Int> bridges;
     public GroundArray(int maxExclusive){
         width = 0;
         height = 0;
-        layer = Random.Range(0,2);
-        int min = layer == 0 ? 2 : 1; 
+        targetFloor = Random.Range(0,2);
+        int min = targetFloor == 0 ? 2 : 1; 
         int num = Random.Range(min, maxExclusive);
         grounds = new GroundStruct[1];
         roads = new();
@@ -62,7 +62,7 @@ public struct GroundArray{
         grounds[0].Init((grounds[0].width + grounds[0].height)/2);
         bridges = new();
         roads = new();
-        this.layer = layer;
+        this.targetFloor = layer;
         width = grounds[0].width;
         height = width = grounds[0].height;
     }

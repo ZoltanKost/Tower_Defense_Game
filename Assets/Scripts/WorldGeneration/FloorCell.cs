@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class FloorCell{
     public int currentFloor;
     public bool bridgeSpot;
@@ -12,7 +15,5 @@ public class FloorCell{
         gridX = x;
         gridY = y;
         currentFloor = lastFloor;
-        road = false;
-        building = false;
     }
 }

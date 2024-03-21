@@ -63,9 +63,10 @@ public class Floor : MonoBehaviour{
         pos.z = 0;
         SetTile(pos,BRIDGELAYER, TileID.Bridge);
     }
-    public void SetBridge(Vector3Int pos){
+    public void SetBridgeSpot(Vector3Int pos){
         pos.z = 0;
         SetTile(pos, BRIDGELAYER, TileID.BridgeOnGround);
+        SetTile(pos,SANDLAYER,TileID.Sand);
     }
     public void CreateGroundArray(Vector3Int start, int w, int h){
         for(int posX = 0; posX < w; posX++){

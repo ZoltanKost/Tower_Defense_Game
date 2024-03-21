@@ -15,11 +15,11 @@ public class GroundUI : MonoBehaviour{
     public void SetGroundArray(GroundArray ga){
         currentGA = ga;
         floor.ClearAllTiles();
-        floor.layer = ga.layer;
+        floor.layer = ga.targetFloor;
         foreach(var g in ga.grounds){
             floor.CreateGroundArray(g.position, g.width, g.height);
         }
-        if(!(ga.layer == 0))
+        if(!(ga.targetFloor == 0))
             foreach(Vector3Int road in ga.roads){
                 if(!floor.HasTile(road)){
                     floor.PlaceBridge(road);

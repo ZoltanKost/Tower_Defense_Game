@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
 	List<FloorCell> castlePositions;
-	List<List<FloorCell>> paths = new();
+	// List<List<FloorCell>> paths = new();
 	List<Queue<Vector3>> vectors = new();
 	int offsetX, offsetY;
 	float cellSize;
@@ -12,7 +12,7 @@ public class Pathfinding : MonoBehaviour{
 		gridX += width/2;
 		FloorCell pos = floor.floorCells[gridX,gridY-1];
 		castlePositions.Add(pos);
-		Debug.Log($"Castle: {gridX},{gridY}");
+		Debug.Log(message: $"Castle: {gridX},{gridY}");
 	}
 	// public bool FindPathToLadder(){
 
@@ -21,19 +21,17 @@ public class Pathfinding : MonoBehaviour{
 		offsetX = floor.offset.x;
 		offsetY = floor.offset.y;
 		cellSize = floor.GetComponent<Grid>().cellSize.x;
-		paths.Clear();
+		// paths.Clear();
 		vectors.Clear();
 		Stack<FloorCell> closedSet = new();
 		foreach(FloorCell graph in castlePositions){
-			int count = paths.Count;
 			BFSearch(graph,closedSet,vectors);
-			if(count >= paths.Count) return false;
 		}
-		Debug.Log(paths.Count);
-		return paths.Count > 0;
+		Debug.Log(vectors.Count);
+		return vectors.Count > 0;
 	}
 	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
-		if(!current.road) return;
+		if(!(current.road || current.bridge || current.bridgeSpot)) return;
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;
 			string s =
