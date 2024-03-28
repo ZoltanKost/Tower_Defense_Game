@@ -5,37 +5,30 @@ public class GroundUI : MonoBehaviour{
     public OnClick onClick;
     public Floor floor;
     public GroundArray currentGA{get;private set;}
-    private int groundMaxDimension, groundMinDimensions;
-    private int groundMaxPieces, groundMinPieces;
+    private int maxDimensions, maxSeed, maxValue, random, randomReduce, trueCondition;
     void Awake(){
         floor.Init(0, $"GroundUI");
     }
-    public void Init(int groundMaxPieces, int groundMaxDimension,int groundMinPieces,int groundMinDimensions){
-        this.groundMaxPieces = groundMaxPieces;
-        this.groundMaxDimension = groundMaxDimension;
-        this.groundMinPieces = groundMinPieces;
-        this.groundMinDimensions = groundMinDimensions;
+    public void Init(int maxDimensions, int maxSeed,int maxValue,int random, int randomReduce, int trueCondition){
+        this.maxDimensions = maxDimensions;
+        this.maxSeed = maxSeed;
+        this.maxValue = maxValue;
+        this.random = random; 
+        this.randomReduce = randomReduce; 
+        this.trueCondition = trueCondition;
     }
     public void SetGroundArray(GroundArray ga){
         currentGA = ga;
         floor.ClearAllTiles();
         floor.layer = ga.targetFloor;
-        foreach(var g in ga.grounds){
-            floor.CreateGroundArray(g.position, g.width, g.height);
+        foreach(Vector3Int g in ga.grounds){
+            floor.CreateGround(g);
         }
-        if(!(ga.targetFloor == 0))
-            foreach(Vector3Int road in ga.roads){
-                if(!floor.HasTile(road)){
-                    floor.PlaceBridge(road);
-                }else{
-                    floor.PlaceRoad(road);
-                }
-            }
-        Vector3 pos = new Vector3{x = Mathf.Min((-ga.width)/2, -.5f), y = (-ga.height)/2 + .5f, z = 0};
+        Vector3 pos = new Vector3{x = Mathf.Min((-ga.width)/2, -.5f), y = (-ga.width)/2 + .5f, z = 0};
         floor.transform.localPosition = pos;
     }
     public void CreateGroundArray(){
-        GroundArray ga = new GroundArray(groundMaxPieces, groundMaxDimension,groundMinPieces,groundMinDimensions);
+        GroundArray ga = new GroundArray(maxDimensions, maxSeed, maxValue, random, randomReduce, trueCondition);
         SetGroundArray(ga);
     }
     public void ClearAllTiles(){

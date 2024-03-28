@@ -8,10 +8,7 @@ public class GroundPiecesUIManager : MonoBehaviour{
     [SerializeField] private PlayerBuildingManager playerBuildingManager;
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private GroundUI prefab;
-    [SerializeField] private int groundMaxDimension = 4;
-    [SerializeField] private int groundMaxPieces = 3;
-    [SerializeField] private int groundMinDimensions = 1;
-    [SerializeField] private int groundMinPieces = 1;
+    [SerializeField] private int maxDimensions, maxSeed, maxValue, random,  randomReduce, trueCondition;
     public bool hided = false;
     Tween currentTween;
     Vector3 downPosition;
@@ -28,7 +25,7 @@ public class GroundPiecesUIManager : MonoBehaviour{
     public List<GroundUI> grounds_visuals;
     public void AddGroundArray(){
         GroundUI ui = Instantiate(prefab, transform);
-        ui.Init(groundMaxPieces,groundMaxDimension, groundMinPieces, groundMinDimensions);
+        ui.Init(maxDimensions, maxSeed, maxValue, random,  randomReduce, trueCondition);
         ui.CreateGroundArray();
         ui.onClick += OnGroundUICallBack;
         grounds_visuals.Add(ui);

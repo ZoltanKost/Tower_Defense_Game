@@ -70,14 +70,22 @@ public class FloorManager : MonoBehaviour{
     }
     public bool CreateGroundArray(Vector3 input, GroundArray groundArray){
         Vector3Int pos = floors[0].WorldToCell(input);
+        pos.z = 0;
         if(pos.x < - offset.x || pos.x >= offset.x || pos.y < 1 - offset.y || pos.y >= offset.y) return false;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
-        int currentFloor = floorCells[posX,posY].currentFloor;
-        if(!CheckGroundArray(groundArray, posX, posY,currentFloor)) return false;
+        int currentFloor = -2;
+        Debug.Log(groundArray.s);
+        foreach(Vector3Int g in groundArray.grounds){
+            if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor; 
+            if(!CheckCell(posX + g.x, posY + g.y,currentFloor,groundArray.targetFloor)) return false;
+        }
+        Debug.Log($"Ground on floor {currentFloor + 1} is successful!");
         currentFloor++;
-        PlaceGroundArray(groundArray, currentFloor,pos);
-        floors[currentFloor].Animate();
+        foreach(Vector3Int g in groundArray.grounds){
+            floors[currentFloor].CreateGround(pos + g);
+            floorCells[posX + g.x, posY + g.y].currentFloor = currentFloor;
+        }
         return true;
     }
     public void PlaceRoad(Vector3 input){
@@ -128,35 +136,6 @@ public class FloorManager : MonoBehaviour{
         floorCells[posX, posY].bridge = true;
         Debug.Log($"New floor: {floor}, on Cell: {posX},{posY}");
     }
-    public void PlaceGroundArray(GroundArray ga, int currentFloor, Vector3Int pos){
-        pos.z = 0;
-        int posX = pos.x + offset.x;
-        int posY = pos.y + offset.y;
-        ga.targetFloor = ga.targetFloor > 0? 1: 0;
-        foreach(GroundStruct g in ga.grounds){
-            int w = g.width;
-            int h = g.height;
-            floors[currentFloor].CreateGroundArray(pos + g.position, w, h);
-            for(int x = g.xMin; x < g.xMax; x++){
-                for(int y = g.yMin; y < g.yMax; y++){
-                    floorCells[posX + x,posY + y].currentFloor = currentFloor;
-                    if(y == g.yMax - 1 && floorCells[posX + x,posY + y].road){
-                        floorCells[posX + x,posY + y].road = false;
-                    }
-                }
-            }
-        }
-        if(!(ga.targetFloor != 0)) return;
-        foreach(Vector3Int road in ga.roads){ 
-            floors[currentFloor].PlaceRoad(pos + road);
-            floorCells[posX + road.x, posY + road.y].road = true;
-        }
-        foreach(Vector3Int b in ga.bridges){
-            floors[currentFloor].SetBridgeSpot(pos + b);
-            floorCells[posX + b.x, posY + b.y].bridgeSpot = true;
-            Debug.Log($"SetBridgeSpot: {posX + b.x},{posY + b.y}");
-        }
-    }
     public bool PlaceBuilding(Vector3 input, Building b){
         if(b == castle) CreateCastle(input,b);
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -203,23 +182,13 @@ public class FloorManager : MonoBehaviour{
         target.bridgeSpot = true;
         floors[floor].SetBridgeSpot(pos);
     }
-    public bool CheckGroundArray(GroundArray ga, int posX, int posY, int currentFloor){
-        foreach(GroundStruct g in ga.grounds){
-            for(int x = g.xMin; x < g.xMax; x++){
-                for(int y = g.yMin; y < g.yMax; y++){
-                    if(!CheckCell(posX + x, posY + y, currentFloor, ga.targetFloor))
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public bool CheckCell(int x, int y, int placingFloor, int groundTargetFloor){
         FloorCell cell = floorCells[x,y];
         if(
-            (placingFloor + 1 != 0 && groundTargetFloor == 0) || // floor isn't the same as on ground
-            // cell.currentFloor >= floors.Count -1 || // floor is higher then maximum floors
+            // (placingFloor + 1 != 0 && groundTargetFloor == 0) || // floor isn't the same as on ground
+            Mathf.Clamp(placingFloor + 1,0,1) != groundTargetFloor ||
+            cell.currentFloor >= floors.Count -1 || // floor is higher then maximum floors
             cell.currentFloor != placingFloor || // floor isn't the same at every cell
             cell.building || // cell has a building
             cell.bridgeSpot || cell.bridge || // cell has a bridge

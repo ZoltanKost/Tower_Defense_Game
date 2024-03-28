@@ -8,6 +8,7 @@ public class TemporalFloor : Floor
     private Vector3Int floorStart;
     private int cellSize;
     Vector3Int currentPosition;
+    [SerializeField] Transform[] arrows;
     Vector3Int temp;
     GroundArray ground;
     bool activated;
@@ -15,21 +16,15 @@ public class TemporalFloor : Floor
         floorStart = visuals[0].WorldToCell(transform.position);
         cellSize = Mathf.FloorToInt(visuals[0].cellSize.x);
     }
-    public void CreateGroundArray(Vector3Int pos,  GroundArray groundArray){
+    public void CreateGroundArray(Vector3Int pos,  GroundArray ga){
         pos.z = 0;
-        foreach(var g in groundArray.grounds){
-            layer = groundArray.targetFloor;    
-            for(int x = g.xMin; x < g.xMax; x++){
-                for(int y = g.yMin; y < g.yMax; y++){
-                    CreateGround(pos + new Vector3Int(x,y,0));
-                }
-            }
-            if(!(groundArray.targetFloor == 0)){
-                foreach(Vector3Int road in groundArray.roads)
-                    PlaceRoad(pos + road);
-                foreach(Vector3Int b in groundArray.bridges)
-                    SetBridgeSpot(pos + b);
-            }
+        layer = ga.targetFloor;
+        arrows[0].localPosition = pos;
+        arrows[1].localPosition = pos + Vector3Int.right * ga.width * cellSize;
+        arrows[2].localPosition = pos + Vector3Int.up * ga.height * cellSize;
+        arrows[3].localPosition = pos + new Vector3Int(ga.width, ga.height) * cellSize;
+        foreach(Vector3Int g in ga.grounds){
+            CreateGround(pos + g);
         }
     }
     public void MoveTempFloor(Vector3 position){
@@ -57,10 +52,16 @@ public class TemporalFloor : Floor
     public void ActivateFloor(GroundArray ga){
         activated = true;
         SetGroundArray(ga);
+        foreach(var ar in arrows){
+            ar.gameObject.SetActive(true);
+        }
     }
     public void DeactivateFloor(){
         // transform.position = floorStart;
         ClearAllTiles();
+        foreach(var ar in arrows){
+            ar.gameObject.SetActive(false);
+        }
         activated = false;
     }
 }

@@ -697,6 +697,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 383552384316942856, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 717145756380060467, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 733991947407350277, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295394308486307405, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1435283420074433606, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: lerpSpeed
       value: 0.15
@@ -704,6 +720,18 @@ PrefabInstance:
     - target: {fileID: 1435283420074433606, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: jumpingSize
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1846404336128188847, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1940723183255327435, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604011499452818191, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6828127425830948307, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: m_SortingOrder
@@ -1897,13 +1925,25 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[33].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 7126692245675563788, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7396908524654184588, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8389366662318371863, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: m_Name
-      value: Floor 2
+      value: TemporalFloor
       objectReference: {fileID: 0}
     - target: {fileID: 8389366662318371863, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8585025422364771207, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9073638887811284643, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
       propertyPath: m_Size.x
@@ -14854,7 +14894,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 393348948}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1190703270
 TilemapRenderer:
@@ -50644,10 +50684,12 @@ MonoBehaviour:
   playerBuildingManager: {fileID: 1018600448}
   playerInputManager: {fileID: 1018600450}
   prefab: {fileID: 340509466061575731, guid: 6c820858ecccc6e47a7687019347b6b3, type: 3}
-  groundMaxDimension: 4
-  groundMaxPieces: 3
-  groundMinDimensions: 1
-  groundMinPieces: 1
+  maxDimensions: 5
+  maxSeed: 3
+  maxValue: 100
+  random: 100
+  randomReduce: 10
+  trueCondition: 25
   hided: 0
   grounds_visuals: []
 --- !u!222 &1869781800
@@ -50992,6 +51034,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfWidth: 100
   halfHeight: 100
+  maxDimensions: 5
+  maxSeedValue: 4
+  maxValue: 100
+  random: 10
+  randomReduce: 1
+  trueCondition: 50
+  test: 0
   FOAM: {fileID: 11400000, guid: 68eb2d5a3c693d44e86905a6e35e6629, type: 2}
   GROUND: {fileID: 11400000, guid: 8078799262c240b4d91d505a7f9c14ed, type: 2}
   ROCK: {fileID: 11400000, guid: 8475ec6b99681c94c96fba7e64cb5383, type: 2}
