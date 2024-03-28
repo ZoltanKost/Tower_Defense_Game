@@ -10,9 +10,13 @@ public class Pathfinding : MonoBehaviour{
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
 		if(castlePositions == null)castlePositions = new List<FloorCell>();
 		gridX += width/2;
-		FloorCell pos = floor.floorCells[gridX,gridY-1];
+		FloorCell pos = floor.floorCells[gridX,gridY];
+		pos.road = true;
 		castlePositions.Add(pos);
 		Debug.Log(message: $"Castle: {gridX},{gridY}");
+	}
+	public void ClearCastlePoint(){
+		castlePositions.Clear();
 	}
 	// public bool FindPathToLadder(){
 
@@ -37,8 +41,6 @@ public class Pathfinding : MonoBehaviour{
 			string s =
 			$"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
 			closedSet.Push(current);
-			int offsetX = floor.offset.x;
-			int offsetY = floor.offset.y;
 			Queue<Vector3> res = new Queue<Vector3>();
 			foreach(FloorCell cell in closedSet){
 				Vector3 pos = new(){

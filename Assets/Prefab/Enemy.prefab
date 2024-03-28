@@ -98,8 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
   index: 0
   active: 0
+  alive: 0
   speed: 5
   HP: 100
 --- !u!114 &9071115895459296981
@@ -128,3 +130,35 @@ MonoBehaviour:
     - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
     - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
     duration: 0.75
+  - action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7266588368055346098}
+          m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+          m_MethodName: OnKillInvoke
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    actionPoint: 13
+    sprites:
+    - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 872446035, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1988140810, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1866946633, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 70982598, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -1686293569, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -368744008, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 2112967236, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1076972744, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 324086716, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    duration: 1.5

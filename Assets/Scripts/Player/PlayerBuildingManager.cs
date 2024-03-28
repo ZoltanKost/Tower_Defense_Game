@@ -28,6 +28,9 @@ public class PlayerBuildingManager : MonoBehaviour{
             case BuildMode.Bridge:
                 floor.PlaceBridge(position);
                 break;
+            case BuildMode.BridgeSpot:
+                floor.PlaceBridgeSpot(position);
+                break;
         }
         return false;
     }
@@ -51,5 +54,6 @@ public enum BuildMode{
     Ground,
     Road,
     Building,
-    Bridge
+    Bridge,
+    BridgeSpot
 }

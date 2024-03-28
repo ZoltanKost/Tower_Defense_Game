@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 public class FloorManager : MonoBehaviour{
+    [SerializeField] private BuildingManager bm;
     [SerializeField] private int layers;
     [SerializeField] int width;
     [SerializeField] int height;
@@ -10,14 +11,15 @@ public class FloorManager : MonoBehaviour{
     public FloorCell[,] floorCells{get;private set;}
     public Vector3Int[] castlePositions{get;private set;}
     public Vector3Int offset{get;private set;}
-    
+    [SerializeField] private Building castle;
+     
     void Awake(){
         floors = new List<Floor>();
         floors.Add(Instantiate(floorPrefab, transform)); 
-        floors[0].Init(0, 0);
+        floors[0].Init(0,"0");
         for(int i = 1; i < layers; i++){
             floors.Add(Instantiate(floorPrefab, transform)); 
-            floors[i].Init(i, i);
+            floors[i].Init(i,$"{i}");
         }
         floorCells = new FloorCell[width,height];
         for(int x = 0; x < width; x++){
@@ -26,6 +28,17 @@ public class FloorManager : MonoBehaviour{
             }
         }
         offset = new Vector3Int(width/2, height/2);
+    }
+    public void ClearFloor(){
+        floorCells = new FloorCell[width,height];
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < width; y++){
+                floorCells[x,y] = new FloorCell(x,y,-1);
+            }
+        }
+        foreach(var floor in floors){
+            floor.ClearAllTiles();
+        }
     }
     public void CreateCastle(Vector3 input, Building b){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -52,7 +65,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].building = true;
             }
         }
-        b.Build(pos,floor * 5 + 5);
+        bm.Build(pos,floor,b);
         pathfinding.SetCastlePoint(posX, posY, b.width, b.height);
     }
     public bool CreateGroundArray(Vector3 input, GroundArray groundArray){
@@ -145,6 +158,7 @@ public class FloorManager : MonoBehaviour{
         }
     }
     public bool PlaceBuilding(Vector3 input, Building b){
+        if(b == castle) CreateCastle(input,b);
         Vector3Int pos = floors[0].WorldToCell(input);
         if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
         int posX = pos.x + offset.x;
@@ -162,8 +176,26 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].building = true;
             }
         }
-        b.Build(pos,floor * 5 + 5);
+        bm.Build(pos,floor,b);
         return true;
+    }
+    public void PlaceBridgeSpot(Vector3 input){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        FloorCell target = floorCells[posX, posY];
+        if(target.bridge || target.bridgeSpot || target.building) return;
+        bool edge = false;
+        int floor = target.currentFloor;
+        List<FloorCell> temp = GetNeighbours4(posX,posY);
+        foreach(FloorCell c in temp){
+            if(c.currentFloor == floor - 1) edge = true;
+            if(c.currentFloor == floor && c.bridgeSpot) return;
+        }
+        if(!edge) return;
+        target.bridgeSpot = true;
+        floors[floor].SetBridgeSpot(pos);
     }
     public void SetBridgeSpot(Vector3Int pos){
         FloorCell target = floorCells[pos.x, pos.y];

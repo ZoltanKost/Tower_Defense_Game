@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
-    public static EnemyManager singleton{get;private set;}
+    [SerializeField] private PlayerManager playerManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private int enemyPoolCount;
@@ -14,7 +14,6 @@ public class EnemyManager : MonoBehaviour {
     bool active;
     void Awake(){
         enemies = new Enemy[enemyPoolCount];
-        if(singleton == null) singleton = this;
         for(int i = 0; i < enemyPoolCount; i++){
             enemies[i] = Instantiate(enemyPrefab, transform);
             enemies[i].index = i;
@@ -31,8 +30,8 @@ public class EnemyManager : MonoBehaviour {
     private void FixedUpdate(){
         float delta = Time.fixedDeltaTime;
         for(int x = 0; x < enemies.Length; x++){
-            if(enemies[x].active)
-            enemies[x].Move(delta);
+            if(!enemies[x].active) continue;
+            enemies[x].Tick(delta);
         }
     }
     private void SpawnEnemy(){
@@ -43,16 +42,18 @@ public class EnemyManager : MonoBehaviour {
         Enemy enemy = enemies[lowestInactive++];
         enemy.gameObject.SetActive(true);
         var path = pathfinding.GetRandomPath();
-        enemy.Init(path, path.Peek(),true, RemoveEnemy);
-    }
-    private void KillEnemy(int index){
-        enemies[index].active = false;
+        enemy.Init(path, path.Peek(),true, RemoveEnemy, playerManager.Damage);
     }
     public void Activate(){
         active = true;
     }
     public void Deactivate(){
         active = false;
+        time = 0;
+        lowestInactive = 0;
+        foreach(var enemy in enemies){
+            RemoveEnemy(enemy.index);
+        }
     }
     void RemoveEnemy(int index){
         enemies[index].active = false;

@@ -59,6 +59,7 @@ public class TemporalFloor : Floor
         SetGroundArray(ga);
     }
     public void DeactivateFloor(){
+        // transform.position = floorStart;
         ClearAllTiles();
         activated = false;
     }

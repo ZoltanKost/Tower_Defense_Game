@@ -38,6 +38,27 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 3912706603
+    locked: 0
+  - name: 0
+    uniqueID: 1836973359
+    locked: 0
+  - name: 1
+    uniqueID: 3969413571
+    locked: 0
+  - name: 2
+    uniqueID: 461573841
+    locked: 0
+  - name: 3
+    uniqueID: 1868381673
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GroundUI
+    uniqueID: 2302267107
+    locked: 0
+  - name: TempFloor
+    uniqueID: 395631345
     locked: 0

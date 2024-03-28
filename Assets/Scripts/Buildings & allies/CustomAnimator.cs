@@ -18,7 +18,6 @@ public class CustomAnimator : MonoBehaviour{
         currentAnimation.Reset();
     }
     public void PlayAnimation(int id){
-        Debug.Log($"Playing Animation: {id}");
         currentAnimation = animations[id];
         time = 0;
         currentAnimation.Reset();
@@ -38,6 +37,11 @@ public class CustomAnimator : MonoBehaviour{
         if(currentAnimation == animations[animation]) return;
         PlayAnimation(animation);
     }
+    public void SetSortingParams(int order, int layer){
+        currentAnimation = animations[0];
+        spriteRenderer.sortingOrder = order;
+        spriteRenderer.sortingLayerName = $"{layer}";
+    }
 }
 public delegate void AnimationDelegate();
 [Serializable]
@@ -47,9 +51,9 @@ public class Animation{
     public Sprite[] sprites;
     public Sprite nextSprite{
         get{
-            if(number >= sprites.Length - 1) number = -1;
+            if(number >= sprites.Length) number = 0;
             if(number == actionPoint) InvokeAction();
-            return sprites[++number];
+            return sprites[number++];
         }
     }
     public float duration;
@@ -60,7 +64,7 @@ public class Animation{
         }
     }
     public void Reset(){
-        number = -1;
+        number = 0;
     }
     public void InvokeAction(){
         action?.Invoke();

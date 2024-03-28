@@ -1,53 +1,45 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class Archer : MonoBehaviour{
     [SerializeField] private CustomAnimator body;
-    [SerializeField] Transform[] arrows;
-    int lowestInactiveArrow;
+    [SerializeField] Arrow arrow;
+    [SerializeField] private float shootSpeed = 5f;
     [SerializeField] Enemy target;
     [SerializeField] private float attackRange;
     bool shooting;
     Enemy[] enemyList;
-    public void Start(){
+    public void Init(Enemy[] enemies){
         body.PlayAnimation(0);
-        enemyList = EnemyManager.singleton.enemies;
+        enemyList = enemies;
+        arrow.Init(transform.position);
     }
-    public void Update(){
-        float delta = Time.deltaTime;
-        Detect();
-        if(shooting) body.SetAnimation(1);
-        else body.SetAnimation(0);
+    public void TickAnimator(float delta){
         body.UpdateAnimator(delta);
     }
+    public void TickDetection(float delta){
+        Detect();
+        if(arrow.active)arrow.Move(delta);
+        if(shooting) {
+            body.SetAnimation(1);
+        }
+        else body.SetAnimation(0);
+    }
+    public void ResetAnimation(){
+        body.SetAnimation(0);
+    }
     public void Shoot(){
-        Vector3 norm = (transform.position - target.transform.position).normalized;
-        norm.z = 0;
-        float angle = Vector2.Angle(Vector2.right,norm) + 180;
-
-        if(lowestInactiveArrow >= arrows.Length) lowestInactiveArrow = 0;
-
-        Transform tr = arrows[lowestInactiveArrow++];
-        tr.gameObject.SetActive(true);
-        tr.localPosition = Vector3.zero;
-        tr.rotation = Quaternion.Euler(0f,0f,angle);
-
-        Tween tween = tr.DOMove(target.transform.position,.3f,false);
-        tween.onKill += target.Damage;
-        tween.onKill += () => {
-            tr.gameObject.SetActive(false);
-        };
+        arrow.Send(target, shootSpeed);
     }
     public void Detect(){
         shooting = false;
         for(int i = 0; i < enemyList.Length; i++){
-            if(!enemyList[i].active) continue;
+            if(!enemyList[i].active || !enemyList[i].alive) continue;
             Vector3 vector = transform.position - enemyList[i].transform.position;
             vector.z = 0;
             float distance = vector.magnitude;
             if(distance > attackRange) continue;
             float minDistance;
-            if(target == null || !target.active) minDistance = attackRange; 
+            if(target == null || !target.active || !target.alive) minDistance = attackRange; 
             else {
                 vector = transform.position - target.transform.position;
                 vector.z = 0;
@@ -56,7 +48,7 @@ public class Archer : MonoBehaviour{
             if(distance < minDistance){
                 target = enemyList[i];
             }
-            shooting = target!= null && target.active;
         }
+        shooting = target != null && target.active && target.alive;
     }
 }

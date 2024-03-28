@@ -25,10 +25,12 @@ public class Floor : MonoBehaviour{
     protected void Awake(){
         visuals = GetComponentsInChildren<Tilemap>();
     }
-    public void Init(int layer, int RenderOrderOffset){
+    public void Init(int layer, string sortingLayerName){
         this.layer = layer;
         for(int i = 0; i < visuals.Length; i++){
-            visuals[i].GetComponent<TilemapRenderer>().sortingOrder = RenderOrderOffset * 5 + i;
+            TilemapRenderer mapRenderer = visuals[i].GetComponent<TilemapRenderer>();
+            mapRenderer.sortingLayerName = sortingLayerName;
+            mapRenderer.sortingOrder = i;
         }
     }
     // Checks if there's a ground or a road on the floor. Refactor.

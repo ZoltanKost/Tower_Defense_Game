@@ -9,18 +9,17 @@ public class GroundPiecesUIManager : MonoBehaviour{
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private GroundUI prefab;
     [SerializeField] private int groundMaxDimension = 4;
-    Canvas canvas;
+    [SerializeField] private int groundMaxPieces = 3;
+    [SerializeField] private int groundMinDimensions = 1;
+    [SerializeField] private int groundMinPieces = 1;
     public bool hided = false;
-    float height;
     Tween currentTween;
     Vector3 downPosition;
     Vector3 upPosition;
-    GroundArray chosen;
     void Start(){
-        height = GetComponent<GridLayoutGroup>().cellSize.y;
-        canvas = GetComponentInParent<Canvas>();
-        downPosition = Vector3.down * Camera.main.orthographicSize;
-        upPosition = downPosition + Vector3.up * height;
+        float height = GetComponent<GridLayoutGroup>().cellSize.y;
+        downPosition = transform.localPosition + Vector3.down * height;
+        upPosition = transform.localPosition;
         for(int i = 0; i < 5; i++){
             AddGroundArray();
         }
@@ -29,7 +28,7 @@ public class GroundPiecesUIManager : MonoBehaviour{
     public List<GroundUI> grounds_visuals;
     public void AddGroundArray(){
         GroundUI ui = Instantiate(prefab, transform);
-        ui.Init(groundMaxDimension);
+        ui.Init(groundMaxPieces,groundMaxDimension, groundMinPieces, groundMinDimensions);
         ui.CreateGroundArray();
         ui.onClick += OnGroundUICallBack;
         grounds_visuals.Add(ui);
@@ -41,17 +40,13 @@ public class GroundPiecesUIManager : MonoBehaviour{
         }
     }
     public void Hide(){
-        Vector3 pos = canvas.transform.parent.position + downPosition;
-        pos.z = 0;
-        currentTween?.Complete();
-        currentTween = canvas.transform.DOMove( pos,1f);
+        currentTween?.Kill(false);
+        currentTween = transform.DOLocalMove( downPosition,1f);
         hided = true;
     }
     public void Show(){
         currentTween?.Kill(false);
-        Vector3 pos = canvas.transform.parent.position + upPosition;
-        pos.z = 0;
-        currentTween = canvas.transform.DOMove( pos,1f);
+        currentTween = transform.DOLocalMove(upPosition,1f);
         hided = false;
     }
     void OnGroundUICallBack(GroundUI uI){

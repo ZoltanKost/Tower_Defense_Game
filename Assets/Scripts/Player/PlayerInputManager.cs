@@ -2,21 +2,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PlayerInputManager : MonoBehaviour{
-    public delegate void CancelCallback();
+    public delegate void Callback();
     public delegate bool BuildCallback(Vector3 input);
-    public delegate void ResetCallback();
-    public delegate void PlaceCallback();
-    ResetCallback resetCallback;
+    Callback resetCallback;
     BuildCallback buildCallback;
-    CancelCallback cancelCallback;
-    PlaceCallback placeCallback;
+    Callback cancelCallback;
+    Callback placeCallback;
+    Callback stopLevelCallback;
     bool active;
     Camera mCamera;
     TemporalFloor temporalFloor;
     EventSystem currentEventSystem;
     Vector3 camMovePosition = new();
     Vector3 fixedCameraPosition = new();
-    public void Init(TemporalFloor tempFloor, ResetCallback resetCallback, BuildCallback buildCallback){
+    public void Init(TemporalFloor tempFloor, Callback resetCallback, BuildCallback buildCallback, Callback stopLevelCallback){
         active = true;
         mCamera = Camera.main;
         currentEventSystem = FindObjectOfType<EventSystem>();
@@ -24,15 +23,21 @@ public class PlayerInputManager : MonoBehaviour{
         this.resetCallback = resetCallback;
         resetCallback += tempFloor.DeactivateFloor;
         this.buildCallback = buildCallback;
+        this.stopLevelCallback = stopLevelCallback;
     }
     public void Update(){
+        DebugActionQueue.Update();
         if(active) Tick();
+        else if(Input.GetKeyDown(KeyCode.Escape)){
+            stopLevelCallback?.Invoke();
+        }
         if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;
             fixedCameraPosition = mCamera.transform.position;
         }else if(Input.GetMouseButton(2)){
             Vector3 pos = Input.mousePosition;
-            mCamera.transform.position = fixedCameraPosition + (camMovePosition - pos) * Time.fixedDeltaTime;
+            Vector3 direction = camMovePosition - pos;
+            mCamera.transform.position = fixedCameraPosition + direction * Time.fixedDeltaTime;
         }
     }
     public void Tick(){
@@ -50,6 +55,7 @@ public class PlayerInputManager : MonoBehaviour{
             cancelCallback?.Invoke();
             cancelCallback = null;
             resetCallback?.Invoke();
+            Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
         }else if(Input.GetKeyDown(KeyCode.Escape)){
             cancelCallback?.Invoke();
         }
@@ -60,21 +66,21 @@ public class PlayerInputManager : MonoBehaviour{
     public void Activate(){
         active = true;
     }
-    public void SetCancelCallback(CancelCallback callback){
+    public void SetCancelCallback(Callback callback){
         cancelCallback = callback;
         cancelCallback += temporalFloor.DeactivateFloor;
     }
-    public void AddCancelCallback(CancelCallback callback){
+    public void AddCancelCallback(Callback callback){
         cancelCallback += callback;
     }
     public void InvokeCancelCallback(){
         cancelCallback?.Invoke();
     }
-    public void SetPlaceCallback(PlaceCallback callback){
+    public void SetPlaceCallback(Callback callback){
         placeCallback = callback;
         placeCallback += temporalFloor.DeactivateFloor;
     }
-    public void AddPlaceCallback(PlaceCallback callback){
+    public void AddPlaceCallback(Callback callback){
         placeCallback += callback;
     }
     public void ActivateTempFloor(GroundArray ga){
