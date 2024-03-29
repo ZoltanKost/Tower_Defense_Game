@@ -50687,9 +50687,9 @@ MonoBehaviour:
   maxDimensions: 5
   maxSeed: 3
   maxValue: 100
-  random: 100
-  randomReduce: 10
-  trueCondition: 25
+  random: 50
+  trueCondition: 50
+  randomReduce: 0.5
   hided: 0
   grounds_visuals: []
 --- !u!222 &1869781800
@@ -51040,7 +51040,7 @@ MonoBehaviour:
   random: 10
   randomReduce: 1
   trueCondition: 50
-  test: 0
+  test: 1
   FOAM: {fileID: 11400000, guid: 68eb2d5a3c693d44e86905a6e35e6629, type: 2}
   GROUND: {fileID: 11400000, guid: 8078799262c240b4d91d505a7f9c14ed, type: 2}
   ROCK: {fileID: 11400000, guid: 8475ec6b99681c94c96fba7e64cb5383, type: 2}

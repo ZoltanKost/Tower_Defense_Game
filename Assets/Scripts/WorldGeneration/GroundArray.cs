@@ -70,15 +70,31 @@ public struct GroundArray{
             d/=2;
             random = Mathf.FloorToInt(random * randomMultiplayer);
         }
+        int small = maxValue;
+        int big = 0;
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
-                if(ints[x,y] > trueCondition){
+                if(ints[x,y] < small){
+                    small = ints[x,y];
+                }
+                if(ints[x,y] > big){
+                    big = ints[x,y];
+                }
+            }
+        }
+        float rel = (float)trueCondition / maxValue;
+        int tCon = Mathf.RoundToInt(small + (big - small) * rel);
+        Debug.Log($"Max: {maxValue}, True: {trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
+        for(int y = height - 1; y >= 0; y--){
+            for(int x = 0; x < width; x++){
+                if(ints[x,y] > tCon){
                     grounds.Add(new Vector3Int(x,y));
                 }
                 s += $"[{ints[x,y]}]";
             }
             s += "\n";
         }
+        
         Debug.Log(s);
     }
     public Vector2Int[] GetSquarePoints(int start, int d){
