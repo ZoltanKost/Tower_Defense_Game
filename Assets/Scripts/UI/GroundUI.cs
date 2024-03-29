@@ -5,11 +5,12 @@ public class GroundUI : MonoBehaviour{
     public OnClick onClick;
     public Floor floor;
     public GroundArray currentGA{get;private set;}
-    private int maxDimensions, maxSeed, maxValue, random, randomReduce, trueCondition;
+    private int maxDimensions, maxSeed, maxValue, random,  trueCondition;
+    private float randomReduce;
     void Awake(){
         floor.Init(0, $"GroundUI");
     }
-    public void Init(int maxDimensions, int maxSeed,int maxValue,int random, int randomReduce, int trueCondition){
+    public void Init(int maxDimensions, int maxSeed,int maxValue,int random, float randomReduce, int trueCondition){
         this.maxDimensions = maxDimensions;
         this.maxSeed = maxSeed;
         this.maxValue = maxValue;

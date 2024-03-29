@@ -8,7 +8,8 @@ public class GroundPiecesUIManager : MonoBehaviour{
     [SerializeField] private PlayerBuildingManager playerBuildingManager;
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private GroundUI prefab;
-    [SerializeField] private int maxDimensions, maxSeed, maxValue, random,  randomReduce, trueCondition;
+    [SerializeField] private int maxDimensions, maxSeed, maxValue, random, trueCondition;
+    [SerializeField] private float randomReduce;
     public bool hided = false;
     Tween currentTween;
     Vector3 downPosition;

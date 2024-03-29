@@ -11,54 +11,65 @@ public struct GroundArray{
     public HashSet<Vector3Int> grounds;
     // public HashSet<Vector3Int> roads;
     // public HashSet<Vector3Int> bridges;
-    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, int randomReduce, int trueCondition){
+    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, float randomMultiplayer, int trueCondition){
+        s = "";
+        int d = Mathf.ClosestPowerOfTwo(maxDimensions) + 1;
         // width = Random.Range(2, maxDimensions + 1);
         // height = Random.Range(2, maxDimensions + 1);
-        width = maxDimensions;
-        height = maxDimensions;
+        width = d;
+        height = d;
+        d-=1;
         grounds = new HashSet<Vector3Int>();
         int[,] ints = new int[width,height];
         targetFloor = Random.Range(0,2);
-        Vector2Int[] seeds = new Vector2Int[maxSeedValue];//new Vector2Int[Random.Range(1,maxSeedValue + 1)];
-        for(int i = 0; i < seeds.Length; i++){
-            seeds[i] = new Vector2Int{
-                x = Random.Range(0,width),
-                y = Random.Range(0,height)
-            };
+        Vector2Int start = Vector2Int.zero;
+        List<Vector2Int> closed = new();
+        List<Vector2Int> starts = new(){
+            start
+        };
+        foreach(Vector2Int v in starts){
+            ints[v.x, v.y] = Random.Range(0, maxValue + 1);
+            ints[v.x + d, v.y] = Random.Range(0, maxValue + 1);
+            ints[v.x, v.y + d] = Random.Range(0, maxValue + 1);
+            ints[v.x + d, v.y + d] = Random.Range(0, maxValue + 1);
         }
-        HashSet<Vector2Int> open = new(seeds);
-        HashSet<Vector2Int> closed = new();
-        HashSet<Vector2Int> temp = new();
-        int avg = maxValue;
-        while(open.Count > 0){
-            foreach(var v in open){
-                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(- random,random + 1), 0, maxValue);
-                int num = Random.Range(1,4);
-                List<Vector2Int> neigs = new List<Vector2Int>();
-                for(int i = 0; i < num; i++){
-                    Vector2Int add = new Vector2Int(){
-                        x = Random.Range(-1,2),
-                        y = Random.Range(-1,2)
-                    };
-                    Vector2Int res = v + add;
-                    if(res.x < 0 || res.x >= width || res.y < 0 || res.y >= height) continue;
-                    if(closed.Contains(v + add) || open.Contains(v + add)) continue;
-                    neigs.Add(v + add);
-                }
-                temp.UnionWith(neigs);
-                closed.Add(v);
+        List<Vector2Int> temp = new();
+        d/=2;
+        
+        while(d > 0){
+            int avg = 0;
+            foreach(var v in starts){
+                avg += ints[v.x,v.y];
             }
-            avg = 0;
-            foreach(var vector in closed){
-                avg += ints[vector.x, vector.y];
+            avg /= starts.Count;
+            for(int i = 0; i < starts.Count; i++){
+                Vector2Int v = starts[i];
+                temp.Add(v);
+                temp.Add(v + Vector2Int.right * d);
+                temp.Add(v + Vector2Int.up * d);
+                temp.Add(v + Vector2Int.one * d);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += Vector2Int.right * d;
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += Vector2Int.one * d; 
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += (Vector2Int.left + Vector2Int.up)* d;
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += -Vector2Int.one * d;
+                ints[v.x, v.y] = avg + Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
             }
-            avg /= closed.Count;
-            open.Clear();
-            open.UnionWith(temp);
+            starts.Clear();
+            foreach(Vector2Int v in temp){
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x + d, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                starts.Add(v);
+            }
             temp.Clear();
-            random -= randomReduce;
+            d/=2;
+            random = Mathf.FloorToInt(random * randomMultiplayer);
         }
-        s = "";
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
                 if(ints[x,y] > trueCondition){
@@ -68,7 +79,16 @@ public struct GroundArray{
             }
             s += "\n";
         }
-        // Debug.Log(s);
+        Debug.Log(s);
+    }
+    public Vector2Int[] GetSquarePoints(int start, int d){
+        Vector2Int[] seeds = {
+            new Vector2Int(start,start),
+            new Vector2Int(start,start + d),
+            new Vector2Int(start + d,start),
+            new Vector2Int(start + d,start + d),
+        };
+        return seeds;
     }
     public GroundArray(Vector2Int dimensions, int floor){
         width = dimensions.x;
