@@ -1,122 +1,123 @@
-using UnityEngine;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Numerics;
-
+using UnityEngine;
 public struct GroundArray{
-    public float width{get; private set;}
-    public float height{get; private set;}
+    // public float width{get; private set;}
+    // public float height{get; private set;}
+    public int width;
+    public int height;
     public int targetFloor;
-    public readonly GroundStruct[] grounds;
-    public HashSet<Vector3Int> roads;
-    public HashSet<Vector3Int> bridges;
-    public GroundArray(int maxExPieces, int maxExDimensions, int minPiexes, int minDimensions){
-        width = 0;
-        height = 0;
+    public string s;
+    public HashSet<Vector3Int> grounds;
+    // public HashSet<Vector3Int> roads;
+    // public HashSet<Vector3Int> bridges;
+    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, float randomMultiplier, int trueCondition){
+        s = "";
+        int d = Mathf.ClosestPowerOfTwo(Random.Range(1,maxDimensions + 1)) + 1;
+        // width = Random.Range(2, maxDimensions + 1);
+        // height = Random.Range(2, maxDimensions + 1);
+        width = d;
+        height = d;
+        d-=1;
+        grounds = new HashSet<Vector3Int>();
+        int[,] ints = new int[width,height];
         targetFloor = Random.Range(0,2);
-        // int min = targetFloor == 0 ? 2 : 1; 
-        int num = Random.Range(minPiexes, maxExPieces);
-        grounds = new GroundStruct[num];
-        roads = new();
-        bridges = new();
-        grounds[0] = new GroundStruct(){
-            position = Vector3Int.zero,
-            size = new Vector3Int(){
-                x = Random.Range(minDimensions,maxExDimensions),
-                y = Random.Range(minDimensions,maxExDimensions)
-            }
+        Vector2Int start = Vector2Int.zero;
+        List<Vector2Int> closed = new();
+        List<Vector2Int> starts = new(){
+            start
         };
-        // grounds[0].Init((grounds[0].width + grounds[0].height)/2);
-        // roads.UnionWith(grounds[0].roads);
-        // bridges.UnionWith(grounds[0].bridges);
-        width = grounds[0].width;
-        height = grounds[0].height;
-        for(int i = 1; i < grounds.Length; i++){
-            bool x = Random.Range(0,2) == 1?true:false;
-            grounds[i] = new GroundStruct(){
-                position = new Vector3Int{
-                    x = x?Random.Range(grounds[i-1].xMin,grounds[i-1].xMax):grounds[i-1].xMax,
-                    y = x?grounds[i-1].yMax:Random.Range(grounds[i-1].yMin,grounds[i-1].yMax)
-                },
-                size = new Vector3Int(){
-                    x = Random.Range(minDimensions,maxExDimensions),
-                    y = Random.Range(minDimensions,maxExDimensions)
+        foreach(Vector2Int v in starts){
+            ints[v.x, v.y] = Random.Range(0, maxValue + 1);
+            ints[v.x + d, v.y] = Random.Range(0, maxValue + 1);
+            ints[v.x, v.y + d] = Random.Range(0, maxValue + 1);
+            ints[v.x + d, v.y + d] = Random.Range(0, maxValue + 1);
+        }
+        List<Vector2Int> temp = new();
+        d/=2;
+        
+        while(d > 0){
+            int avg = 0;
+            foreach(var v in starts){
+                avg += ints[v.x,v.y];
+            }
+            avg /= starts.Count;
+            for(int i = 0; i < starts.Count; i++){
+                Vector2Int v = starts[i];
+                temp.Add(v);
+                temp.Add(v + Vector2Int.right * d);
+                temp.Add(v + Vector2Int.up * d);
+                temp.Add(v + Vector2Int.one * d);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += Vector2Int.right * d;
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += Vector2Int.one * d; 
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += (Vector2Int.left + Vector2Int.up)* d;
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                v += -Vector2Int.one * d;
+                ints[v.x, v.y] = avg + Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+            }
+            starts.Clear();
+            foreach(Vector2Int v in temp){
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x + d, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                starts.Add(v);
+            }
+            temp.Clear();
+            d/=2;
+            random = Mathf.FloorToInt(random * randomMultiplier);
+        }
+        int small = maxValue;
+        int big = 0;
+        for(int y = height - 1; y >= 0; y--){
+            for(int x = 0; x < width; x++){
+                if(ints[x,y] < small){
+                    small = ints[x,y];
                 }
-            };
-            // grounds[i].Init((grounds[i].width + grounds[i].height)/2);
-            // roads.UnionWith(grounds[i].roads);
-            // bridges.UnionWith(grounds[i].bridges);
-            width += grounds[i-1].xMax > grounds[i].xMin
-                ?grounds[i].width - (grounds[i-1].xMax - grounds[i].xMin)  
-                :grounds[i].width + (grounds[i].xMin - grounds[i-1].xMax);
-            height += grounds[i-1].yMax > grounds[i].yMin
-                ?grounds[i].height - (grounds[i-1].yMax - grounds[i].yMin) 
-                :grounds[i].height + (grounds[i].yMin - grounds[i-1].yMax);
+                if(ints[x,y] > big){
+                    big = ints[x,y];
+                }
+            }
+        }
+        trueCondition = Random.Range(0, trueCondition + 1);
+        float rel = (float)trueCondition / maxValue;
+        int tCon = Mathf.RoundToInt(small + (big - small) * rel);
+        Debug.Log($"Max: {maxValue}, True: {trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
+        for(int y = height - 1; y >= 0; y--){
+            for(int x = 0; x < width; x++){
+                if(ints[x,y] > tCon){
+                    grounds.Add(new Vector3Int(x,y));
+                }
+                s += $"[{ints[x,y]}]";
+            }
+            s += "\n";
+        }
+        
+        Debug.Log(s);
+    }
+    public Vector2Int[] GetSquarePoints(int start, int d){
+        Vector2Int[] seeds = {
+            new Vector2Int(start,start),
+            new Vector2Int(start,start + d),
+            new Vector2Int(start + d,start),
+            new Vector2Int(start + d,start + d),
+        };
+        return seeds;
+    }
+    public GroundArray(Vector2Int dimensions, int floor){
+        width = dimensions.x;
+        height = dimensions.y;
+        targetFloor = floor;
+        grounds = new HashSet<Vector3Int>();
+        s = "";
+        for(int y = height - 1; y >= 0; y--){
+            for(int x = 0; x < width; x++){
+                    grounds.Add(new Vector3Int(x,y));
+                s += $"[{100}]";
+            }
+            s += "\n";
         }
     }
-    public GroundArray(Vector3Int dimensions, int layer){
-        grounds = new GroundStruct[1];
-        grounds[0] = new GroundStruct(){
-            position = Vector3Int.zero,
-            size = dimensions
-        };
-        
-        // grounds[0].Init((grounds[0].width + grounds[0].height)/2);
-        bridges = new();
-        roads = new();
-        targetFloor = layer;
-        width = grounds[0].width;
-        height = width = grounds[0].height;
-    }
-}
-public struct GroundStruct{
-    public Vector3Int position;
-    public Vector3Int size;
-    public HashSet<Vector3Int> roads;
-    public HashSet<Vector3Int> bridges;
-    public int width => size.x;
-    public int height => size.y;
-    public int xMin => Mathf.Min(position.x, position.x + size.x);
-    public int yMin => Mathf.Min(position.y, position.y + size.y);
-    public int xMax => Mathf.Max(position.x, position.x + size.x);
-    public int yMax => Mathf.Max(position.y, position.y + size.y);
-    // public void Init(int maxRoads){
-    //     roads = new();
-    //     bridges = new();
-    //     bool w = Random.Range(0,2) == 0;
-    //     bridges.Add(new Vector3Int(){
-    //         x = w?Random.Range(xMin, xMax):0,
-    //         y = w?0:Random.Range(yMin,yMax)
-    //     });
-    //     Vector3Int pos = new(){
-    //         x = Random.Range(xMin,xMax),
-    //         y = Random.Range(yMin, yMax)
-    //     };
-    //     int m = Random.Range(0 ,Mathf.Min(width, height)/2);
-    //     roads.Add(pos);
-    //     for(int i = 0; i < m; i++){
-    //         pos += new Vector3Int(){
-    //             x = Random.Range(-1,2),
-    //             y = Random.Range(-1,2)
-    //         };
-    //         if(bridges.Contains(pos)) continue;
-    //         if(pos.x > xMax) {
-    //             Debug.Log(pos.x + " " + xMax);
-    //             pos.x--;
-    //         }
-    //         if(pos.x < xMin - 1){ 
-    //             Debug.Log(pos.x + " " + xMin);
-    //             pos.x++;
-    //         }
-    //         if(pos.y > yMax){  
-    //             Debug.Log(pos.y + " " + yMax);
-    //             pos.y--;
-    //         }
-    //         if(pos.y < yMin - 1){ 
-    //             Debug.Log(pos.y + " " + yMin);
-    //             pos.y++;
-    //         }
-    //         roads.Add(pos);
-    //     }
-    // }
 }

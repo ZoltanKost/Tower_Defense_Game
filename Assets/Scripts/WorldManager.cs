@@ -6,6 +6,8 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
     bool playing;
+    [SerializeField] private int maxDimensions,maxSeedValue,maxValue,random,randomReduce,trueCondition;
+    [SerializeField] private bool test;
 
     [Header("Tiles")]
     public TileBase FOAM;
@@ -55,13 +57,16 @@ public class WorldManager : MonoBehaviour {
         playerInput.Init(temporalFloor,callback, buildingManager.Build, StopLevel);
         nextWaweButton.Init(StartLevel);
         playerManager.Init(Defeat);
+        if(test)for(int i = 0; i < 100; i++){
+            var v = new GroundArray(maxDimensions,maxSeedValue,maxValue,random,randomReduce,trueCondition);
+        }
     }
     void Start(){
         Vector3 input = Camera.main.transform.position;
-        GroundArray ga = new GroundArray(new Vector3Int(10,10),0);
-        input -= new Vector3(ga.width,ga.height)*.5f;
+        GroundArray ga = new GroundArray(new Vector2Int(10,10),0);
+        input -= new Vector3(10,10)*.5f;
         floorManager.CreateGroundArray(input, ga);
-        GroundArray ga1 = new GroundArray(new Vector3Int(5,2),1);
+        GroundArray ga1 = new GroundArray(new Vector2Int(5,2),1);
         Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
         floorManager.CreateGroundArray(mid, ga1);
         floorManager.CreateCastle(mid,castle);
