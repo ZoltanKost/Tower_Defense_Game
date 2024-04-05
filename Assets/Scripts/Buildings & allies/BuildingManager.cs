@@ -5,7 +5,7 @@ public class BuildingManager : MonoBehaviour {
     [SerializeField] private ArcherManager archerManager;
     public void Build(Vector3 worldPosition, int floor, Building building){
         worldPosition.z = 0;
-        BuildingObject s = Instantiate(building.prefab, worldPosition, Quaternion.identity);
+        BuildingObject s = Instantiate(building.prefab, worldPosition, Quaternion.identity,transform);
         s.Init(6,floor);
         InitArchers(s.GetArchers(), 7,floor);
         // Animate(s.transform);
@@ -21,6 +21,11 @@ public class BuildingManager : MonoBehaviour {
     public void InitArchers(Archer[] archers, int sortingOrder, int sortingLayer){
         foreach(Archer a in archers){
             archerManager.AddArcher(a, sortingOrder, sortingLayer);
+        }
+    }
+    public void Reset(){
+        foreach(Transform tr in transform){
+            gameObject.SetActive(false);
         }
     }
 }

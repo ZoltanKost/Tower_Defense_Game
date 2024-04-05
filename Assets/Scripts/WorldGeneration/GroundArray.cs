@@ -10,9 +10,9 @@ public struct GroundArray{
     public HashSet<Vector3Int> grounds;
     // public HashSet<Vector3Int> roads;
     // public HashSet<Vector3Int> bridges;
-    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, float randomMultiplayer, int trueCondition){
+    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, float randomMultiplier, int trueCondition){
         s = "";
-        int d = Mathf.ClosestPowerOfTwo(maxDimensions) + 1;
+        int d = Mathf.ClosestPowerOfTwo(Random.Range(1,maxDimensions + 1)) + 1;
         // width = Random.Range(2, maxDimensions + 1);
         // height = Random.Range(2, maxDimensions + 1);
         width = d;
@@ -67,7 +67,7 @@ public struct GroundArray{
             }
             temp.Clear();
             d/=2;
-            random = Mathf.FloorToInt(random * randomMultiplayer);
+            random = Mathf.FloorToInt(random * randomMultiplier);
         }
         int small = maxValue;
         int big = 0;
@@ -81,6 +81,7 @@ public struct GroundArray{
                 }
             }
         }
+        trueCondition = Random.Range(0, trueCondition + 1);
         float rel = (float)trueCondition / maxValue;
         int tCon = Mathf.RoundToInt(small + (big - small) * rel);
         Debug.Log($"Max: {maxValue}, True: {trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
