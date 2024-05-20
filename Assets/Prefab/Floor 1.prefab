@@ -730,6 +730,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336237004961178447}
   - component: {fileID: 6185729091870479477}
+  - component: {fileID: -6802219229200229049}
   m_Layer: 0
   m_Name: Floor 1
   m_TagString: Untagged
@@ -777,4 +778,21 @@ MonoBehaviour:
   - {fileID: 9060132247546551429}
   - {fileID: 6935072829675052581}
   - {fileID: 9073638887811284643}
+  tweenAnimator: {fileID: 0}
   layer: 0
+--- !u!114 &-6802219229200229049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8389366662318371863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cbe89ec1acd9646bdd57d5d4eefd27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTime: 0.2
+  startSize: 0.99
+  amplitude_overshoot: 0.25
+  animEase: 29

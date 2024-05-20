@@ -1,9 +1,10 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using DG.Tweening;
 
 public class Floor : MonoBehaviour{
     [SerializeField] public Tilemap[] visuals;
+    protected TweenAnimator tweenAnimator;
     private const int FOAMLAYER = 0;
     private const int SHADOWLAYER = 1;
     private const int GROUNDLAYER = 2;
@@ -24,6 +25,7 @@ public class Floor : MonoBehaviour{
     public int layer;
     protected void Awake(){
         visuals = GetComponentsInChildren<Tilemap>();
+        tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int layer, string sortingLayerName){
         this.layer = layer;
@@ -33,7 +35,7 @@ public class Floor : MonoBehaviour{
             mapRenderer.sortingOrder = i;
         }
     }
-    // Checks if there's a ground or a road on the floor. Refactor.
+    // Checks if there's a ground or a road on the floor.
     public bool HasTile(Vector3Int start){
         start.z = 0;
         return visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(ground) 
@@ -77,27 +79,21 @@ public class Floor : MonoBehaviour{
             }
         }
     }
-    // Shortcut. After refactoring probably isn't required.
     void SetTile(Vector3Int pos, int LAYER, TileID ID){
         visuals[LAYER].SetTile(pos,StaticTiles.GetTile(ID));
-        // Debug.Log(pos + " " + LAYER + " " + ID);
     }
-    // Shortcut
     public Vector3Int WorldToCell(Vector3 input){
         return visuals[0].WorldToCell(input);
     }
     public Vector3 CellToWorld(Vector3Int cell){
         return visuals[0].CellToWorld(cell);
     }
-    // Jelly Animation. Probably should be moved somewhere else
-    public void Animate(){
-        Tween tween = transform.DOScale(.99f, .05f);
-        tween.onComplete += () => {
-            Tween tween1 = transform.DOScale(1.01f, .1f);
-            tween1.onComplete += () => transform.DOScale(1, .05f);
-        };
+    public virtual void Animate(){
+        tweenAnimator.JellyAnimation();
     }
-    // Shortcut.
+    public virtual Tween GetAnimationTween(){
+        return tweenAnimator.JellyAnimation();   
+    }
     public void ClearAllTiles(){
         foreach(Tilemap map in visuals){
             map.ClearAllTiles();

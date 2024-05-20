@@ -1,47 +1,65 @@
+using System;
 using UnityEngine;
 
-public class Archer : MonoBehaviour{
-    [SerializeField] private CustomAnimator body;
-    [SerializeField] Arrow arrow;
+public class Archer : MonoBehaviour, IAttacking{
+    [SerializeField] private CustomAnimator animator;
+    [SerializeField] private Arrow arrow;
+    private Arrow arrowObject;
     [SerializeField] private float shootSpeed = 5f;
-    [SerializeField] Enemy target;
+    [SerializeField] IDamagable target;
     [SerializeField] private float attackRange;
+    [SerializeField] private int damage;
+    public bool _active;
+    public Vector3 position{
+        get{return transform.position;}
+    }
+    [SerializeField] private AttackType _attackType;
+    public AttackType attackType{
+        get{return _attackType;}
+    }
+
     bool shooting;
-    Enemy[] enemyList;
+    IDamagable[] enemyList;
     public void Init(Enemy[] enemies){
-        body.PlayAnimation(0);
+        animator.Init();
         enemyList = enemies;
-        arrow.Init(transform.position);
+        arrowObject = Instantiate(arrow);
+        arrowObject.Init(this, damage);
+        _active = true;
+    }
+    public IProjectile GetProjectile(){
+        return arrowObject;
     }
     public void TickAnimator(float delta){
-        body.UpdateAnimator(delta);
+        if(!_active) return;
+        animator.UpdateAnimator(delta);
     }
     public void TickDetection(float delta){
+        if(!_active) return;
         Detect();
-        if(arrow.active)arrow.Move(delta);
         if(shooting) {
-            body.SetAnimation(1);
+            animator.SetAnimation(1);
         }
-        else body.SetAnimation(0);
+        else animator.SetAnimation(0);
     }
     public void ResetAnimation(){
-        body.SetAnimation(0);
+        animator.SetAnimation(0);
     }
-    public void Shoot(){
-        arrow.Send(target, shootSpeed);
+    public void Attack(){
+        arrowObject.Send(target, shootSpeed);
     }
     public void Detect(){
         shooting = false;
         for(int i = 0; i < enemyList.Length; i++){
             if(!enemyList[i].active || !enemyList[i].alive) continue;
-            Vector3 vector = transform.position - enemyList[i].transform.position;
+            Vector3 vector = transform.position - enemyList[i].position;
             vector.z = 0;
             float distance = vector.magnitude;
             if(distance > attackRange) continue;
             float minDistance;
             if(target == null || !target.active || !target.alive) minDistance = attackRange; 
             else {
-                vector = transform.position - target.transform.position;
+                vector = transform.position - target.position;
                 vector.z = 0;
                 minDistance = vector.magnitude;
             }
@@ -50,5 +68,10 @@ public class Archer : MonoBehaviour{
             }
         }
         shooting = target != null && target.active && target.alive;
+    }
+
+    public void SetEnemyPool(IDamagable[] enemies)
+    {
+        enemyList = enemies;
     }
 }

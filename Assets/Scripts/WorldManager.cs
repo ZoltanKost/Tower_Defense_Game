@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -5,9 +7,7 @@ public class WorldManager : MonoBehaviour {
     [Header("Dimensions")]
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
-    bool playing;
     [SerializeField] private int maxDimensions,maxSeedValue,maxValue,random,randomReduce,trueCondition;
-    [SerializeField] private bool test;
 
     [Header("Tiles")]
     public TileBase FOAM;
@@ -27,14 +27,19 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private TemporalFloor temporalFloor;
     [SerializeField] private GroundPiecesUIManager groundUIManager;
     [SerializeField] private BuildingUI buildingUI;
-    [SerializeField] private PlayerBuildingManager buildingManager;
+    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerInputManager playerInput;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private EnemyManager enemy;
     [SerializeField] private ArcherManager archerManager;
-    [SerializeField] private NextWaveButton nextWaweButton;
-    [SerializeField] private PlayerManager playerManager;
-    [SerializeField] private Transform DefeatImage;
+    [SerializeField] private EventSubscribeButton nextWaweButton;
+    [SerializeField] private EventSubscribeButton PauseButton;
+    [SerializeField] private PlayerManager playerManager; 
+    [SerializeField] private MenuUIManager defeatMenuManager;
+    [SerializeField] private MenuUIManager menuUIManager;
+    [SerializeField] private Transform ControlsMenu;
+    private GameState gameState;
     
     void Awake(){
         StaticTiles.Init();
@@ -50,16 +55,18 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,"TempFloor");
 
-        PlayerInputManager.Callback callback = buildingManager.ResetMode;
-        callback += groundUIManager.Reset;
-        callback += temporalFloor.DeactivateFloor;
-
-        playerInput.Init(temporalFloor,callback, buildingManager.Build, StopLevel);
+        Action buildingFailedCallback = () => 
+        {
+            playerInput.Deactivate();
+            temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
+        };
+        playerBuildingManager.Init(buildingFailedCallback, temporalFloor);
+        playerInput.Init(temporalFloor,groundUIManager.Reset, playerBuildingManager.CancelBuildingAction, playerBuildingManager.ClickBuild, playerBuildingManager.HoldBuild);
         nextWaweButton.Init(StartLevel);
+        PauseButton.Init(Pause);
+        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit});
+        defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
         playerManager.Init(Defeat);
-        if(test)for(int i = 0; i < 100; i++){
-            var v = new GroundArray(maxDimensions,maxSeedValue,maxValue,random,randomReduce,trueCondition);
-        }
     }
     void Start(){
         Vector3 input = Camera.main.transform.position;
@@ -70,38 +77,103 @@ public class WorldManager : MonoBehaviour {
         Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
         floorManager.CreateGroundArray(mid, ga1);
         floorManager.CreateCastle(mid,castle);
-        playing = true;
+        gameState = GameState.Idle;
     }
     void Update(){
-        if(playing) return;
-        if(Input.GetKeyDown(KeyCode.Space)){
-            floorManager.ClearFloor();
-            Start();
-            StopLevel();
-            DefeatImage.gameObject.SetActive(false);
+        bool esc = Input.GetKeyDown(KeyCode.Escape);
+        switch(gameState){
+            case GameState.Idle:
+                if(esc) {
+                    UIOff();
+                    Pause();
+                }
+                break;
+            case GameState.IdlePaused:
+                if(esc) {
+                    Unpause();
+                }
+                break;
+            case GameState.Wave:
+                if(esc) {
+                    Pause();
+                }
+                break;
+            case GameState.WavePaused:
+                if(esc) {
+                    Unpause();
+                }
+                break;
+            case GameState.Defeat:
+                if(esc) {
+                    Restart();
+                }
+                break;
         }
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
-        archerManager.ActivateArchers();
-        buildingUI.HideUI();
-        groundUIManager.Hide();
-        playerInput.Deactivate();
+        UIOff();
+        playerBuildingManager.CancelBuildingAction();
+        buildingManager.Activate();
         enemy.Activate();
+        archerManager.ActivateArchers();
+        gameState = GameState.Wave;
     }
     public void StopLevel(){
-        buildingUI.ShowUI();
-        groundUIManager.Show();
-        playerInput.Activate();
-        enemy.Deactivate();
+        UIOn();
+        enemy.Reset();
+        buildingManager.Deactivate();
         archerManager.DeactivateArchers();
+        gameState = GameState.Idle;
     }
     public void Defeat(){
+        UIOff();
+        buildingManager.Deactivate();
+        archerManager.DeactivateArchers();
+        defeatMenuManager.gameObject.SetActive(true);
+        gameState = GameState.Defeat;
+    }
+    public void Restart(){
+        floorManager.ClearFloor();
+        StopLevel();
+        archerManager.DeactivateArchers();
+        buildingManager.Reset();
+        defeatMenuManager.gameObject.SetActive(false);
+        menuUIManager.gameObject.SetActive(false);
+        Start();
+    }
+    public void Pause(){
+        UIOff();
+        archerManager.DeactivateArchers();
+        enemy.Deactivate();
+        menuUIManager.gameObject.SetActive(true);
+        gameState = gameState + 1;
+    }
+    public void Unpause(){
+        if(gameState == GameState.WavePaused){
+            archerManager.ActivateArchers();
+            enemy.Activate();
+        }else{
+            UIOn();
+        }
+        menuUIManager.gameObject.SetActive(false);
+        gameState = gameState - 1;
+    }
+    public void UIOn(){
+        playerInput.Activate();
+        buildingUI.ShowUI();
+        groundUIManager.Show();
+    }
+    public void UIOff(){
         buildingUI.HideUI();
         groundUIManager.Hide();
         playerInput.Deactivate();
-        archerManager.DeactivateArchers();
-        DefeatImage.gameObject.SetActive(true);
-        playing = false;
     }
+    enum GameState{
+        Idle,
+        IdlePaused,
+        Wave,
+        WavePaused,
+        Defeat
+    } 
 }

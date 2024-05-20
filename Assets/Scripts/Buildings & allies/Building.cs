@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Buildings")]
 public class Building : ScriptableObject{

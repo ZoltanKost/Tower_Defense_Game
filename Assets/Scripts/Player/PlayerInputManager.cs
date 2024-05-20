@@ -1,36 +1,33 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PlayerInputManager : MonoBehaviour{
-    public delegate void Callback();
-    public delegate bool BuildCallback(Vector3 input);
-    Callback resetCallback;
-    BuildCallback buildCallback;
-    Callback cancelCallback;
-    Callback placeCallback;
-    Callback stopLevelCallback;
+    public delegate void ClickCallback(Vector3 input);
+    private ClickCallback clickCallback;
+    private ClickCallback holdCallback;
+    private Action cancelBuildingActionCallback;
+    private Action resetAllGroundsCallback;
     bool active;
-    Camera mCamera;
-    TemporalFloor temporalFloor;
-    EventSystem currentEventSystem;
+    protected Camera mCamera;
+    protected TemporalFloor temporalFloor;
+    protected EventSystem currentEventSystem;
     Vector3 camMovePosition = new();
     Vector3 fixedCameraPosition = new();
-    public void Init(TemporalFloor tempFloor, Callback resetCallback, BuildCallback buildCallback, Callback stopLevelCallback){
+    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelBuildingActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback){
         active = true;
         mCamera = Camera.main;
         currentEventSystem = FindObjectOfType<EventSystem>();
         temporalFloor = tempFloor;
-        this.resetCallback = resetCallback;
-        resetCallback += tempFloor.DeactivateFloor;
-        this.buildCallback = buildCallback;
-        this.stopLevelCallback = stopLevelCallback;
+        this.resetAllGroundsCallback = resetAllGroundsCallback;
+        clickCallback = clickBuildCallback;
+        this.holdCallback = holdCallback;
+        this.cancelBuildingActionCallback = cancelBuildingActionCallback;
     }
     public void Update(){
         DebugActionQueue.Update();
         if(active) Tick();
-        else if(Input.GetKeyDown(KeyCode.Escape)){
-            stopLevelCallback?.Invoke();
-        }
         if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;
             fixedCameraPosition = mCamera.transform.position;
@@ -40,24 +37,21 @@ public class PlayerInputManager : MonoBehaviour{
             mCamera.transform.position = fixedCameraPosition + direction * Time.fixedDeltaTime;
         }
     }
-    public void Tick(){
+    public virtual void Tick(){
         Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
         temporalFloor.MoveTempFloor(input);
-        if(Input.GetMouseButton(0) || Input.GetMouseButtonDown(0)){
+        if( Input.GetMouseButtonDown(0)){
             if(currentEventSystem.IsPointerOverGameObject()){ 
-               // currentEventSystem.currentSelectedGameObject.GetComponentInChildren<Floor>().Animate();
                 return;
             }
-            if(buildCallback.Invoke(input)){
-                placeCallback?.Invoke();
-            }
+            clickCallback?.Invoke(input);
+        }else if(Input.GetMouseButton(0)){
+            holdCallback?.Invoke(input);
         }else if(Input.GetKeyDown(KeyCode.Space)){
-            cancelCallback?.Invoke();
-            cancelCallback = null;
-            resetCallback?.Invoke();
-            Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
+            cancelBuildingActionCallback?.Invoke();
+            resetAllGroundsCallback?.Invoke();
         }else if(Input.GetKeyDown(KeyCode.Escape)){
-            cancelCallback?.Invoke();
+            cancelBuildingActionCallback?.Invoke();
         }
     }
     public void Deactivate(){
@@ -66,24 +60,9 @@ public class PlayerInputManager : MonoBehaviour{
     public void Activate(){
         active = true;
     }
-    public void SetCancelCallback(Callback callback){
-        cancelCallback = callback;
-        cancelCallback += temporalFloor.DeactivateFloor;
-    }
-    public void AddCancelCallback(Callback callback){
-        cancelCallback += callback;
-    }
-    public void InvokeCancelCallback(){
-        cancelCallback?.Invoke();
-    }
-    public void SetPlaceCallback(Callback callback){
-        placeCallback = callback;
-        placeCallback += temporalFloor.DeactivateFloor;
-    }
-    public void AddPlaceCallback(Callback callback){
-        placeCallback += callback;
-    }
-    public void ActivateTempFloor(GroundArray ga){
-        temporalFloor.ActivateFloor(ga);
+    public IEnumerator WaitForActivate(float time){
+        yield return new WaitForSeconds(time);
+        Activate();
+        Debug.Log("Activated");
     }
 }

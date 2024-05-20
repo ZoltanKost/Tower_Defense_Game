@@ -29,7 +29,7 @@ public class GroundUI : MonoBehaviour{
         floor.transform.localPosition = pos;
     }
     public void CreateGroundArray(){
-        GroundArray ga = new GroundArray(maxDimensions, maxSeed, maxValue, random, randomReduce, trueCondition);
+        GroundArray ga = new GroundArray(maxDimensions, maxValue, random, randomReduce, trueCondition);
         SetGroundArray(ga);
     }
     public void ClearAllTiles(){

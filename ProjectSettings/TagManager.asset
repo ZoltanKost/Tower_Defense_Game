@@ -38,9 +38,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: BackGround
-    uniqueID: 3912706603
-    locked: 0
   - name: 0
     uniqueID: 1836973359
     locked: 0
@@ -55,6 +52,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Projectiles
+    uniqueID: 604994399
     locked: 0
   - name: GroundUI
     uniqueID: 2302267107

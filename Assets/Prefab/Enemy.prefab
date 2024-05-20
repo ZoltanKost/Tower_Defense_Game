@@ -98,12 +98,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackType: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
   damage: 10
   index: 0
-  active: 0
-  alive: 0
-  speed: 5
-  HP: 100
+  _active: 0
+  speed: 1
+  attackrange: 2
+  _hp: 100
+  attackPeriod: 1.5
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,10 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
   animations:
-  - action:
-      m_PersistentCalls:
-        m_Calls: []
-    actionPoint: 0
+  - events: []
     sprites:
     - {fileID: -1278766764, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
     - {fileID: 2030248817, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
@@ -130,22 +131,23 @@ MonoBehaviour:
     - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
     - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
     duration: 0.75
-  - action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7266588368055346098}
-          m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-          m_MethodName: OnKillInvoke
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    actionPoint: 13
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7266588368055346098}
+            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+            m_MethodName: OnKillInvoke
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 13
     sprites:
     - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
@@ -162,3 +164,44 @@ MonoBehaviour:
     - {fileID: 1076972744, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 324086716, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     duration: 1.5
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7266588368055346098}
+            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+            m_MethodName: Attack
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 3
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7266588368055346098}
+            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+            m_MethodName: ResetState
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 5
+    sprites:
+    - {fileID: -128203984, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: 1822073971, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: -2109284018, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: 189845494, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+    duration: 1

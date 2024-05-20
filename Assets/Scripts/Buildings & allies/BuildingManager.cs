@@ -1,31 +1,47 @@
 using UnityEngine;
-using DG.Tweening;
+
+using System.Collections.Generic;
 
 public class BuildingManager : MonoBehaviour {
     [SerializeField] private ArcherManager archerManager;
+    public List<BuildingObject> bs = new List<BuildingObject>();
+    bool active;
     public void Build(Vector3 worldPosition, int floor, Building building){
         worldPosition.z = 0;
-        BuildingObject s = Instantiate(building.prefab, worldPosition, Quaternion.identity,transform);
-        s.Init(6,floor);
+        Vector3 offset =  (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
+        BuildingObject s = Instantiate(building.prefab, worldPosition + offset, Quaternion.identity,transform);
+        s.Init(6,floor, bs.Count, RemoveBuilding);
+        bs.Add(s);
         InitArchers(s.GetArchers(), 7,floor);
-        // Animate(s.transform);
     }
-    public void Animate(Transform transform){
-        Tween tween = transform.DOScale(.99f, .05f);
-        tween.onComplete += () => {
-            Tween tween1 = transform.DOScale(1.01f, .1f);
-            tween1.onComplete += () => transform.DOScale(1, .05f);
-        };
-    }
-    
     public void InitArchers(Archer[] archers, int sortingOrder, int sortingLayer){
         foreach(Archer a in archers){
-            archerManager.AddArcher(a, sortingOrder, sortingLayer);
+            archerManager.AddArcher(a);
+        }
+    }
+    void Update(){
+        if(!active) return;
+        float delta = Time.deltaTime;
+        for(int i = 0; i < bs.Count; i++){
+            if(!bs[i].active) continue;
+            bs[i].TickUpdate(delta);
         }
     }
     public void Reset(){
-        foreach(Transform tr in transform){
-            gameObject.SetActive(false);
+        int b = transform.childCount;
+        for(int i = 0; i < b; i++){
+            transform.GetChild(i).gameObject.SetActive(false);
         }
+    }
+    public void RemoveBuilding(int index){
+        Debug.Log($"Removed: {index}");
+        if(index == 0) return;
+    }
+    public void Activate(){
+        active = true;
+    }
+    public void Deactivate(){
+        active = false;
+        archerManager.DeactivateArchers();
     }
 }

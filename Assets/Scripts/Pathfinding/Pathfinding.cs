@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
+	[SerializeField] private int maxPaths = 200;
 	List<FloorCell> castlePositions;
 	// List<List<FloorCell>> paths = new();
 	List<Queue<Vector3>> vectors = new();
@@ -35,6 +36,7 @@ public class Pathfinding : MonoBehaviour{
 		return vectors.Count > 0;
 	}
 	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
+		if(result.Count > maxPaths) return;
 		if(!(current.road || current.bridge || current.bridgeSpot)) return;
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;

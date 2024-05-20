@@ -1,40 +1,65 @@
 using UnityEngine;
 
-public class Arrow : MonoBehaviour {
-    [SerializeField] private Transform normal;
-    [SerializeField] private Transform cut;
-    Vector3 parentPosition;
-    Enemy target;
-    float speed;
-    public bool active;
-    public void Init(Vector3 parent){
-        parentPosition = parent;
+public class Arrow : MonoBehaviour, IProjectile {
+    [SerializeField] private Transform visuals;
+    [SerializeField] private int damage;
+    [SerializeField] private CustomAnimator animator;
+    IAttacking _parent;
+    IDamagable _target; 
+    public IDamagable target{get{return _target;}}
+
+    public bool active{
+        get {return _active;}
     }
-    public void Send(Enemy target, float speed){
-        active = true;
-        transform.position = parentPosition;
-        this.target = target;
-        cut.gameObject.SetActive(false);
-        normal.gameObject.SetActive(true);
+    void Awake(){
+        if(animator == null) animator = visuals.GetComponent<CustomAnimator>();
+        animator.Init();
+        visuals.gameObject.SetActive(false);
+    }
+
+    float speed;
+    public bool _active;
+    public void Init(IAttacking parent, int damage){
+        _parent = parent;
+        this.damage = damage;
+        visuals.gameObject.SetActive(false);
+    }
+    public void Send(IDamagable target, float speed){
+        _active = true;
+        transform.position = _parent.position;
+        _target = target;
+        visuals.gameObject.SetActive(true);
+        animator.SetAnimation(0);
         this.speed = speed;
     }
+    public void UpdateAnimator(float delta){
+        animator.UpdateAnimator(delta);
+    }
     public void Move(float delta){
-        if(!active) return;
-        Vector3 dir = target.transform.position - parentPosition;
+        Vector3 dir = target.position - _parent.position;
         dir.z = 0;
         float angle = Vector2.Angle(Vector2.right,dir);
-        if(parentPosition.y > target.transform.position.y) angle = -angle;
+        if(_parent.position.y > target.position.y) angle = -angle;
         Quaternion rot = Quaternion.Euler(0f,0f,angle);
-        normal.rotation = rot;
+        visuals.rotation = rot;
         transform.position += delta * speed * dir.normalized;
-        if((transform.position - target.transform.position).magnitude < .3f){
-            active = false;
-            normal.gameObject.SetActive(false);
+        if((transform.position - target.position).magnitude < .3f){
+            animator.SetAnimation(1);
+            Disable();
             if(!target.alive) {
-                cut.gameObject.SetActive(true);
-                cut.transform.SetPositionAndRotation(normal.transform.position, normal.transform.rotation);
+                animator.SetAnimation(2);
             }
-            target.Damage();
+            target.Damage(damage);
         }
+    }
+    public void Disable(){
+        _active = false;
+    }
+    public void HideVisuals(){
+        visuals.gameObject.SetActive(false);
+    }
+    public void Deactivate(){
+        Disable();
+        HideVisuals();
     }
 }

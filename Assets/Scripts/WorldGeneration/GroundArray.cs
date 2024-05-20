@@ -10,7 +10,7 @@ public struct GroundArray{
     public HashSet<Vector3Int> grounds;
     // public HashSet<Vector3Int> roads;
     // public HashSet<Vector3Int> bridges;
-    public GroundArray(int maxDimensions, int maxSeedValue, int maxValue, int random, float randomMultiplier, int trueCondition){
+    public GroundArray(int maxDimensions, int maxValue, int random, float randomMultiplier, int trueCondition){
         s = "";
         int d = Mathf.ClosestPowerOfTwo(Random.Range(1,maxDimensions + 1)) + 1;
         // width = Random.Range(2, maxDimensions + 1);
@@ -22,7 +22,6 @@ public struct GroundArray{
         int[,] ints = new int[width,height];
         targetFloor = Random.Range(0,2);
         Vector2Int start = Vector2Int.zero;
-        List<Vector2Int> closed = new();
         List<Vector2Int> starts = new(){
             start
         };
@@ -97,19 +96,24 @@ public struct GroundArray{
         
         Debug.Log(s);
     }
-    public Vector2Int[] GetSquarePoints(int start, int d){
-        Vector2Int[] seeds = {
-            new Vector2Int(start,start),
-            new Vector2Int(start,start + d),
-            new Vector2Int(start + d,start),
-            new Vector2Int(start + d,start + d),
-        };
-        return seeds;
-    }
     public GroundArray(Vector2Int dimensions, int floor){
         width = dimensions.x;
         height = dimensions.y;
         targetFloor = floor;
+        grounds = new HashSet<Vector3Int>();
+        s = "";
+        for(int y = height - 1; y >= 0; y--){
+            for(int x = 0; x < width; x++){
+                    grounds.Add(new Vector3Int(x,y));
+                s += $"[{100}]";
+            }
+            s += "\n";
+        }
+    }
+    public GroundArray(Vector2Int dimensions){
+        width = dimensions.x;
+        height = dimensions.y;
+        targetFloor = Random.Range(0,2);
         grounds = new HashSet<Vector3Int>();
         s = "";
         for(int y = height - 1; y >= 0; y--){

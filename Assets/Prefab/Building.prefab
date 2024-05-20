@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7869584282338817135
+--- !u!1 &5847007084564941738
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,39 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6834620555424438756}
-  - component: {fileID: 5929532673901106855}
-  - component: {fileID: 4047626471853321614}
+  - component: {fileID: 2911389349750916090}
+  - component: {fileID: 2853853628150353533}
   m_Layer: 0
-  m_Name: Building
+  m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6834620555424438756
+--- !u!4 &2911389349750916090
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7869584282338817135}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2811813, y: 14.481075, z: -103.5379}
+  m_GameObject: {fileID: 5847007084564941738}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4966212616407628545}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Children: []
+  m_Father: {fileID: 6834620555424438756}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5929532673901106855
+--- !u!212 &2853853628150353533
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7869584282338817135}
+  m_GameObject: {fileID: 5847007084564941738}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -85,7 +83,43 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 1
+  m_SpriteSortPoint: 0
+--- !u!1 &7869584282338817135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6834620555424438756}
+  - component: {fileID: 4047626471853321614}
+  - component: {fileID: -4801807064181918262}
+  - component: {fileID: -2896916751406074852}
+  m_Layer: 0
+  m_Name: Building
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6834620555424438756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869584282338817135}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4966212616407628545}
+  - {fileID: 2911389349750916090}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4047626471853321614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +132,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e118c6ba820a01546ae1e592fc5669eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweenAnimator: {fileID: 0}
+  _hp: 100
+--- !u!114 &-4801807064181918262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869584282338817135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 2853853628150353533}
+  animations:
+  - events: []
+    sprites:
+    - {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}
+    duration: 10
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 4047626471853321614}
+            m_TargetAssemblyTypeName: BuildingObject, Assembly-CSharp
+            m_MethodName: OnKillCallBack
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 0
+    sprites:
+    - {fileID: 21300000, guid: 63adccf17e98dc447b8a4f3ebe6db23a, type: 3}
+    - {fileID: 21300000, guid: 63adccf17e98dc447b8a4f3ebe6db23a, type: 3}
+    duration: 0.1
+--- !u!114 &-2896916751406074852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869584282338817135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cbe89ec1acd9646bdd57d5d4eefd27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTime: 0.35
+  startSize: 1.05
+  amplitude_overshoot: 0.5
+  animEase: 30
 --- !u!1001 &7102216728773296220
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2772999576847956829, guid: f79b7fae6157b55408f01518d098fffe, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2772999576847956829, guid: f79b7fae6157b55408f01518d098fffe, type: 3}
       propertyPath: m_LocalPosition.y

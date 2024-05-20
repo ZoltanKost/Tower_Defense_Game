@@ -1066,6 +1066,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336237004961178447}
   - component: {fileID: 1435283420074433606}
+  - component: {fileID: 4127554322881803205}
   m_Layer: 0
   m_Name: Floor 2
   m_TagString: Untagged
@@ -1118,10 +1119,29 @@ MonoBehaviour:
   - {fileID: 6935072829675052581}
   - {fileID: 9073638887811284643}
   layer: 1
-  lerpSpeed: 30
-  jumpingSize: 3
+  tweenSpeed: 30
+  FixedDelta: 1
+  amplitude_overshoot: 1.03
+  minElasticMagnitude: 2
+  moveEase: 27
   arrows:
   - {fileID: 1846404336128188847}
   - {fileID: 1940723183255327435}
   - {fileID: 1295394308486307405}
   - {fileID: 717145756380060467}
+--- !u!114 &4127554322881803205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8389366662318371863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cbe89ec1acd9646bdd57d5d4eefd27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTime: 0.2
+  startSize: 0.99
+  amplitude_overshoot: 0.25
+  animEase: 29

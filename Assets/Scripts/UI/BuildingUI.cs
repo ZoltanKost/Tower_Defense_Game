@@ -1,15 +1,11 @@
-using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 public class BuildingUI : MonoBehaviour {
     [SerializeField] private PlayerBuildingManager buildingManager;
     [SerializeField] private Building castle;
     [SerializeField] private Building tower;
-    Vector3 rightPosition,leftPosition;
+    HideShowUI hideShowUI;
     void Awake(){
-        float width = GetComponent<GridLayoutGroup>().cellSize.x;
-        rightPosition = transform.localPosition + Vector3.right * width;
-        leftPosition = transform.localPosition;
+        hideShowUI = GetComponent<HideShowUI>();
     }
     public void ChooseCastleBuilding(){
         buildingManager.ChooseBuilding(castle);
@@ -28,12 +24,12 @@ public class BuildingUI : MonoBehaviour {
     }
     public void DisableBuilding(){
         buildingManager.ChooseMode(0);
-        HideUI();
+        hideShowUI.HideUI();
     }
     public void ShowUI(){
-        transform.DOLocalMove(leftPosition,1f);
+        hideShowUI.ShowUI();
     }
     public void HideUI(){
-        transform.DOLocalMove(rightPosition,1f);
+        hideShowUI.HideUI();
     }
 }

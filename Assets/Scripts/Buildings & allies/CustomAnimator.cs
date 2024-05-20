@@ -2,15 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class CustomAnimator : MonoBehaviour{
     
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] public SpriteRenderer spriteRenderer;
     public Animation[] animations;
     private Animation currentAnimation;
     float time = 0;
-    void Awake(){
+    public void Init(){
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        PlayAnimation(0);
     }
     public void PlayAnimation(Animation animation){
         currentAnimation = animation;
@@ -21,6 +21,7 @@ public class CustomAnimator : MonoBehaviour{
         currentAnimation = animations[id];
         time = 0;
         currentAnimation.Reset();
+        spriteRenderer.sprite = currentAnimation.sprites[0];
     }
     public void UpdateAnimator(float delta){
         time += delta;
@@ -46,13 +47,17 @@ public class CustomAnimator : MonoBehaviour{
 public delegate void AnimationDelegate();
 [Serializable]
 public class Animation{
-    public UnityEvent action;
-    public int actionPoint;
+    [Serializable]
+    public struct Event{
+        public UnityEvent action;
+        public int actionPoint;
+    }
+    public Event[] events;
     public Sprite[] sprites;
     public Sprite nextSprite{
         get{
             if(number >= sprites.Length) number = 0;
-            if(number == actionPoint) InvokeAction();
+            CheckEvents();
             return sprites[number++];
         }
     }
@@ -63,13 +68,12 @@ public class Animation{
             return duration / sprites.Length;
         }
     }
+    public void CheckEvents(){
+        foreach(Event e in events){
+            if(e.actionPoint == number) e.action?.Invoke();
+        }
+    }
     public void Reset(){
         number = 0;
-    }
-    public void InvokeAction(){
-        action?.Invoke();
-    }
-    public void SetAction(UnityEvent animDelegate){
-        action = animDelegate;
     }
 }

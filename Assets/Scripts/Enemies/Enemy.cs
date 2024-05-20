@@ -1,33 +1,74 @@
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(CustomAnimator))]
-public class Enemy : MonoBehaviour {
-    public delegate void OnKillEvent(int index);
+public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     public delegate void DamageCastleEvent(int damage);
     DamageCastleEvent damageCastleEvent;
     OnKillEvent onKillEvent;
+    public int HP{
+        get{return _hp;}
+        set{_hp = value;}
+    }
+    public Vector3 position{
+        get {return transform.position;}
+    }
+
+    public bool active { 
+        get {return _active;} 
+        set {_active = value;}
+    }
+
+    public bool alive {get{return active && state != EnemyState.dead;}}
+    [SerializeField] private AttackType _attackType;
+    public AttackType attackType{
+        get {return _attackType;}
+    }
+    [SerializeField] private Transform projectilePrefab;
+    private IProjectile projectile;
+    [SerializeField] private float projectileSpeed;
+
+    private EnemyState state;
+
     [SerializeField] private int damage;
+    IDamagable[] targets;
+    IDamagable currentTarget;
     private CustomAnimator animator;
     Queue<Vector3> currentPath;
     public int index;
-    public bool active;
-    public bool alive;
-    public float speed;
-    public int HP = 100;
+    [SerializeField] private bool _active;
+    [SerializeField] private float speed;
+    [SerializeField] private float attackrange = 3f;
+    [SerializeField] private int _hp = 100;
+    [SerializeField] private float attackPeriod = 5f;
+    float time;
     Vector3 destination;
     void Awake(){
         animator = GetComponent<CustomAnimator>();
-    }
-    public void Damage(){
-        if(!alive) return;
-        HP -= 10;
-        if(HP <= 0){
-            KillEnemy();
+        animator.Init();
+        if(attackType == AttackType.Projectile){
+            if(projectile == null)projectile = Instantiate(projectilePrefab).GetComponent<IProjectile>();
+            projectile.Init(this, damage);
         }
     }
-    public void KillEnemy(){
-        alive = false;
+    public IProjectile GetProjectile(){
+        if(projectile == null){
+            projectile = Instantiate(projectilePrefab).GetComponent<IProjectile>();
+        }
+        return projectile;
+    }
+    public void Damage(int damage){
+        if(state == EnemyState.dead) return;
+        HP -= damage;
+        Debug.Log($"DMG: {damage}, HP: {HP}");
+        Animate();
+        if(HP <= 0){
+            Kill();
+        }
+    }
+    public void Kill(){
+        state = EnemyState.dead;
         animator.PlayAnimation(1);
     }
     public void OnKillInvoke(){
@@ -39,8 +80,8 @@ public class Enemy : MonoBehaviour {
         Pathfinding_SetPath(path);
         transform.position = position;
         destination = position;
-        this.active = active;
-        alive = true;
+        _active = active;
+        state = EnemyState.run;
         HP = 100;
         animator.PlayAnimation(0);
     }
@@ -49,14 +90,31 @@ public class Enemy : MonoBehaviour {
         currentPath = path;
     }
     public void Tick(float delta){
-        if(alive) Move(delta);
         UpdateAnimator(delta);
+        switch(state){
+            case EnemyState.dead:
+                return;
+            case EnemyState.run:
+                animator.SetAnimation(0);
+                Move(delta);
+                time += delta;
+                if(time < attackPeriod) return;
+                Detect();
+                return;
+            case EnemyState.attack:
+                time = 0;
+                animator.SetAnimation(2);
+                break;
+            default:
+                state = EnemyState.run;
+                break;
+        }
     }
     public void UpdateAnimator(float delta){
         animator.UpdateAnimator(delta);
     }
     public void Move(float delta){
-        transform.position += (destination - transform.position).normalized * delta;
+        transform.position += (destination - transform.position).normalized * delta * speed;
         if((destination - transform.position).magnitude <= .1f){ 
             if(currentPath.Count > 0) destination = currentPath.Dequeue();
             else DamageCastle();
@@ -66,4 +124,55 @@ public class Enemy : MonoBehaviour {
         damageCastleEvent?.Invoke(damage);
         onKillEvent?.Invoke(index);
     }
+
+    public void SetEnemyPool(IDamagable[] enemies)
+    {
+        targets = enemies;
+    }
+
+    public void Detect()
+    {
+        for(int i = 0; i < targets.Length; i++){
+            if(!targets[i].active || !targets[i].alive) continue;
+            IDamagable t = targets[i];
+            float distance = (t.position - position).magnitude;
+            if(distance > attackrange) continue;
+            float minDistance;
+            if(currentTarget == null || !currentTarget.active || !currentTarget.alive) minDistance = attackrange;
+            else minDistance = (currentTarget.position - position).magnitude;
+            // Debug.Log($"Min: {minDistance}, distance: {distance};");
+            if(distance >= minDistance) continue;
+            currentTarget = t;
+        }
+        bool attack = currentTarget != null && currentTarget.active && currentTarget.alive;
+        if(attack) state = EnemyState.attack;
+    }
+
+    public void Attack()
+    {
+        switch(attackType){
+            case AttackType.Melee:
+                currentTarget.Damage(damage);
+            break;
+            case AttackType.Projectile:
+                projectile.Send(currentTarget, projectileSpeed);
+            break;
+        }
+    }
+    public void ResetState(){
+        state = EnemyState.idle;
+    }
+    public void Animate(){
+        Tween tween = transform.DOScale(.99f, .05f);
+        tween.onComplete += () => {
+            Tween tween1 = transform.DOScale(1.01f, .1f);
+            tween1.onComplete += () => transform.DOScale(1, .05f);
+        };
+    }
+}
+public enum EnemyState{
+    idle,
+    run,
+    dead,
+    attack
 }

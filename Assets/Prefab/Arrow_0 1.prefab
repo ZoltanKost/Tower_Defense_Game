@@ -1,0 +1,236 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &76448684581883948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6056175986238031692}
+  - component: {fileID: 704569826120457826}
+  - component: {fileID: 5877313773062140966}
+  m_Layer: 0
+  m_Name: Arrow_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6056175986238031692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76448684581883948}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5307833470203409925}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &704569826120457826
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76448684581883948}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 604994399
+  m_SortingLayer: 1
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &5877313773062140966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76448684581883948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  animations:
+  - events: []
+    sprites:
+    - {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    - {fileID: -315356772, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    - {fileID: 1045102975, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    - {fileID: 394637170, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    - {fileID: 1265161102, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    - {fileID: -1867172308, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    duration: 0.25
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7778037953086895800}
+            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
+            m_MethodName: Disable
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 0
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7778037953086895800}
+            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
+            m_MethodName: HideVisuals
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 8
+    sprites:
+    - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    duration: 0.75
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7778037953086895800}
+            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
+            m_MethodName: Disable
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 7778037953086895800}
+            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
+            m_MethodName: HideVisuals
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 0
+    sprites:
+    - {fileID: 0}
+    - {fileID: 0}
+    duration: 0.1
+--- !u!1 &3189570932686458792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5307833470203409925}
+  - component: {fileID: 7778037953086895800}
+  m_Layer: 0
+  m_Name: Arrow_0 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5307833470203409925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3189570932686458792}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -4.2983418, y: 9.120682, z: 2.3741446}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6056175986238031692}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7778037953086895800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3189570932686458792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3451287903a6c5747ad85cc46d77e5f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visuals: {fileID: 6056175986238031692}
+  damage: 10
+  animator: {fileID: 5877313773062140966}
+  _active: 0
