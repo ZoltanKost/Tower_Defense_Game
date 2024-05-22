@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 5803977340589067958}
   animations:
   - events: []
     sprites:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3429721088360299154}
-  arrow: {fileID: 7778037953086895800, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
+  arrow: {fileID: 5307833470203409925, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
   shootSpeed: 10
   attackRange: 5
   damage: 15

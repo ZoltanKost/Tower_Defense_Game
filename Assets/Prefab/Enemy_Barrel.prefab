@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &189702414211034926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647510513473006261}
+  - component: {fileID: 1325746399686741614}
+  - component: {fileID: 7266588368055346098}
+  - component: {fileID: 9071115895459296981}
+  m_Layer: 0
+  m_Name: Enemy_Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &647510513473006261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.2983418, y: 9.120682, z: 2.3741446}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1325746399686741614
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 1700940551, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 3, y: 3}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &7266588368055346098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackType: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
+  damage: 15
+  index: 0
+  _active: 0
+  speed: 0.7
+  attackrange: 0
+  _hp: 100
+  attackPeriod: 5
+--- !u!114 &9071115895459296981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  animations:
+  - events: []
+    sprites:
+    - {fileID: 1906061183, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+    - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+    - {fileID: -1773167663, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+    - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+    duration: 0.5
+  - events:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 7266588368055346098}
+            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+            m_MethodName: OnKillInvoke
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      actionPoint: 13
+    sprites:
+    - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 872446035, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1988140810, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1866946633, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 70982598, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -1686293569, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -368744008, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 2112967236, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1076972744, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 324086716, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    duration: 1.5

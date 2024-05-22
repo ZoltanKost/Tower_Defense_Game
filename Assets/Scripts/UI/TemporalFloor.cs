@@ -1,14 +1,17 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class TemporalFloor : Floor
 {
     [SerializeField] private float tweenSpeed = 30f;
     [SerializeField] private bool FixedDelta;
     [SerializeField] private float amplitude_overshoot = 1.15f;
-    [SerializeField] private int minElasticMagnitude = 1;
     [SerializeField] private Ease moveEase;
-    Transform visual;
+    [SerializeField] private Color canPlace;
+    [SerializeField] private Color blockPlace;
+    private Color currentColor;
+    BuildingObject visual;
     private int cellSize;
     Vector3Int currentPosition;
     [SerializeField] Transform[] arrows;
@@ -17,6 +20,10 @@ public class TemporalFloor : Floor
     Tween tween;
     void Start(){
         cellSize = Mathf.FloorToInt(visuals[0].cellSize.x);
+        currentColor = canPlace;
+        foreach(Tilemap tilemap in visuals){
+            tilemap.color = currentColor;
+        }
     }
     public void CreateGroundArray(Vector3Int pos,  GroundArray ga){
         pos.z = 0;
@@ -29,7 +36,7 @@ public class TemporalFloor : Floor
             CreateGround(pos + g);
         }
     }
-    public void MoveTempFloor(Vector3 position){
+    public void MoveTempFloor(Vector3 position, bool canBuild){
         Vector3 vector = position / cellSize;
         temp.x = Mathf.FloorToInt(f: vector.x);
         temp.y = Mathf.FloorToInt(vector.y);
@@ -38,6 +45,12 @@ public class TemporalFloor : Floor
             tween.Kill();
             if(activated){
                 tween = transform.DOMove(temp, (temp - currentPosition).magnitude * tweenSpeed * (FixedDelta?Time.fixedDeltaTime:Time.deltaTime)).SetEase(moveEase,amplitude_overshoot);
+                if(canBuild){
+                    currentColor = canPlace;
+                }else{
+                    currentColor = blockPlace;
+                }
+                UpdateColors();
             }else{
                 transform.position = temp;
             }
@@ -52,9 +65,10 @@ public class TemporalFloor : Floor
         CreateGroundArray(Vector3Int.zero, array);
     }
     public void SetBuilding(Building building){
-        visual = Instantiate(building.prefab, transform).transform;
+        visual = Instantiate(building.prefab, transform);
         Vector3 offset = (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
-        visual.SetLocalPositionAndRotation(offset, Quaternion.identity);
+        visual.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
+        visual.SetColor(visuals[0].color);
         arrows[0].localPosition = Vector3.zero * cellSize;
         arrows[1].localPosition = Vector3Int.right * building.width * cellSize;
         arrows[2].localPosition = Vector3Int.up * building.height * cellSize;
@@ -119,5 +133,12 @@ public class TemporalFloor : Floor
     }
     public override Tween GetAnimationTween(){
         return tweenAnimator.ErrorAnimation();
+    }
+    public void UpdateColors(){
+        foreach(Tilemap tilemap in visuals){
+            tilemap.color = currentColor;
+        }
+        if(visual == null) return;
+        visual.SetColor(currentColor);
     }
 }

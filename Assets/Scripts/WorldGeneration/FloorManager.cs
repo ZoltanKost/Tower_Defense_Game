@@ -120,17 +120,26 @@ public class FloorManager : MonoBehaviour{
         bool hasBridgeNeighbour = false;
         // Debug.Log($"Checking bridge's {posX},{posY} neighbours...");
         for(int x = -1; x <= 1; x++){
-            for(int y = -1; y <= 1; y++){
-                // Debug.Log($"Checking {posX + x},{posY + y}");
-                FloorCell checking = floorCells[posX + x, posY + y];
-                if(!(checking.bridgeSpot || checking.bridge)) {
-                    // Debug.Log($"Cell isn't a bridge spot.");
-                    continue;
-                }
-                Debug.Log($"{posX + x},{posY + y} is a bridge!");
-                floor = checking.currentFloor;
-                hasBridgeNeighbour = true;
+            // Debug.Log($"Checking {posX + x},{posY + y}");
+            FloorCell checking = floorCells[posX + x, posY];
+            if(!(checking.bridgeSpot || checking.bridge)) {
+                // Debug.Log($"Cell isn't a bridge spot.");
+                continue;
             }
+            Debug.Log($"{posX + x},{posY} is a bridge!");
+            floor = checking.currentFloor;
+            hasBridgeNeighbour = true;
+        }
+        for(int y = -1; y <= 1; y++){
+            // Debug.Log($"Checking {posX + x},{posY + y}");
+            FloorCell checking = floorCells[posX, posY + y];
+            if(!(checking.bridgeSpot || checking.bridge)) {
+                // Debug.Log($"Cell isn't a bridge spot.");
+                continue;
+            }
+            Debug.Log($"{posX},{posY + y} is a bridge!");
+            floor = checking.currentFloor;
+            hasBridgeNeighbour = true;
         }
         if(!hasBridgeNeighbour) return false;
         floors[floor].PlaceBridge(pos);
@@ -186,7 +195,92 @@ public class FloorManager : MonoBehaviour{
         target.bridgeSpot = true;
         floors[floor].SetBridgeSpot(pos);
     }
-
+    public bool CheckBuilding(Vector3 input, int w, int h){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX,posY].currentFloor;
+        if(floor <= 0) return false;
+        for(int x = posX; x < posX + w; x++){
+            for(int y = posY; y < posY + h; y++){
+                if(floorCells[x, y].road || floorCells[x, y].occupied) return false;
+                if(floorCells[x, y].currentFloor != floor) return false;
+            }
+        }
+        return true;
+    }
+    public bool CheckGA(Vector3 input, GroundArray groundArray){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        pos.z = 0;
+        if(pos.x < - offset.x || pos.x >= offset.x || pos.y < 1 - offset.y || pos.y >= offset.y) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int currentFloor = -2;
+        Debug.Log(groundArray.s);
+        foreach(Vector3Int g in groundArray.grounds){
+            if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor; 
+            if(!CheckCell(posX + g.x, posY + g.y,currentFloor,groundArray.targetFloor)) return false;
+        }
+        return true;
+    }
+    public bool CheckBridge(Vector3 input){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX,posY].currentFloor + 1;
+        if(floor < 0 || floor > floors.Count || floorCells[posX,posY].occupied) return false;
+        bool hasBridgeNeighbour = false;
+        // Debug.Log($"Checking bridge's {posX},{posY} neighbours...");
+        for(int x = -1; x <= 1; x++){
+            for(int y = -1; y <= 1; y++){
+                // Debug.Log($"Checking {posX + x},{posY + y}");
+                FloorCell checking = floorCells[posX + x, posY + y];
+                if(!(checking.bridgeSpot || checking.bridge)) {
+                    // Debug.Log($"Cell isn't a bridge spot.");
+                    continue;
+                }
+                Debug.Log($"{posX + x},{posY + y} is a bridge!");
+                floor = checking.currentFloor;
+                hasBridgeNeighbour = true;
+            }
+        }
+        if(!hasBridgeNeighbour) return false;
+        return true;
+    }
+    public bool CheckBridgeSpot(Vector3 input){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        FloorCell target = floorCells[posX, posY];
+        if(target.bridge || target.bridgeSpot || target.building) return false;
+        bool edge = false;
+        int floor = target.currentFloor;
+        List<FloorCell> temp = GetNeighbours4(posX,posY);
+        foreach(FloorCell c in temp){
+            if(c.currentFloor == floor - 1) edge = true;
+            if(c.currentFloor == floor && c.bridgeSpot) return false;
+        }
+        if(!edge) return false;
+        return true;
+    }
+    public bool CheckRoad(Vector3 input){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX,posY].currentFloor;
+        if(floor < 0 || floor > floors.Count || floorCells[posX,posY].occupied){ 
+            if(floorCells[posX, posY].road && floorCells[posX, posY + 1].currentFloor == floor + 1){
+                floors[floor + 1].PlaceStairs(pos);
+                return true;
+            }    
+            return false;
+        }
+        return true;
+    }
     public bool CheckCell(int x, int y, int placingFloor, int groundTargetFloor){
         FloorCell cell = floorCells[x,y];
         if(

@@ -36,9 +36,6 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         animator.PlayAnimation(0);
         onKillEvent = OnKill;
         active = true;
-        // Vector3 temp = Vector3.left * width/2;
-        // foreach(Archer archer in archers) archer.transform.position += temp;
-        // spriteRenderer.transform.position += temp; 
         Animate();
     }
     public Archer[] GetArchers(){
@@ -58,8 +55,7 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public void Kill()
     {
         foreach(Archer a in archers){
-            a._active = false;
-            a.gameObject.SetActive(false);
+            a.Deactivate();
         }
         animator.PlayAnimation(1);
     }
@@ -69,5 +65,11 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     }
     public void Animate(){
         tweenAnimator.JellyAnimation();
+    }
+    public void SetColor(Color color){
+        spriteRenderer.color = color;
+        foreach(Archer archer in archers){
+            archer.SetColor(color);
+        }
     }
 }

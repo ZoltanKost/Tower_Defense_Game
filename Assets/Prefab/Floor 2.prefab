@@ -1124,6 +1124,8 @@ MonoBehaviour:
   amplitude_overshoot: 1.03
   minElasticMagnitude: 2
   moveEase: 27
+  canPlace: {r: 0.3529412, g: 0.69803923, b: 1, a: 0.47058824}
+  blockPlace: {r: 1, g: 0.40562463, b: 0.35294116, a: 0.47058824}
   arrows:
   - {fileID: 1846404336128188847}
   - {fileID: 1940723183255327435}

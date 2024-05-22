@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArcherManager : MonoBehaviour {
+public class ArcherManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private EnemyManager enemyManager;
     public List<Archer> archersList = new List<Archer>();
@@ -13,39 +13,45 @@ public class ArcherManager : MonoBehaviour {
             projectileManager.AddProjectile(archer.GetProjectile());
         }
     }
-    public void ActivateArchers(){
-        int n = archersList.Count;
-        for(int i = 0; i < n; i++){
-            archersList[i].ResetAnimation();
-        }
-        active = true;
-    }
     void Update(){
-        int n = archersList.Count;
         float delta = Time.deltaTime;
-        if(active){
-            for(int i = 0; i < n; i++){
-                archersList[i].TickDetection(delta);
-            }
+        Tick(delta);
+        AnimatorTick(delta);
+    }
+    public void Tick(float delta)
+    {
+        if(!active) return;
+        for(int i = 0; i < archersList.Count; i++){
+            archersList[i].TickDetection(delta);
         }
-        for(int i = 0; i < n; i++){
+    }
+
+    public void AnimatorTick(float delta)
+    {
+        for(int i = 0; i < archersList.Count; i++){
             archersList[i].TickAnimator(delta);
         }
     }
-    public void DeactivateArchers(){
+    public void Switch(bool active)
+    {
+        this.active = active;
         int n = archersList.Count;
         for(int i = 0; i < n; i++){
-            archersList[i].ResetAnimation();
-            archersList[i].GetProjectile().Deactivate();
+            archersList[i].Switch(active);
         }
-        active = false;
     }
-    public void DeactivateArchers(Archer[] archer){
-        foreach(Archer a in archer){
-            Debug.Log($"Deactivated: {a}");
-            archersList.Remove(a);
-            a._active = false;
+    public void DeactivateEntities()
+    {
+        foreach(Archer a in archersList){
             a.gameObject.SetActive(false);
         }
+    }
+
+    public void ResetEntities()
+    {
+        foreach(Archer archer in archersList){
+            Destroy(archer.gameObject);
+        }
+        archersList.Clear();
     }
 }

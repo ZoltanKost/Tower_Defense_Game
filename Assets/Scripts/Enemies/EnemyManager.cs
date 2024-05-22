@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour {
+public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerManager playerManager;
@@ -8,7 +8,6 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private Enemy[] enemyPrefabs;
     [SerializeField] private int enemyPoolCount;
     public Enemy[] enemies;
-    int Count;
     int lowestInactive = 0;
     [SerializeField] private float timeToSpawn = 10f;
     // [SerializeField] private int EnemyCount = 10;
@@ -16,7 +15,7 @@ public class EnemyManager : MonoBehaviour {
     bool active;
     void Start(){
         enemies = new Enemy[enemyPoolCount];
-        Reset();
+        SpawnEnemies();
     }
     public void Update(){
         if(!active) return;
@@ -25,18 +24,11 @@ public class EnemyManager : MonoBehaviour {
             time = 0;
             SpawnEnemy();
         }
-    }
-    private void FixedUpdate(){
-        if(!active) return;
-        float delta = Time.fixedDeltaTime;
-        for(int x = 0; x < enemies.Length; x++){
-            if(!enemies[x].active) continue;
-            enemies[x].Tick(delta);
-        }
+        Tick(Time.deltaTime);
     }
     private void SpawnEnemy(){
-        if(lowestInactive >= Count){
-            Debug.Log($"{lowestInactive}, {Count}");
+        if(lowestInactive >= enemyPoolCount){
+            Debug.Log($"{lowestInactive}, {enemyPoolCount}");
             lowestInactive = 0;
         }
         Enemy enemy = enemies[lowestInactive++];
@@ -45,19 +37,46 @@ public class EnemyManager : MonoBehaviour {
         enemy.Init(path, path.Peek(),true, RemoveEnemy, playerManager.Damage);
         enemy.SetEnemyPool(buildingManager.bs.ToArray());
     }
-    public void Activate(){
-        active = true;
+    void RemoveEnemy(int index){
+        enemies[index].gameObject.SetActive(false);
+        enemies[index].active = false;
     }
-    public void Deactivate(){
-        active = false;
-    }
-    public void Reset(){
-        Deactivate();
-        time = 0;
-        Count = enemyPoolCount;
-        foreach(Enemy enemy in enemies){
-            if(enemy != null)Destroy(enemy.gameObject);
+
+    public void Tick(float delta)
+    {
+        for(int x = 0; x < enemies.Length; x++){
+            if(!enemies[x].active) continue;
+            enemies[x].Tick(delta);
         }
+    }
+
+    public void AnimatorTick(float delta)
+    {
+        
+    }
+
+    public void Switch(bool active)
+    {
+        this.active = active;
+    }
+
+    public void DeactivateEntities()
+    {
+        time = 0;
+        foreach(Enemy enemy in enemies){
+            enemy.gameObject.SetActive(false);
+        }
+    }
+
+    public void ResetEntities()
+    {
+        foreach(Enemy enemy in enemies){
+            if(enemy != null) Destroy(enemy.gameObject);
+        }
+        enemies = new Enemy[enemyPoolCount];
+        SpawnEnemies();
+    }
+    public void SpawnEnemies(){
         for(int i = 0; i < enemyPoolCount; i++){
             int x = Random.Range(0, enemyPrefabs.Length); 
             enemies[i] = Instantiate(enemyPrefabs[x], transform);
@@ -66,9 +85,5 @@ public class EnemyManager : MonoBehaviour {
                 projectileManager.AddProjectile(enemies[i].GetProjectile());
             }
         }
-    }
-    void RemoveEnemy(int index){
-        enemies[index].gameObject.SetActive(false);
-        enemies[index].active = false;
     }
 }

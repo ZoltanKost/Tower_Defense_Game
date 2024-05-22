@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 
 public class Archer : MonoBehaviour, IAttacking{
     [SerializeField] private CustomAnimator animator;
-    [SerializeField] private Arrow arrow;
-    private Arrow arrowObject;
+    [SerializeField] private Transform arrow;
+    private IProjectile arrowObject;
     [SerializeField] private float shootSpeed = 5f;
     [SerializeField] IDamagable target;
     [SerializeField] private float attackRange;
@@ -17,17 +16,17 @@ public class Archer : MonoBehaviour, IAttacking{
     public AttackType attackType{
         get{return _attackType;}
     }
-
     bool shooting;
     IDamagable[] enemyList;
     public void Init(Enemy[] enemies){
         animator.Init();
         enemyList = enemies;
-        arrowObject = Instantiate(arrow);
+        arrowObject = Instantiate(arrow).GetComponent<IProjectile>();
         arrowObject.Init(this, damage);
         _active = true;
     }
-    public IProjectile GetProjectile(){
+    public IProjectile GetProjectile()
+    {
         return arrowObject;
     }
     public void TickAnimator(float delta){
@@ -73,5 +72,16 @@ public class Archer : MonoBehaviour, IAttacking{
     public void SetEnemyPool(IDamagable[] enemies)
     {
         enemyList = enemies;
+    }
+    public void Switch(bool active){
+        _active = active;
+        ResetAnimation();
+    }
+    public void Deactivate(){
+        gameObject.SetActive(false);
+        _active = false;
+    }
+    public void SetColor(Color color){
+        animator.spriteRenderer.color = color;
     }
 }

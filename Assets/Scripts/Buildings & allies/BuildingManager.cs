@@ -2,7 +2,7 @@ using UnityEngine;
 
 using System.Collections.Generic;
 
-public class BuildingManager : MonoBehaviour {
+public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private ArcherManager archerManager;
     public List<BuildingObject> bs = new List<BuildingObject>();
     bool active;
@@ -21,27 +21,43 @@ public class BuildingManager : MonoBehaviour {
     }
     void Update(){
         if(!active) return;
-        float delta = Time.deltaTime;
-        for(int i = 0; i < bs.Count; i++){
-            if(!bs[i].active) continue;
-            bs[i].TickUpdate(delta);
-        }
-    }
-    public void Reset(){
-        int b = transform.childCount;
-        for(int i = 0; i < b; i++){
-            transform.GetChild(i).gameObject.SetActive(false);
-        }
+        AnimatorTick(Time.deltaTime);
     }
     public void RemoveBuilding(int index){
         Debug.Log($"Removed: {index}");
         if(index == 0) return;
     }
-    public void Activate(){
-        active = true;
+
+    public void Tick(float delta)
+    {
+        // insert logic here
     }
-    public void Deactivate(){
-        active = false;
-        archerManager.DeactivateArchers();
+
+    public void AnimatorTick(float delta)
+    {
+        for(int i = 0; i < bs.Count; i++){
+            if(!bs[i].active) continue;
+            bs[i].TickUpdate(delta);
+        }
+    }
+
+    public void Switch(bool active)
+    {
+        this.active = active;
+    }
+
+    public void DeactivateEntities()
+    {
+        foreach(BuildingObject b in bs){
+            b.gameObject.SetActive(false);
+        }
+    }
+
+    public void ResetEntities()
+    {
+        foreach(BuildingObject b in bs){
+            Destroy(b.gameObject);
+        }
+        bs.Clear();
     }
 }

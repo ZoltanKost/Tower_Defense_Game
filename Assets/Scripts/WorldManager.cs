@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class WorldManager : MonoBehaviour {
+    [SerializeField] private Texture2D cursor;
     [Header("Dimensions")]
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
@@ -31,14 +32,15 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerInputManager playerInput;
     [SerializeField] private Pathfinding pathfinding;
-    [SerializeField] private EnemyManager enemy;
+    [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private ArcherManager archerManager;
     [SerializeField] private EventSubscribeButton nextWaweButton;
     [SerializeField] private EventSubscribeButton PauseButton;
     [SerializeField] private PlayerManager playerManager; 
     [SerializeField] private MenuUIManager defeatMenuManager;
     [SerializeField] private MenuUIManager menuUIManager;
-    [SerializeField] private Transform ControlsMenu;
+    [SerializeField] private MenuUIManager controlsMenu;
+    [SerializeField] private ProjectileManager projectileManager;
     private GameState gameState;
     
     void Awake(){
@@ -54,6 +56,7 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,"TempFloor");
+        Cursor.SetCursor(cursor,Vector2.zero,CursorMode.Auto);
 
         Action buildingFailedCallback = () => 
         {
@@ -61,12 +64,20 @@ public class WorldManager : MonoBehaviour {
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
         playerBuildingManager.Init(buildingFailedCallback, temporalFloor);
-        playerInput.Init(temporalFloor,groundUIManager.Reset, playerBuildingManager.CancelBuildingAction, playerBuildingManager.ClickBuild, playerBuildingManager.HoldBuild);
+        playerInput.Init(
+            temporalFloor,
+            groundUIManager.Reset, 
+            playerBuildingManager.CancelBuildingAction, 
+            playerBuildingManager.ClickBuild, 
+            playerBuildingManager.HoldBuild, 
+            playerBuildingManager.CanBuild
+        );
         nextWaweButton.Init(StartLevel);
         PauseButton.Init(Pause);
-        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit});
+        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls});
         defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
         playerManager.Init(Defeat);
+        controlsMenu.Init(new Action[]{Unpause});
     }
     void Start(){
         Vector3 input = Camera.main.transform.position;
@@ -110,53 +121,64 @@ public class WorldManager : MonoBehaviour {
                 break;
         }
     }
+    public void OpenControls(){
+        controlsMenu.gameObject.SetActive(true);
+        menuUIManager.gameObject.SetActive(false);
+    }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
         UIOff();
         playerBuildingManager.CancelBuildingAction();
-        buildingManager.Activate();
-        enemy.Activate();
-        archerManager.ActivateArchers();
+        buildingManager.Switch(true);
+        enemyManager.Switch(true);
+        archerManager.Switch(true);
+        projectileManager.Switch(true);
         gameState = GameState.Wave;
     }
     public void StopLevel(){
-        UIOn();
-        enemy.Reset();
-        buildingManager.Deactivate();
-        archerManager.DeactivateArchers();
-        gameState = GameState.Idle;
+        enemyManager.Switch(false);
+        buildingManager.Switch(false);
+        archerManager.Switch(false);
+        projectileManager.Switch(false);
+    }
+    public void ResetLevel(){
+        archerManager.ResetEntities();
+        projectileManager.ResetEntities();
+        buildingManager.ResetEntities();
+        projectileManager.ResetEntities();
+        enemyManager.ResetEntities();
     }
     public void Defeat(){
         UIOff();
-        buildingManager.Deactivate();
-        archerManager.DeactivateArchers();
+        StopLevel();
         defeatMenuManager.gameObject.SetActive(true);
         gameState = GameState.Defeat;
     }
     public void Restart(){
         floorManager.ClearFloor();
-        StopLevel();
-        archerManager.DeactivateArchers();
-        buildingManager.Reset();
+        UIOn();
+        ResetLevel();
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
         Start();
     }
     public void Pause(){
         UIOff();
-        archerManager.DeactivateArchers();
-        enemy.Deactivate();
+        StopLevel();
         menuUIManager.gameObject.SetActive(true);
         gameState = gameState + 1;
     }
     public void Unpause(){
         if(gameState == GameState.WavePaused){
-            archerManager.ActivateArchers();
-            enemy.Activate();
+            enemyManager.Switch(true);
         }else{
             UIOn();
         }
+        buildingManager.Switch(true);
+        archerManager.Switch(true);
+        projectileManager.Switch(true);
         menuUIManager.gameObject.SetActive(false);
+        controlsMenu.gameObject.SetActive(false);
         gameState = gameState - 1;
     }
     public void UIOn(){
@@ -170,9 +192,9 @@ public class WorldManager : MonoBehaviour {
         playerInput.Deactivate();
     }
     enum GameState{
-        Idle,
+        Idle, 
         IdlePaused,
-        Wave,
+        Wave, 
         WavePaused,
         Defeat
     } 

@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerInputManager : MonoBehaviour{
     public delegate void ClickCallback(Vector3 input);
+    public delegate bool CheckCallback(Vector3 intput);
+    private CheckCallback checkCallback;
     private ClickCallback clickCallback;
     private ClickCallback holdCallback;
     private Action cancelBuildingActionCallback;
@@ -15,7 +17,7 @@ public class PlayerInputManager : MonoBehaviour{
     protected EventSystem currentEventSystem;
     Vector3 camMovePosition = new();
     Vector3 fixedCameraPosition = new();
-    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelBuildingActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback){
+    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelBuildingActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback, CheckCallback checkCallback){
         active = true;
         mCamera = Camera.main;
         currentEventSystem = FindObjectOfType<EventSystem>();
@@ -23,6 +25,7 @@ public class PlayerInputManager : MonoBehaviour{
         this.resetAllGroundsCallback = resetAllGroundsCallback;
         clickCallback = clickBuildCallback;
         this.holdCallback = holdCallback;
+        this.checkCallback = checkCallback;
         this.cancelBuildingActionCallback = cancelBuildingActionCallback;
     }
     public void Update(){
@@ -39,8 +42,9 @@ public class PlayerInputManager : MonoBehaviour{
     }
     public virtual void Tick(){
         Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
-        temporalFloor.MoveTempFloor(input);
-        if( Input.GetMouseButtonDown(0)){
+        bool canBuild = checkCallback.Invoke(input);
+        temporalFloor.MoveTempFloor(input,canBuild);
+        if(Input.GetMouseButtonDown(0)){
             if(currentEventSystem.IsPointerOverGameObject()){ 
                 return;
             }

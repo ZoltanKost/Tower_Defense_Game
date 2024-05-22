@@ -98,6 +98,36 @@ public class PlayerBuildingManager : MonoBehaviour{
     public void AddPlaceCallback(Action callback){
         placeCallback += callback;
     }
+    public bool CanBuild(Vector3 position){
+        switch(mode){
+            case BuildMode.Ground:
+                if(!floor.CheckGA(position,chosenGround)){
+                    return false;
+                }
+                break;
+            case BuildMode.Road:
+                if(!floor.CheckRoad(position)){
+                    return false;
+                }
+                break;
+            case BuildMode.Building:
+                if(!floor.CheckBuilding(position,chosenBuilding.width, chosenBuilding.height)){
+                    return false;
+                }
+                break;
+            case BuildMode.Bridge:
+                if(!floor.CheckBridge(position)){
+                    return false;
+                }
+                break;
+            case BuildMode.BridgeSpot:
+                if(!floor.CheckBridgeSpot(position)){
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
 }
 public enum BuildMode{
     None,
