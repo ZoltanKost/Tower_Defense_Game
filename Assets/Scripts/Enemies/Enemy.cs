@@ -8,8 +8,8 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     DamageCastleEvent damageCastleEvent;
     OnKillEvent onKillEvent;
     public int HP{
-        get{return _hp;}
-        set{_hp = value;}
+        get{return currentHP;}
+        set{currentHP = value;}
     }
     public Vector3 position{
         get {return transform.position;}
@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
         get {return _attackType;}
     }
     [SerializeField] private Transform projectilePrefab;
+    [SerializeField] private HealthBar hpBar;
     private IProjectile projectile;
     [SerializeField] private float projectileSpeed;
 
@@ -40,9 +41,10 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     [SerializeField] private bool _active;
     [SerializeField] private float speed;
     [SerializeField] private float attackrange = 3f;
-    [SerializeField] private int _hp = 100;
+    [SerializeField] private int MaxHP = 100;
     [SerializeField] private float attackPeriod = 5f;
     float time;
+    int currentHP;
     Vector3 destination;
     void Awake(){
         animator = GetComponent<CustomAnimator>();
@@ -61,7 +63,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     public void Damage(int damage){
         if(state == EnemyState.dead) return;
         HP -= damage;
-        Debug.Log($"DMG: {damage}, HP: {HP}");
+        hpBar.Set((float)HP/MaxHP);
         Animate();
         if(HP <= 0){
             Kill();
@@ -69,6 +71,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     }
     public void Kill(){
         state = EnemyState.dead;
+        hpBar.gameObject.SetActive(false);
         animator.PlayAnimation(1);
     }
     public void OnKillInvoke(){
@@ -82,7 +85,9 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
         destination = position;
         _active = active;
         state = EnemyState.run;
-        HP = 100;
+        currentHP = MaxHP;
+        hpBar.gameObject.SetActive(true);
+        hpBar.Set(1);
         animator.PlayAnimation(0);
     }
     public void Pathfinding_SetPath(Queue<Vector3> path)
@@ -90,7 +95,6 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
         currentPath = path;
     }
     public void Tick(float delta){
-        UpdateAnimator(delta);
         switch(state){
             case EnemyState.dead:
                 return;

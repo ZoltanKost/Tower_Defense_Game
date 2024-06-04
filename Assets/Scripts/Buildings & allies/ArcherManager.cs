@@ -6,6 +6,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     [SerializeField] private EnemyManager enemyManager;
     public List<Archer> archersList = new List<Archer>();
     bool active;
+    bool animate;
     public void AddArcher(Archer archer){
         archersList.Add(archer);
         archer.Init(enemyManager.enemies);
@@ -28,26 +29,33 @@ public class ArcherManager : MonoBehaviour, IHandler {
 
     public void AnimatorTick(float delta)
     {
+        if(!animate) return;
         for(int i = 0; i < archersList.Count; i++){
             archersList[i].TickAnimator(delta);
         }
     }
+    public void SwitchAnimation(bool animate){
+        this.animate = animate;
+    }
     public void Switch(bool active)
     {
         this.active = active;
-        int n = archersList.Count;
-        for(int i = 0; i < n; i++){
-            archersList[i].Switch(active);
-        }
     }
     public void DeactivateEntities()
     {
         foreach(Archer a in archersList){
-            a.gameObject.SetActive(false);
+            a.Deactivate();
         }
     }
 
     public void ResetEntities()
+    {
+        foreach(Archer a in archersList){
+            a.Reset();
+        }
+    }
+
+    public void ClearEntities()
     {
         foreach(Archer archer in archersList){
             Destroy(archer.gameObject);

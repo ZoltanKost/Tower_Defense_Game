@@ -4,6 +4,7 @@ using UnityEngine;
 public class GroundPiecesUIManager : MonoBehaviour{
     public delegate void AddArray(GroundUI ui, GroundArray g);
     [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private GroundArrayGenerator groundArrayGenerator;
     [SerializeField] private GroundUI prefab;
     [SerializeField] private int maxDimensions, maxSeed, maxValue, random, trueCondition;
     [SerializeField] private float randomReduce;
@@ -18,15 +19,14 @@ public class GroundPiecesUIManager : MonoBehaviour{
     public List<GroundUI> grounds_visuals;
     public void AddGroundArray(){
         GroundUI ui = Instantiate(prefab, transform);
-        ui.Init(maxDimensions, maxSeed, maxValue, random,  randomReduce, trueCondition);
-        ui.CreateGroundArray();
+        CreateGroundArray(ui);
         ui.onClick += OnGroundUICallBack;
         grounds_visuals.Add(ui);
     }
     
-    public void Reset(){
+    public void ResetGroundArrays(){
         foreach(var u in grounds_visuals){
-            u.CreateGroundArray();
+            CreateGroundArray(u);
         }
     }
     public void Hide(){
@@ -37,13 +37,14 @@ public class GroundPiecesUIManager : MonoBehaviour{
     }
     void OnGroundUICallBack(GroundUI uI){
         playerBuildingManager.CancelBuildingAction();
-        // 2. Set a ground at building Manager
         playerBuildingManager.ChooseGround(uI.currentGA);
-        // 4. Deactivate ButtonVisual;
         uI.DeactivateVisuals();
-        // 5. Set Cancel and Place PlayerInput callback.
         playerBuildingManager.SetPlaceCallback(uI.ActivateVisuals);
-        playerBuildingManager.AddPlaceCallback(uI.CreateGroundArray);
+        playerBuildingManager.AddPlaceCallback(() => CreateGroundArray(uI));
         playerBuildingManager.SetCancelCallback(uI.ActivateVisuals);
+    }
+    public void CreateGroundArray(GroundUI uI){
+        GroundArray ga = groundArrayGenerator.GenerateGA(maxDimensions, maxValue, random, randomReduce, trueCondition);
+        uI.SetGroundArray(ga);
     }
 }

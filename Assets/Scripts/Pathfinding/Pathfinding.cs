@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
 	[SerializeField] private int maxPaths = 200;
@@ -38,6 +39,15 @@ public class Pathfinding : MonoBehaviour{
 	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
 		if(result.Count > maxPaths) return;
 		if(!(current.road || current.bridge || current.bridgeSpot)) return;
+		if(closedSet.Count != 0)
+		{
+			FloorCell temp = closedSet.Peek();
+			if(current.currentFloor == temp.currentFloor - 1){
+				if(!(current.gridY == temp.gridY - 1))return; 
+			}else if(current.currentFloor == temp.currentFloor + 1){
+				if(!(current.gridY == temp.gridY + 1))return; 
+			}
+		}
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;
 			string s =
@@ -61,14 +71,13 @@ public class Pathfinding : MonoBehaviour{
 			return;
 		}
 		closedSet.Push(current);
-		// Debug.Log($"Checking {current.gridX},{current.gridY}...");
-		// Debug.Log($"Cell has {neighs.Count} neighbours!");
+		Debug.Log($"Checking {current.gridX},{current.gridY}...");
 		foreach(FloorCell n in floor.GetNeighbours4(current.gridX, current.gridY)){
 			if(!closedSet.Contains(n)) {
 				BFSearch(n,closedSet,result);
 			}
 		}
-		// Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
+		Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
 		closedSet.Pop();
 		return;
 	}

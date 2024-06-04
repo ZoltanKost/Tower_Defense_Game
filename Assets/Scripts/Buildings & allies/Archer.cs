@@ -30,7 +30,6 @@ public class Archer : MonoBehaviour, IAttacking{
         return arrowObject;
     }
     public void TickAnimator(float delta){
-        if(!_active) return;
         animator.UpdateAnimator(delta);
     }
     public void TickDetection(float delta){
@@ -75,6 +74,8 @@ public class Archer : MonoBehaviour, IAttacking{
     }
     public void Switch(bool active){
         _active = active;
+    }
+    public void Reset(){
         ResetAnimation();
     }
     public void Deactivate(){

@@ -1,15 +1,21 @@
+using System;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
-    public delegate void OnPlayerLost();
-    OnPlayerLost onPlayerLost;
-    [SerializeField] int HP = 100;
-    public void Init(OnPlayerLost onPlayerLost){
+    public delegate void OnDamage(float HP);
+    OnDamage onDamage;
+    Action onPlayerLost;
+    [SerializeField] int MaxHP = 100;
+    int currentHp;
+    public void Init(Action onPlayerLost, OnDamage onDamage){
+        this.onDamage = onDamage;
         this.onPlayerLost = onPlayerLost;
+        currentHp = MaxHP;
     }
     public void Damage(int damage){
-        HP -= damage;
-        if(HP <= 0){
+        currentHp -= damage;
+        onDamage?.Invoke((float)currentHp/MaxHP);
+        if(currentHp <= 0){
             onPlayerLost?.Invoke();
         }
     }

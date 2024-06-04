@@ -29,7 +29,6 @@ public class PlayerInputManager : MonoBehaviour{
         this.cancelBuildingActionCallback = cancelBuildingActionCallback;
     }
     public void Update(){
-        DebugActionQueue.Update();
         if(active) Tick();
         if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;

@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class BuildingObject : MonoBehaviour, IDamagable{
     OnKillEvent onKillEvent;
+    [SerializeField] private HealthBar hpBar;
     [SerializeField] private TweenAnimator tweenAnimator;
-    [SerializeField] private int _hp = 100;
+    [SerializeField] private int maxHP = 100;
     SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
     Archer[] archers;
     int index;
     bool _active;
+    private int currentHP;
     CustomAnimator animator;
     public int HP { 
-        get {return _hp;} 
-        set {_hp = value;} 
+        get {return currentHP;} 
+        set {currentHP = value;} 
     }
     public Vector3 position{
         get {return transform.position + 2 * Vector3.up;}
@@ -30,6 +32,8 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int sortingOrder, int sortingLayer, int index, OnKillEvent OnKill){
+        currentHP = maxHP;
+        hpBar?.gameObject.SetActive(true);
         this.index = index;
         spriteRenderer.sortingOrder = sortingOrder;
         spriteRenderer.sortingLayerName = $"{sortingLayer}";
@@ -48,12 +52,14 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public void Damage(int damage)
     {
         HP -= damage;
+        hpBar?.Set((float)HP/maxHP);
         Animate();
         if(HP <= 0) Kill();
     }
 
     public void Kill()
     {
+        hpBar?.gameObject.SetActive(false);
         foreach(Archer a in archers){
             a.Deactivate();
         }

@@ -12,9 +12,11 @@ public class ProjectileManager : MonoBehaviour, IHandler {
     }
     void Update(){
         if(!active) return;
-        float dt = Time.deltaTime;
-        Tick(dt);
-        AnimatorTick(dt);
+        AnimatorTick(Time.deltaTime);
+    }
+    private void FixedUpdate() {
+        if(!active) return;
+        Tick(Time.fixedDeltaTime);
     }
     public void Tick(float delta)
     {
@@ -44,6 +46,15 @@ public class ProjectileManager : MonoBehaviour, IHandler {
     }
 
     public void ResetEntities()
+    {
+        for(int i = 0; i < projectiles.Count; i++){
+            if(projectiles[i] != null){
+                projectiles[i].Deactivate();
+            }
+        }
+    }
+
+    public void ClearEntities()
     {
         for(int i = 0; i < projectiles.Count; i++){
             if(projectiles[i] != null){

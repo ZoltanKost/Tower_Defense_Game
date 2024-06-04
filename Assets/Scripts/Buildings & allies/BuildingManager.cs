@@ -55,6 +55,11 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
     public void ResetEntities()
     {
+        
+    }
+
+    public void ClearEntities()
+    {
         foreach(BuildingObject b in bs){
             Destroy(b.gameObject);
         }

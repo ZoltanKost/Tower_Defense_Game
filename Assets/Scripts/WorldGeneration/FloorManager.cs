@@ -75,12 +75,12 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int currentFloor = -2;
-        Debug.Log(groundArray.s);
+        // Debug.Log(groundArray.s);
         foreach(Vector3Int g in groundArray.grounds){
             if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor; 
             if(!CheckCell(posX + g.x, posY + g.y,currentFloor,groundArray.targetFloor)) return false;
         }
-        Debug.Log($"Ground on floor {currentFloor + 1} is successful!");
+        // Debug.Log($"Ground on floor {currentFloor + 1} is successful!");
         currentFloor++;
         foreach(Vector3Int g in groundArray.grounds){
             floors[currentFloor].CreateGround(pos + g);
@@ -126,7 +126,7 @@ public class FloorManager : MonoBehaviour{
                 // Debug.Log($"Cell isn't a bridge spot.");
                 continue;
             }
-            Debug.Log($"{posX + x},{posY} is a bridge!");
+            // Debug.Log($"{posX + x},{posY} is a bridge!");
             floor = checking.currentFloor;
             hasBridgeNeighbour = true;
         }
@@ -137,7 +137,7 @@ public class FloorManager : MonoBehaviour{
                 // Debug.Log($"Cell isn't a bridge spot.");
                 continue;
             }
-            Debug.Log($"{posX},{posY + y} is a bridge!");
+            // Debug.Log($"{posX},{posY + y} is a bridge!");
             floor = checking.currentFloor;
             hasBridgeNeighbour = true;
         }
@@ -145,7 +145,7 @@ public class FloorManager : MonoBehaviour{
         floors[floor].PlaceBridge(pos);
         floorCells[posX, posY].currentFloor = floor;
         floorCells[posX, posY].bridge = true;
-        Debug.Log($"New floor: {floor}, on Cell: {posX},{posY}");
+        // Debug.Log($"New floor: {floor}, on Cell: {posX},{posY}");
         return false;
     }
     public bool PlaceBuilding(Vector3 input, Building b){
@@ -158,8 +158,7 @@ public class FloorManager : MonoBehaviour{
         if(floor <= 0) return false;
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
-                if(floorCells[x, y].road || floorCells[x, y].occupied) return false;
-                if(floorCells[x, y].currentFloor != floor) return false;
+                if(floorCells[x, y].occupied || floorCells[x, y].currentFloor != floor) return false;
             }
         }
         for(int x = posX; x < posX + b.width; x++){
@@ -204,8 +203,7 @@ public class FloorManager : MonoBehaviour{
         if(floor <= 0) return false;
         for(int x = posX; x < posX + w; x++){
             for(int y = posY; y < posY + h; y++){
-                if(floorCells[x, y].road || floorCells[x, y].occupied) return false;
-                if(floorCells[x, y].currentFloor != floor) return false;
+                if(floorCells[x, y].occupied || floorCells[x, y].currentFloor != floor) return false;
             }
         }
         return true;
@@ -217,7 +215,6 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int currentFloor = -2;
-        Debug.Log(groundArray.s);
         foreach(Vector3Int g in groundArray.grounds){
             if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor; 
             if(!CheckCell(posX + g.x, posY + g.y,currentFloor,groundArray.targetFloor)) return false;
@@ -241,7 +238,7 @@ public class FloorManager : MonoBehaviour{
                     // Debug.Log($"Cell isn't a bridge spot.");
                     continue;
                 }
-                Debug.Log($"{posX + x},{posY + y} is a bridge!");
+                // Debug.Log($"{posX + x},{posY + y} is a bridge!");
                 floor = checking.currentFloor;
                 hasBridgeNeighbour = true;
             }
@@ -284,31 +281,19 @@ public class FloorManager : MonoBehaviour{
     public bool CheckCell(int x, int y, int placingFloor, int groundTargetFloor){
         FloorCell cell = floorCells[x,y];
         if(
-            // (placingFloor + 1 != 0 && groundTargetFloor == 0) || // floor isn't the same as on ground
             Mathf.Clamp(placingFloor + 1,0,1) != groundTargetFloor ||
             cell.currentFloor >= floors.Count -1 || // floor is higher then maximum floors
             cell.currentFloor != placingFloor || // floor isn't the same at every cell
             cell.building || // cell has a building
             cell.bridgeSpot || cell.bridge || // cell has a bridge
-            // floorCells[x, y - 1].bridgeSpot || floorCells[x, y - 1].bridge ||
-            (cell.road && !(floorCells[x, y + 1].currentFloor > cell.currentFloor)) || // cell is a ladder
-            cell.currentFloor > floorCells[x, y - 1].currentFloor) // the next cell is under the floor
+            (cell.road && !(floorCells[x, y + 1].currentFloor == cell.currentFloor + 1)) || // cell is a road and not a ladder
+            cell.currentFloor > floorCells[x, y - 1].currentFloor || // the next cell is under the floor
+            (floorCells[x, y - 1].occupied && floorCells[x,y-1].currentFloor < placingFloor))
             {
-                Debug.Log("cell " + x + " " + y + " can't be placed");
-                Debug.Log("choosenFloor: " + cell.currentFloor + " buildable:" + cell.occupied);
-                Debug.Log("placingFloor: " + placingFloor + " targetFloor: " + groundTargetFloor);
                 return false; 
             }
             
         return true;
-    }
-    public FloorCell WorldPositionToCell(Vector3 position){
-        Vector3Int pos = floors[0].WorldToCell(position);
-        pos += offset;
-        return floorCells[pos.x,pos.y];
-    }
-    public int GetMaxHeapSize(){
-        return width*height;
     }
     public List<FloorCell> GetNeighbours4(int gridX, int gridY){
         List<FloorCell> neighbours = new List<FloorCell>();

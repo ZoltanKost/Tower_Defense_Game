@@ -46,7 +46,7 @@ public class TemporalFloor : Floor
             if(activated){
                 tween = transform.DOMove(temp, (temp - currentPosition).magnitude * tweenSpeed * (FixedDelta?Time.fixedDeltaTime:Time.deltaTime)).SetEase(moveEase,amplitude_overshoot);
                 if(canBuild){
-                    currentColor = canPlace;
+                    currentColor = Color.white;
                 }else{
                     currentColor = blockPlace;
                 }
