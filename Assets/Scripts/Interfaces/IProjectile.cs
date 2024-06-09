@@ -4,6 +4,7 @@ public interface IProjectile{
     public GameObject gameObject{get;}
     IDamagable target{get;}
     public bool active{get;}
+    public bool alive{get; set;}
     public void Init(IAttacking parent, int damage);
     public void Move(float delta);
     public void UpdateAnimator(float delta);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private ArcherManager archerManager;
+    [SerializeField] private ProjectileManager projectileManager;
     public List<BuildingObject> bs = new List<BuildingObject>();
     bool active;
     public void Build(Vector3 worldPosition, int floor, Building building){
@@ -25,7 +26,6 @@ public class BuildingManager : MonoBehaviour, IHandler {
     }
     public void RemoveBuilding(int index){
         Debug.Log($"Removed: {index}");
-        if(index == 0) return;
     }
 
     public void Tick(float delta)

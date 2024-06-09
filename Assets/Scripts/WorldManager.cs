@@ -41,6 +41,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private MenuUIManager winScreen;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
+    [SerializeField] private EventSubscribeButton shopButton;
     private GameState gameState;
     
     void Awake(){
@@ -63,14 +64,24 @@ public class WorldManager : MonoBehaviour {
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
         playerBuildingManager.Init(buildingFailedCallback, temporalFloor);
+        HideShowUI startLevelHideShow = nextWaweButton.GetComponent<HideShowUI>();
+        HideShowUI shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
+        Action cancelBuildingActionCallback = shop.Hide;
+        cancelBuildingActionCallback += startLevelHideShow.ShowUI;
+        cancelBuildingActionCallback += shopButtonHideShow.ShowUI;
+        cancelBuildingActionCallback += playerBuildingManager.CancelBuildingAction;
         playerInput.Init(
             temporalFloor,
             shop.ResetGroundArrays, 
-            playerBuildingManager.CancelBuildingAction, 
+            cancelBuildingActionCallback, 
             playerBuildingManager.ClickBuild, 
             playerBuildingManager.HoldBuild, 
             playerBuildingManager.CanBuild
         );
+        Action shopButtonCallback = shop.Show;
+        shopButtonCallback += startLevelHideShow.HideUI;
+        shopButtonCallback += shopButtonHideShow.HideUI;
+        shopButton.Init(shopButtonCallback);
         nextWaweButton.Init(StartLevel);
         PauseButton.Init(Pause);
         menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls, ResetWave});
@@ -98,37 +109,37 @@ public class WorldManager : MonoBehaviour {
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
     }
-    void Update(){
-        bool esc = Input.GetKeyDown(KeyCode.Escape);
-        switch(gameState){
-            case GameState.Idle:
-                if(esc) {
-                    UIOff();
-                    Pause();
-                }
-                break;
-            case GameState.IdlePaused:
-                if(esc) {
-                    Unpause();
-                }
-                break;
-            case GameState.Wave:
-                if(esc) {
-                    Pause();
-                }
-                break;
-            case GameState.WavePaused:
-                if(esc) {
-                    Unpause();
-                }
-                break;
-            case GameState.Defeat:
-                if(esc) {
-                    Restart();
-                }
-                break;
-        }
-    }
+    // void Update(){
+    //     bool esc = Input.GetKeyDown(KeyCode.Escape);
+    //     switch(gameState){
+    //         case GameState.Idle:
+    //             if(esc) {
+    //                 UIOff();
+    //                 Pause();
+    //             }
+    //             break;
+    //         case GameState.IdlePaused:
+    //             if(esc) {
+    //                 Unpause();
+    //             }
+    //             break;
+    //         case GameState.Wave:
+    //             if(esc) {
+    //                 Pause();
+    //             }
+    //             break;
+    //         case GameState.WavePaused:
+    //             if(esc) {
+    //                 Unpause();
+    //             }
+    //             break;
+    //         case GameState.Defeat:
+    //             if(esc) {
+    //                 Restart();
+    //             }
+    //             break;
+    //     }
+    // }
     public void Win(){
         StopLevel();
         winScreen.gameObject.SetActive(true);
@@ -140,7 +151,7 @@ public class WorldManager : MonoBehaviour {
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
-        UIOff();
+        InputOff();
         playerBuildingManager.CancelBuildingAction();
         buildingManager.Switch(true);
         enemyManager.Switch(true);
@@ -149,6 +160,8 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Wave;
         playerHealthBar.gameObject.SetActive(true);
         playerHealthBar.Reset();
+        shopButton.GetComponent<HideShowUI>().HideUI();
+        nextWaweButton.GetComponent<HideShowUI>().HideUI();
     }
     public void StopLevel(){
         enemyManager.Switch(false);
@@ -166,7 +179,9 @@ public class WorldManager : MonoBehaviour {
         shop.ResetGroundArrays();
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
-        UIOn();
+        shopButton.GetComponent<HideShowUI>().ShowUI();
+        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
+        InputOn();
         gameState = GameState.Idle;
     }
     public void ResetLevel(){
@@ -179,7 +194,7 @@ public class WorldManager : MonoBehaviour {
         playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
-        UIOff();
+        InputOff();
         StopLevel();
         defeatMenuManager.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
@@ -187,15 +202,17 @@ public class WorldManager : MonoBehaviour {
     }
     public void Restart(){
         floorManager.ClearFloor();
-        UIOn();
+        InputOn();
         ResetLevel();
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
         winScreen.gameObject.SetActive(false);
+        shopButton.GetComponent<HideShowUI>().ShowUI();
+        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
         Start();
     }
     public void Pause(){
-        UIOff();
+        InputOff();
         StopLevel();
         menuUIManager.gameObject.SetActive(true);
         gameState = gameState + 1;
@@ -204,7 +221,7 @@ public class WorldManager : MonoBehaviour {
         if(gameState == GameState.WavePaused){
             enemyManager.Switch(true);
         }else{
-            UIOn();
+            InputOn();
         }
         buildingManager.Switch(true);
         archerManager.Switch(true);
@@ -214,12 +231,12 @@ public class WorldManager : MonoBehaviour {
         controlsMenu.gameObject.SetActive(false);
         gameState = gameState - 1;
     }
-    public void UIOn(){
+    public void InputOn(){
         playerInput.Activate();
-        buildingUI.ShowUI();
+        // buildingUI.ShowUI();
     }
-    public void UIOff(){
-        buildingUI.HideUI();
+    public void InputOff(){
+        // buildingUI.HideUI();
         playerInput.Deactivate();
     }
     enum GameState{

@@ -7,10 +7,11 @@ public class Projectile : MonoBehaviour, IProjectile{
     IAttacking _parent;
     IDamagable _target; 
     public IDamagable target{get{return _target;}}
-
+    public bool _alive;
     public bool active{
         get {return _active;}
     }
+    public bool alive{get => _alive; set {_alive = value;}}
     void Awake(){
         if(animator == null) animator = visuals.GetComponent<CustomAnimator>();
         animator.Init();
@@ -23,8 +24,10 @@ public class Projectile : MonoBehaviour, IProjectile{
         _parent = parent;
         this.damage = damage;
         visuals.gameObject.SetActive(false);
+        _alive = true;
     }
     public void Send(IDamagable target, float speed){
+        if(!alive) return;
         _active = true;
         transform.position = _parent.position;
         _target = target;

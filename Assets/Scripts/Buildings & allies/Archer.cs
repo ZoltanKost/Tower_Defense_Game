@@ -81,6 +81,7 @@ public class Archer : MonoBehaviour, IAttacking{
     public void Deactivate(){
         gameObject.SetActive(false);
         _active = false;
+        arrowObject.alive = false;
     }
     public void SetColor(Color color){
         animator.spriteRenderer.color = color;

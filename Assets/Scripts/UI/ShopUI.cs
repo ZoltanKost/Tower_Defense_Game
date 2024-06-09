@@ -10,8 +10,8 @@ public class ShopUI : MonoBehaviour {
         hideShowUI = GetComponent<HideShowUI>();
     }
     public void Init(){
-        // HideUI();
         InitTabs();
+        HideUI();
     }
     public void ShowUI(){
         hideShowUI.ShowUI();
