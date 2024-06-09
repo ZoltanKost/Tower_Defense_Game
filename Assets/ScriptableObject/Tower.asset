@@ -15,3 +15,4 @@ MonoBehaviour:
   width: 2
   height: 2
   prefab: {fileID: 4047626471853321614, guid: e760dd09984175f4c9ec46483bbedc16, type: 3}
+  sprite: {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}

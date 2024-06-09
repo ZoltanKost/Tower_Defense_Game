@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5059372087207473802}
   - component: {fileID: 340509466061575731}
   m_Layer: 5
-  m_Name: Button
+  m_Name: GroundPiece Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,12 +34,11 @@ RectTransform:
   m_Children:
   - {fileID: 4799726548225807306}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 192, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5059372087207473800
 MonoBehaviour:
@@ -147,12 +146,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f87c6eb2f4b593a41b2c4d394fe7380c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floor: {fileID: 1436261039140431088}
+  _floor: {fileID: 1436261039140431088}
 --- !u!1001 &5059372088592150661
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5059372087207473805}
     m_Modifications:
     - target: {fileID: 336237004961178447, guid: a23bc3d8b1db09e44b4debcb7e201790, type: 3}
@@ -208,6 +208,9 @@ PrefabInstance:
       value: Floor 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a23bc3d8b1db09e44b4debcb7e201790, type: 3}
 --- !u!114 &1436261039140431088 stripped
 MonoBehaviour:

@@ -19,18 +19,4 @@ public struct GroundArray{
             s += "\n";
         }
     }
-    public GroundArray(Vector2Int dimensions){
-        width = dimensions.x;
-        height = dimensions.y;
-        targetFloor = Random.Range(0,2);
-        grounds = new HashSet<Vector2Int>();
-        string s = "";
-        for(int y = height - 1; y >= 0; y--){
-            for(int x = 0; x < width; x++){
-                    grounds.Add(new Vector2Int(x,y));
-                s += $"[{100}]";
-            }
-            s += "\n";
-        }
-    }
 }

@@ -24,8 +24,8 @@ public class WorldManager : MonoBehaviour {
     // [SerializeField] private Floor nextTile;
     [SerializeField] private Building castle;
     [SerializeField] private TemporalFloor temporalFloor;
-    [SerializeField] private GroundPiecesUIManager groundUIManager;
-    [SerializeField] private BuildingUI buildingUI;
+    [SerializeField] private Shop shop;
+    [SerializeField] private ShopUI buildingUI;
     [SerializeField] private PlayerBuildingManager playerBuildingManager;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerInputManager playerInput;
@@ -65,7 +65,7 @@ public class WorldManager : MonoBehaviour {
         playerBuildingManager.Init(buildingFailedCallback, temporalFloor);
         playerInput.Init(
             temporalFloor,
-            groundUIManager.ResetGroundArrays, 
+            shop.ResetGroundArrays, 
             playerBuildingManager.CancelBuildingAction, 
             playerBuildingManager.ClickBuild, 
             playerBuildingManager.HoldBuild, 
@@ -84,6 +84,7 @@ public class WorldManager : MonoBehaviour {
         winScreen.Init(new Action[]{Restart,Application.Quit});
         playerHealthBar.gameObject.SetActive(false);
         enemyManager.SetWinAction(Win);
+        shop.Init(6);
     }
     void Start(){
         Vector3 input = Camera.main.transform.position;
@@ -162,7 +163,7 @@ public class WorldManager : MonoBehaviour {
         enemyManager.ResetEntities();
         archerManager.ResetEntities();
         archerManager.SwitchAnimation(true);
-        groundUIManager.ResetGroundArrays();
+        shop.ResetGroundArrays();
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
         UIOn();
@@ -174,7 +175,7 @@ public class WorldManager : MonoBehaviour {
         buildingManager.ClearEntities();
         projectileManager.ClearEntities();
         enemyManager.ClearEntities();
-        groundUIManager.ResetGroundArrays();
+        shop.ResetGroundArrays();
         playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
@@ -216,11 +217,9 @@ public class WorldManager : MonoBehaviour {
     public void UIOn(){
         playerInput.Activate();
         buildingUI.ShowUI();
-        groundUIManager.Show();
     }
     public void UIOff(){
         buildingUI.HideUI();
-        groundUIManager.Hide();
         playerInput.Deactivate();
     }
     enum GameState{

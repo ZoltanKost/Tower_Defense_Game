@@ -1,31 +1,40 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
+public delegate void OnPageUIClick(int id);
 public class GroundUI : MonoBehaviour{
-    public delegate void OnClick(GroundUI gUI);
-    public OnClick onClick;
-    public Floor floor;
-    public GroundArray currentGA{get;private set;}
+    private OnPageUIClick onClick;
+    [SerializeField] private Floor _floor;
+    public int uiID{get;private set;}
     void Awake(){
-        floor.Init(0, $"GroundUI");
+        _floor.Init(0, $"GroundUI");
+    }
+    public void Init(int ID,OnPageUIClick onClick){
+        uiID = ID;
+        this.onClick = onClick;
     }
     public void SetGroundArray(GroundArray ga){
-        currentGA = ga;
-        floor.ClearAllTiles();
-        floor.layer = ga.targetFloor;
+        _floor.ClearAllTiles();
+        _floor.layer = ga.targetFloor;
         foreach(Vector3Int g in ga.grounds){
-            floor.CreateGround(g);
+            _floor.CreateGround(g);
         }
         Vector3 pos = new Vector3{x = Mathf.Min((-ga.width)/2, -.5f), y = (-ga.width)/2 + .5f, z = 0};
-        floor.transform.localPosition = pos;
+        _floor.transform.localPosition = pos;
+    }
+    public void SetTile(TileBase tile){
+        _floor.ClearAllTiles();
+        _floor.transform.localPosition = Vector3.zero;
+        _floor.visuals[0].SetTile(Vector3Int.zero,tile);
     }
     public void ActivateVisuals(){
-        floor.gameObject.SetActive(true);
+        _floor.gameObject.SetActive(true);
     }
     public void DeactivateVisuals(){
-        floor.gameObject.SetActive(false);
+        _floor.gameObject.SetActive(false);
     }
     public void OnGroundsChoosen(){
-        onClick?.Invoke(this);
+        onClick?.Invoke(uiID);
         DeactivateVisuals();
     }
 }

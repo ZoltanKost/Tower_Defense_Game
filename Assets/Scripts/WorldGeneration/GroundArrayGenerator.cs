@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundArrayGenerator : MonoBehaviour {
-    public GroundArray GenerateGA(int maxDimensions, int maxValue, int random, float randomMultiplier, int trueCondition){
+    [SerializeField] private int maxDimensions, maxValue, random, trueCondition;
+    [SerializeField] private float randomMultiplier;
+    public GroundArray GenerateGA(){
+        int _maxDimensions = maxDimensions, _maxValue = maxValue,_random = random,_trueCondition = trueCondition;
+        float _randomMultiplier = randomMultiplier;
         int width,height, targetFloor;
         HashSet<Vector2Int> grounds;
         string s = "";
-        int d = Mathf.ClosestPowerOfTwo(Random.Range(1,maxDimensions + 1)) + 1;
+        int d = Mathf.ClosestPowerOfTwo(Random.Range(1,_maxDimensions + 1)) + 1;
         width = d;
         height = d;
         d-=1;
@@ -18,10 +22,10 @@ public class GroundArrayGenerator : MonoBehaviour {
             start
         };
         foreach(Vector2Int v in starts){
-            ints[v.x, v.y] = Random.Range(0, maxValue + 1);
-            ints[v.x + d, v.y] = Random.Range(0, maxValue + 1);
-            ints[v.x, v.y + d] = Random.Range(0, maxValue + 1);
-            ints[v.x + d, v.y + d] = Random.Range(0, maxValue + 1);
+            ints[v.x, v.y] = Random.Range(0, _maxValue + 1);
+            ints[v.x + d, v.y] = Random.Range(0, _maxValue + 1);
+            ints[v.x, v.y + d] = Random.Range(0, _maxValue + 1);
+            ints[v.x + d, v.y + d] = Random.Range(0, _maxValue + 1);
         }
         List<Vector2Int> temp = new();
         d/=2;
@@ -38,29 +42,29 @@ public class GroundArrayGenerator : MonoBehaviour {
                 temp.Add(v + Vector2Int.right * d);
                 temp.Add(v + Vector2Int.up * d);
                 temp.Add(v + Vector2Int.one * d);
-                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
                 v += Vector2Int.right * d;
-                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
                 v += Vector2Int.one * d; 
-                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
                 v += (Vector2Int.left + Vector2Int.up)* d;
-                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
                 v += -Vector2Int.one * d;
-                ints[v.x, v.y] = avg + Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y] = avg + Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
             }
             starts.Clear();
             foreach(Vector2Int v in temp){
-                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
-                ints[v.x + d, v.y] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
-                ints[v.x, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
-                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-random, random + 1), 0, maxValue);
+                ints[v.x, v.y] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
+                ints[v.x + d, v.y] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
+                ints[v.x, v.y + d] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
+                ints[v.x + d, v.y + d] = Mathf.Clamp(avg + Random.Range(-_random, _random + 1), 0, _maxValue);
                 starts.Add(v);
             }
             temp.Clear();
             d/=2;
-            random = Mathf.FloorToInt(random * randomMultiplier);
+            _random = Mathf.FloorToInt(_random * _randomMultiplier);
         }
-        int small = maxValue;
+        int small = _maxValue;
         int big = 0;
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
@@ -72,10 +76,10 @@ public class GroundArrayGenerator : MonoBehaviour {
                 }
             }
         }
-        trueCondition = Random.Range(0, trueCondition + 1);
-        float rel = (float)trueCondition / maxValue;
+        _trueCondition = Random.Range(0, _trueCondition + 1);
+        float rel = (float)_trueCondition / _maxValue;
         int tCon = Mathf.RoundToInt(small + (big - small) * rel);
-        Debug.Log($"Max: {maxValue}, True: {trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
+        Debug.Log($"Max: {_maxValue}, True: {_trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
                 if(ints[x,y] > tCon){

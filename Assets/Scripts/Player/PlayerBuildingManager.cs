@@ -131,9 +131,9 @@ public class PlayerBuildingManager : MonoBehaviour{
 }
 public enum BuildMode{
     None,
-    Ground,
     Road,
-    Building,
     Bridge,
-    BridgeSpot
+    BridgeSpot,
+    Building,
+    Ground
 }
