@@ -5,6 +5,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy[] enemyPrefabs;
     [SerializeField] private int enemyPoolCount;
@@ -43,7 +44,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
         Enemy enemy = enemies[lowestInactive];
         enemy.gameObject.SetActive(true);
         var path = pathfinding.GetRandomPath();
-        enemy.Init(path, path.Peek(),true, RemoveEnemy, playerManager.Damage);
+        enemy.Init(path, path.Peek(),true, RemoveEnemy, RegisterKill, playerManager.Damage);
         enemy.SetEnemyPool(buildingManager.bs.ToArray());
         lowestInactive++;
     }
@@ -51,8 +52,11 @@ public class EnemyManager : MonoBehaviour, IHandler {
         enemies[index].gameObject.SetActive(false);
         enemies[index].active = false;
         killed++;
-        Debug.Log($"Removed enemy: {index}, killed total:{killed}");
+        Debug.Log($"Removed enemy: {index}, removed total:{killed}");
         if(killed >= enemyPoolCount) onEnemyFinished?.Invoke();
+    }
+    public void RegisterKill(int index){
+        playerResourceManager.AddResource(Resource.Gold, enemies[index].killReward);
     }
 
     public void Tick(float delta)
@@ -78,6 +82,8 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void DeactivateEntities()
     {
+        lowestInactive = 0;
+        killed = 0;
         time = 0;
         foreach(Enemy enemy in enemies){
             enemy.gameObject.SetActive(false);
@@ -86,6 +92,9 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void ResetEntities()
     {
+        lowestInactive = 0;
+        killed = 0;
+        time = 0;
         foreach(Enemy enemy in enemies){
             if(enemy != null){
                 enemy.active = false;

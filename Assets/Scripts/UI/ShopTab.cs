@@ -3,7 +3,7 @@ using UnityEngine;
 public class ShopTab : EventSubscribeButton {
     [SerializeField] private TweenAnimator tweenAnimator;
     int id;
-    public void Init(OnPageUIClick action, int ID){
+    public void Init(UI_ID_Callback action, int ID){
         id = ID;
         // GetComponentInChildren<Image>().sprite = sprite;
         Init(() => 

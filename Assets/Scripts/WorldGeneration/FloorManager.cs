@@ -14,8 +14,10 @@ public class FloorManager : MonoBehaviour{
     [SerializeField] private Building castle;
      
     void Awake(){
-        floors = new List<Floor>();
-        floors.Add(Instantiate(floorPrefab, transform)); 
+        floors = new List<Floor>
+        {
+            Instantiate(floorPrefab, transform)
+        };
         floors[0].Init(0,"0");
         for(int i = 1; i < layers; i++){
             floors.Add(Instantiate(floorPrefab, transform)); 
@@ -36,7 +38,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y] = new FloorCell(x,y,-1);
             }
         }
-        foreach(var floor in floors){
+        foreach(Floor floor in floors){
             floor.ClearAllTiles();
         }
     }
@@ -89,6 +91,20 @@ public class FloorManager : MonoBehaviour{
         }
         floors[currentFloor].Animate();
         return true;
+    }
+    public void CreateGroundArray_DontCheck(Vector3 input, GroundArray groundArray){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        pos.z = 0;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int currentFloor = -2;
+        foreach(Vector3Int g in groundArray.grounds){
+            if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor + 1;
+            floors[currentFloor].CreateGround(pos + g);
+            floorCells[posX + g.x, posY + g.y].currentFloor = currentFloor;
+            floorCells[posX + g.x, posY + g.y].road = false;
+        }
+        floors[currentFloor].Animate();
     }
     public bool PlaceRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -168,6 +184,18 @@ public class FloorManager : MonoBehaviour{
         }
         bm.Build(pos,floor,b);
         return true;
+    }
+    public void PlaceBuilding_DontCheck(Vector3 input, Building b){
+        Vector3Int pos = floors[0].WorldToCell(input);
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX,posY].currentFloor;
+        for(int x = posX; x < posX + b.width; x++){
+            for(int y = posY; y < posY + b.height; y++){
+                floorCells[x,y].building = true;
+            }
+        }
+        bm.Build(pos,floor,b);
     }
     public bool PlaceBridgeSpot(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);

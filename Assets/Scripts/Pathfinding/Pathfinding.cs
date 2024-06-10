@@ -42,6 +42,8 @@ public class Pathfinding : MonoBehaviour{
 		if(closedSet.Count != 0)
 		{
 			FloorCell temp = closedSet.Peek();
+			if(temp.bridge && !(current.bridge || current.bridgeSpot)) return;
+			if(current.bridge && !(temp.bridge||temp.bridgeSpot)) return;
 			if(current.currentFloor == temp.currentFloor - 1){
 				if(!(current.gridY == temp.gridY - 1))return; 
 			}else if(current.currentFloor == temp.currentFloor + 1){
@@ -71,13 +73,13 @@ public class Pathfinding : MonoBehaviour{
 			return;
 		}
 		closedSet.Push(current);
-		Debug.Log($"Checking {current.gridX},{current.gridY}...");
+		// Debug.Log($"Checking {current.gridX},{current.gridY}...");
 		foreach(FloorCell n in floor.GetNeighbours4(current.gridX, current.gridY)){
 			if(!closedSet.Contains(n)) {
 				BFSearch(n,closedSet,result);
 			}
 		}
-		Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
+		// Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
 		closedSet.Pop();
 		return;
 	}

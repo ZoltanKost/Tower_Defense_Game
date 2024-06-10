@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     public delegate void DamageCastleEvent(int damage);
     DamageCastleEvent damageCastleEvent;
     OnKillEvent onKillEvent;
+    OnKillEvent onRemoveEvent;
     public int HP{
         get{return currentHP;}
         set{currentHP = value;}
@@ -38,11 +39,13 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     private CustomAnimator animator;
     Queue<Vector3> currentPath;
     public int index;
-    [SerializeField] private bool _active;
+    private bool _active;
     [SerializeField] private float speed;
     [SerializeField] private float attackrange = 3f;
     [SerializeField] private int MaxHP = 100;
     [SerializeField] private float attackPeriod = 5f;
+    [SerializeField] private int _killReward = 5;
+    public int killReward{get=>_killReward;}
     float time;
     int currentHP;
     Vector3 destination;
@@ -73,12 +76,14 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
         state = EnemyState.dead;
         hpBar.gameObject.SetActive(false);
         animator.PlayAnimation(1);
-    }
-    public void OnKillInvoke(){
         onKillEvent?.Invoke(index);
     }
-    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onKillEvent, DamageCastleEvent damageCastleEvent){
+    public void OnKillInvoke(){
+        onRemoveEvent?.Invoke(index);
+    }
+    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, DamageCastleEvent damageCastleEvent){
         this.onKillEvent = onKillEvent;
+        this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;
         Pathfinding_SetPath(path);
         transform.position = position;
@@ -126,7 +131,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     }
     public void DamageCastle(){
         damageCastleEvent?.Invoke(damage);
-        onKillEvent?.Invoke(index);
+        onRemoveEvent?.Invoke(index);
     }
 
     public void SetEnemyPool(IDamagable[] enemies)

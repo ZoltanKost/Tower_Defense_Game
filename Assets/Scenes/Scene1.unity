@@ -939,6 +939,7 @@ MonoBehaviour:
   buildingPage: {fileID: 2022198504}
   roadPage: {fileID: 1475801688}
   shopUI: {fileID: 1955536665}
+  playerResourceManager: {fileID: 1018600452}
 --- !u!4 &178731196
 Transform:
   m_ObjectHideFlags: 0
@@ -1354,6 +1355,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0846e3fe3f760894b818a1c0c1cd3a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &386335827
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 386335828}
+  - component: {fileID: 386335830}
+  - component: {fileID: 386335829}
+  m_Layer: 5
+  m_Name: ResourceUIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &386335828
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386335827}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1475103943}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 254, y: -101}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &386335829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386335827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 1
+  m_CellSize: {x: 128, y: 64}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 0
+  m_ConstraintCount: 2
+--- !u!114 &386335830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386335827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eaa6fb9d060a5343b73d3e741ad73e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 5841380133221349726, guid: 8b18bea5dc9a78142960f7de8eefdcca, type: 3}
 --- !u!114 &393348947 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1435283420074433606, guid: 66b21dcb4bd531f42955f912d4fad6c2, type: 3}
@@ -3705,6 +3780,7 @@ GameObject:
   - component: {fileID: 1018600448}
   - component: {fileID: 1018600450}
   - component: {fileID: 1018600451}
+  - component: {fileID: 1018600452}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3766,6 +3842,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
+--- !u!114 &1018600452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018600447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78728c7444e32a448aa5951ecc8db079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceUIManager: {fileID: 386335830}
+  resourceSOs:
+  - {fileID: 11400000, guid: 9125dc4a150d43c4a84c4d7a7667d167, type: 2}
+  counts: 32000000
 --- !u!1 &1030867692
 GameObject:
   m_ObjectHideFlags: 0
@@ -5791,6 +5883,7 @@ RectTransform:
   - {fileID: 42489269}
   - {fileID: 333463014}
   - {fileID: 1191950149}
+  - {fileID: 386335828}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7531,6 +7624,7 @@ MonoBehaviour:
   projectileManager: {fileID: 372981744}
   buildingManager: {fileID: 65913790}
   playerManager: {fileID: 1018600451}
+  playerResourceManager: {fileID: 1018600452}
   pathfinding: {fileID: 1963445667}
   enemyPrefabs:
   - {fileID: 7266588368055346098, guid: 20041db3599da9741b63db7b7b5aec70, type: 3}
@@ -9273,6 +9367,7 @@ MonoBehaviour:
   projectileManager: {fileID: 372981744}
   playerHealthBar: {fileID: 333463015}
   shopButton: {fileID: 1212740708}
+  playerResourceManager: {fileID: 1018600452}
 --- !u!114 &2051073313
 MonoBehaviour:
   m_ObjectHideFlags: 0

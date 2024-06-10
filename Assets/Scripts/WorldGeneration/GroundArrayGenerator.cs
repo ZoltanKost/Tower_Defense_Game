@@ -91,6 +91,6 @@ public class GroundArrayGenerator : MonoBehaviour {
         }
         
         Debug.Log(s);
-        return new GroundArray{width = width,height = height, grounds = grounds, targetFloor = targetFloor};
+        return new GroundArray{width = width,height = height, grounds = grounds, targetFloor = targetFloor, price = grounds.Count - targetFloor};
     }
 }

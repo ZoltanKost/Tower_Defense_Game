@@ -5,10 +5,12 @@ public struct GroundArray{
     public int height;
     public int targetFloor;
     public HashSet<Vector2Int> grounds;
+    public int price;
     public GroundArray(Vector2Int dimensions, int floor){
         width = dimensions.x;
         height = dimensions.y;
         targetFloor = floor;
+        price = 2;
         grounds = new HashSet<Vector2Int>();
         string s = "";
         for(int y = height - 1; y >= 0; y--){

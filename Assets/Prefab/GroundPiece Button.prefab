@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5059372087207473803}
   - component: {fileID: 5059372087207473802}
   - component: {fileID: 340509466061575731}
+  - component: {fileID: 534620295253228959}
   m_Layer: 5
   m_Name: GroundPiece Button
   m_TagString: Untagged
@@ -146,7 +147,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f87c6eb2f4b593a41b2c4d394fe7380c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweenAnimator: {fileID: 0}
   _floor: {fileID: 1436261039140431088}
+--- !u!114 &534620295253228959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059372087207473804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cbe89ec1acd9646bdd57d5d4eefd27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTime: 0.35
+  startSize: 1.05
+  amplitude_overshoot: 0.5
+  animEase: 30
 --- !u!1001 &5059372088592150661
 PrefabInstance:
   m_ObjectHideFlags: 0

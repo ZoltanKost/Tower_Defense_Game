@@ -4,7 +4,7 @@ public class GroundPage : MonoBehaviour {
     private GroundArray[] _grounds;
     private GroundUI[] buttons;
     [SerializeField] private GroundUI prefab;
-    public void Init(GroundArray[] grounds, int capacity, OnPageUIClick buttonOnClickCallback){
+    public void Init(GroundArray[] grounds, int capacity, UI_ID_Callback buttonOnClickCallback){
         _grounds = grounds;
         Debug.Log(_grounds == grounds);
         buttons = new GroundUI[capacity];

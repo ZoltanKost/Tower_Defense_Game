@@ -6,41 +6,61 @@ public class PlayerBuildingManager : MonoBehaviour{
     Action buildingFailed;
     Action cancelBuildingActionCallback;
     Action placeCallback;
+    Action<Resource, int> buyCallback;
+    Func<Resource,int, bool> canBuyCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
     BuildMode mode;
-    public void Init(Action buildingFailed, TemporalFloor tp){
+    public void Init(Action buildingFailed, TemporalFloor tp, Func<Resource, int, bool> canBuyCallback, Action<Resource, int> buyCallback){
         this.buildingFailed = buildingFailed;
         temporalFloor = tp;
+        this.canBuyCallback = canBuyCallback;
+        this.buyCallback = buyCallback;
     }
     // Returns True if chosen object can be built once per click
     public void ClickBuild(Vector3 position){
         switch(mode){
             case BuildMode.Ground:
-                if(floor.CreateGroundArray(position,chosenGround)){
+                if(floor.CheckGA(position,chosenGround) && 
+                canBuyCallback(Resource.Gold,chosenGround.price))
+                {
                     mode = 0;
+                    floor.CreateGroundArray_DontCheck(position,chosenGround);
+                    buyCallback?.Invoke(Resource.Gold,chosenGround.price);
                     FinishBuildingAction();
-                }else{
+                }
+                else
+                {
                     buildingFailed?.Invoke();
                 }
                 break;
             case BuildMode.Road:
-                if(!floor.PlaceRoad(position)){
+                if(!floor.PlaceRoad(position))
+                {
                     buildingFailed?.Invoke();
                 }
                 break;
             case BuildMode.Building:
-                if(!floor.PlaceBuilding(position,chosenBuilding)){
+                if(floor.CheckBuilding(position,chosenBuilding.width, chosenBuilding.height) 
+                   && canBuyCallback(chosenBuilding.resource,chosenBuilding.price))
+                {
+                    buyCallback(Resource.Gold,chosenBuilding.price);
+                    floor.PlaceBuilding_DontCheck(position,chosenBuilding);
+                }
+                else
+                {
                     buildingFailed?.Invoke();
                 }
                 break;
             case BuildMode.Bridge:
-                if(!floor.PlaceBridge(position)){
+                if(!floor.PlaceBridge(position))
+                {
                     buildingFailed?.Invoke();
                 }
                 break;
             case BuildMode.BridgeSpot:
-                if(!floor.PlaceBridgeSpot(position)){
+                if(!floor.PlaceBridgeSpot(position))
+                {
                     buildingFailed?.Invoke();
                 }
                 break;

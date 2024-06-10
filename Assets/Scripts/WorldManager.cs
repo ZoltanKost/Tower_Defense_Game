@@ -42,6 +42,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
     [SerializeField] private EventSubscribeButton shopButton;
+    [SerializeField] private PlayerResourceManager playerResourceManager;
     private GameState gameState;
     
     void Awake(){
@@ -58,12 +59,13 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,"TempFloor");
         Screen.SetResolution(1920,1080, true);
+        playerResourceManager.Init();
         Action buildingFailedCallback = () => 
         {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
-        playerBuildingManager.Init(buildingFailedCallback, temporalFloor);
+        playerBuildingManager.Init(buildingFailedCallback, temporalFloor, playerResourceManager.EnoughtResource, playerResourceManager.RemoveResource);
         HideShowUI startLevelHideShow = nextWaweButton.GetComponent<HideShowUI>();
         HideShowUI shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
         Action cancelBuildingActionCallback = shop.Hide;
@@ -101,10 +103,10 @@ public class WorldManager : MonoBehaviour {
         Vector3 input = Camera.main.transform.position;
         GroundArray ga = new GroundArray(new Vector2Int(10,10),0);
         input -= new Vector3(10,10)*.5f;
-        floorManager.CreateGroundArray(input, ga);
+        floorManager.CreateGroundArray_DontCheck(input, ga);
         GroundArray ga1 = new GroundArray(new Vector2Int(5,2),1);
         Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
-        floorManager.CreateGroundArray(mid, ga1);
+        floorManager.CreateGroundArray_DontCheck(mid, ga1);
         floorManager.CreateCastle(mid,castle);
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
@@ -191,6 +193,7 @@ public class WorldManager : MonoBehaviour {
         projectileManager.ClearEntities();
         enemyManager.ClearEntities();
         shop.ResetGroundArrays();
+        playerResourceManager.Reset();
         playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){

@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public delegate void OnPageUIClick(int id);
+public delegate void UI_ID_Callback(int id);
 public class GroundUI : MonoBehaviour{
-    private OnPageUIClick onClick;
+    private UI_ID_Callback onClick;
     [SerializeField] private Floor _floor;
     public int uiID{get;private set;}
     void Awake(){
         _floor.Init(0, $"GroundUI");
     }
-    public void Init(int ID,OnPageUIClick onClick){
+    public void Init(int ID,UI_ID_Callback onClick){
         uiID = ID;
         this.onClick = onClick;
     }
