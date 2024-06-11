@@ -3,26 +3,28 @@ using UnityEngine;
 public class PlayerBuildingManager : MonoBehaviour{
     [SerializeField] private FloorManager floor;
     [SerializeField] private TemporalFloor temporalFloor;
-    Action buildingFailed;
+    Action buildingFailedCallback;
     Action cancelBuildingActionCallback;
     Action placeCallback;
+    Action<int,int> highlightBuildingCallback;
     Action<Resource, int> buyCallback;
-    Func<Resource,int, bool> canBuyCallback;
+    Func<Resource,int, bool> canBuyCallBack;
     GroundArray chosenGround;
     Building chosenBuilding;
     BuildMode mode;
-    public void Init(Action buildingFailed, TemporalFloor tp, Func<Resource, int, bool> canBuyCallback, Action<Resource, int> buyCallback){
-        this.buildingFailed = buildingFailed;
+    public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int,int> highlightBuildingCb){
+        buildingFailedCallback = buildingFailedCb;
         temporalFloor = tp;
-        this.canBuyCallback = canBuyCallback;
-        this.buyCallback = buyCallback;
+        canBuyCallBack = canBuyCb;
+        buyCallback = buyCb;
+        highlightBuildingCallback = highlightBuildingCb;
     }
     // Returns True if chosen object can be built once per click
     public void ClickBuild(Vector3 position){
         switch(mode){
             case BuildMode.Ground:
                 if(floor.CheckGA(position,chosenGround) && 
-                canBuyCallback(Resource.Gold,chosenGround.price))
+                canBuyCallBack(Resource.Gold,chosenGround.price))
                 {
                     mode = 0;
                     floor.CreateGroundArray_DontCheck(position,chosenGround);
@@ -31,38 +33,41 @@ public class PlayerBuildingManager : MonoBehaviour{
                 }
                 else
                 {
-                    buildingFailed?.Invoke();
+                    buildingFailedCallback?.Invoke();
                 }
                 break;
             case BuildMode.Road:
                 if(!floor.PlaceRoad(position))
                 {
-                    buildingFailed?.Invoke();
+                    buildingFailedCallback?.Invoke();
                 }
                 break;
             case BuildMode.Building:
                 if(floor.CheckBuilding(position,chosenBuilding.width, chosenBuilding.height) 
-                   && canBuyCallback(chosenBuilding.resource,chosenBuilding.price))
+                   && canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
                 {
                     buyCallback(Resource.Gold,chosenBuilding.price);
                     floor.PlaceBuilding_DontCheck(position,chosenBuilding);
                 }
                 else
                 {
-                    buildingFailed?.Invoke();
+                    buildingFailedCallback?.Invoke();
                 }
                 break;
             case BuildMode.Bridge:
                 if(!floor.PlaceBridge(position))
                 {
-                    buildingFailed?.Invoke();
+                    buildingFailedCallback?.Invoke();
                 }
                 break;
             case BuildMode.BridgeSpot:
                 if(!floor.PlaceBridgeSpot(position))
                 {
-                    buildingFailed?.Invoke();
+                    buildingFailedCallback?.Invoke();
                 }
+                break;
+            case BuildMode.None:
+                if(floor.HasBuilding(position,out int X, out int Y)) highlightBuildingCallback?.Invoke(X,Y);
                 break;
         }
     }
@@ -155,5 +160,5 @@ public enum BuildMode{
     Bridge,
     BridgeSpot,
     Building,
-    Ground
+    Ground,
 }

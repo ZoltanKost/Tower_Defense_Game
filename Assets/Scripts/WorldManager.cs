@@ -65,7 +65,7 @@ public class WorldManager : MonoBehaviour {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
-        playerBuildingManager.Init(buildingFailedCallback, temporalFloor, playerResourceManager.EnoughtResource, playerResourceManager.RemoveResource);
+        playerBuildingManager.Init(buildingFailedCallback, temporalFloor, playerResourceManager.EnoughtResource, playerResourceManager.RemoveResource, null);
         HideShowUI startLevelHideShow = nextWaweButton.GetComponent<HideShowUI>();
         HideShowUI shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
         Action cancelBuildingActionCallback = shop.Hide;

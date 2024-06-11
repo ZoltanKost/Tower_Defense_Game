@@ -323,6 +323,17 @@ public class FloorManager : MonoBehaviour{
             
         return true;
     }
+    public bool HasBuilding(Vector3 input, out int posX, out int posY)
+    {
+        Vector3Int pos = floors[0].WorldToCell(input);
+        posX = -1;
+        posY = -1;
+        if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        posX = pos.x + offset.x;
+        posY = pos.y + offset.y;
+        if(floorCells[posX,posY].building) return true;
+        return false;
+    }
     public List<FloorCell> GetNeighbours4(int gridX, int gridY){
         List<FloorCell> neighbours = new List<FloorCell>();
         if(gridX - 1 >= 0)neighbours.Add(floorCells[gridX - 1, gridY]);
