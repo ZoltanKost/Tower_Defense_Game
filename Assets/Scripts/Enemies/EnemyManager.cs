@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
@@ -10,16 +11,15 @@ public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private Enemy[] enemyPrefabs;
     [SerializeField] private int enemyPoolCount;
     Action onEnemyFinished;
-    public Enemy[] enemies;
+    public List<Enemy> enemies;
     int lowestInactive = 0;
     int killed = 0;
     [SerializeField] private float timeToSpawn = 10f;
     // [SerializeField] private int EnemyCount = 10;
     float time;
     bool active;
-    void Start(){
-        enemies = new Enemy[enemyPoolCount];
-        SpawnEnemies();
+    void Awake(){
+        enemies = new List<Enemy>();
     }
     public void SetWinAction(Action win){
         onEnemyFinished = win;
@@ -61,7 +61,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void Tick(float delta)
     {
-        for(int x = 0; x < enemies.Length; x++){
+        for(int x = 0; x < enemies.Count; x++){
             if(!enemies[x].active) continue;
             enemies[x].Tick(delta);
         }
@@ -69,7 +69,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void AnimatorTick(float delta)
     {
-        for(int x = 0; x < enemies.Length; x++){
+        for(int x = 0; x < enemies.Count; x++){
             if(!enemies[x].active) continue;
             enemies[x].UpdateAnimator(delta);
         }
@@ -102,14 +102,20 @@ public class EnemyManager : MonoBehaviour, IHandler {
             }
         }
     }
-    public void SpawnEnemies(){
+    public void SpawnEnemies(int complexity){
+        enemyPoolCount = complexity * 5;
+        foreach(var col in pathfinding.vectors){
+            enemyPoolCount += col.Count;
+        }
         killed = 0;
         lowestInactive = 0;
         time = 0;
+        enemies.Clear();
         for(int i = 0; i < enemyPoolCount; i++){
-            int x = UnityEngine.Random.Range(0, enemyPrefabs.Length); 
-            enemies[i] = Instantiate(enemyPrefabs[x], transform);
-            enemies[i].index = i;
+            int x = UnityEngine.Random.Range(0, enemyPrefabs.Length);
+            Enemy enemy = Instantiate(enemyPrefabs[x], transform);
+            enemy.index = i; 
+            enemies.Add(enemy);
             if(enemies[i].attackType == AttackType.Projectile){
                 projectileManager.AddProjectile(enemies[i].GetProjectile());
             }
@@ -121,7 +127,5 @@ public class EnemyManager : MonoBehaviour, IHandler {
         foreach(Enemy enemy in enemies){
             if(enemy != null) Destroy(enemy.gameObject);
         }
-        enemies = new Enemy[enemyPoolCount];
-        SpawnEnemies();
     }
 }

@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
 	[SerializeField] private int maxPaths = 200;
 	List<FloorCell> castlePositions;
 	// List<List<FloorCell>> paths = new();
-	List<Queue<Vector3>> vectors = new();
+	public List<Queue<Vector3>> vectors{get;private set;}
 	int offsetX, offsetY;
 	float cellSize;
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
@@ -20,9 +19,9 @@ public class Pathfinding : MonoBehaviour{
 	public void ClearCastlePoint(){
 		castlePositions.Clear();
 	}
-	// public bool FindPathToLadder(){
-
-	// }
+	public void Awake(){
+		vectors = new List<Queue<Vector3>>();
+	}
 	public bool FindPathToCastle(){
 		offsetX = floor.offset.x;
 		offsetY = floor.offset.y;

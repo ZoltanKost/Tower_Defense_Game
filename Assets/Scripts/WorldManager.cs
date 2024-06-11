@@ -44,6 +44,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private EventSubscribeButton shopButton;
     [SerializeField] private PlayerResourceManager playerResourceManager;
     private GameState gameState;
+    int wave;
     
     void Awake(){
         StaticTiles.Init();
@@ -157,7 +158,7 @@ public class WorldManager : MonoBehaviour {
     // }
     public void Win(){
         ResetWave();
-        winScreen.gameObject.SetActive(true);
+        // winScreen.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
     }
     public void OpenControls(){
@@ -166,6 +167,7 @@ public class WorldManager : MonoBehaviour {
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
+        enemyManager.SpawnEnemies(wave++);
         InputOff();
         playerBuildingManager.CancelBuildingAction();
         buildingManager.Switch(true);

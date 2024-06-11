@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Archer : MonoBehaviour, IAttacking{
@@ -17,8 +18,8 @@ public class Archer : MonoBehaviour, IAttacking{
         get{return _attackType;}
     }
     bool shooting;
-    IDamagable[] enemyList;
-    public void Init(Enemy[] enemies){
+    List<Enemy> enemyList;
+    public void Init(List<Enemy> enemies){
         animator.Init();
         enemyList = enemies;
         arrowObject = Instantiate(arrow).GetComponent<IProjectile>();
@@ -48,7 +49,7 @@ public class Archer : MonoBehaviour, IAttacking{
     }
     public void Detect(){
         shooting = false;
-        for(int i = 0; i < enemyList.Length; i++){
+        for(int i = 0; i < enemyList.Count; i++){
             if(!enemyList[i].active || !enemyList[i].alive) continue;
             Vector3 vector = transform.position - enemyList[i].position;
             vector.z = 0;
@@ -68,7 +69,7 @@ public class Archer : MonoBehaviour, IAttacking{
         shooting = target != null && target.active && target.alive;
     }
 
-    public void SetEnemyPool(IDamagable[] enemies)
+    public void SetEnemyPool(List<Enemy> enemies)
     {
         enemyList = enemies;
     }
