@@ -7,11 +7,12 @@ public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     public List<BuildingObject> bs = new List<BuildingObject>();
     bool active;
-    public void Build(Vector3 worldPosition, int floor, Building building){
+    public void Build(Vector3 worldPosition, int gridX,int gridY, int floor, Building building, out int index){
         worldPosition.z = 0;
         Vector3 offset =  (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
         BuildingObject s = Instantiate(building.prefab, worldPosition + offset, Quaternion.identity,transform);
-        s.Init(6,floor, bs.Count, RemoveBuilding);
+        index = bs.Count;
+        s.Init(6,floor,index, gridX, gridY, building.width,building.height, RemoveBuilding);
         bs.Add(s);
         InitArchers(s.GetArchers(), 7,floor);
     }
@@ -26,6 +27,22 @@ public class BuildingManager : MonoBehaviour, IHandler {
     }
     public void RemoveBuilding(int index){
         Debug.Log($"Removed: {index}");
+    }
+    public void DestroyBuilding(int index, out int gridX, out int gridY, out int w, out int h)
+    {
+        w = -1;
+        h = -1;
+        gridX = -1;
+        gridY = -1;
+        if(index == 0) return;
+        BuildingObject b = bs[index];
+        w = b.w;
+        h = b.h;
+        gridX = b.gridPosition.x;
+        gridY = b.gridPosition.y;
+        archerManager.RemoveArchers(b.GetArchers());
+        Destroy(b.gameObject);
+        bs.RemoveAt(index);
     }
 
     public void Tick(float delta)

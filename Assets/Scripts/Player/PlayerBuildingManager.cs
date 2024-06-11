@@ -6,18 +6,20 @@ public class PlayerBuildingManager : MonoBehaviour{
     Action buildingFailedCallback;
     Action cancelBuildingActionCallback;
     Action placeCallback;
-    Action<int,int> highlightBuildingCallback;
+    Action<int> highlightBuildingCallback;
     Action<Resource, int> buyCallback;
     Func<Resource,int, bool> canBuyCallBack;
+    Action<int> destroyBuildingCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
     BuildMode mode;
-    public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int,int> highlightBuildingCb){
+    public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         buildingFailedCallback = buildingFailedCb;
         temporalFloor = tp;
         canBuyCallBack = canBuyCb;
         buyCallback = buyCb;
         highlightBuildingCallback = highlightBuildingCb;
+        destroyBuildingCallback = destroyBuildingCb;
     }
     // Returns True if chosen object can be built once per click
     public void ClickBuild(Vector3 position){
@@ -67,7 +69,10 @@ public class PlayerBuildingManager : MonoBehaviour{
                 }
                 break;
             case BuildMode.None:
-                if(floor.HasBuilding(position,out int X, out int Y)) highlightBuildingCallback?.Invoke(X,Y);
+                if(floor.HasBuilding(position, out int ID)) highlightBuildingCallback?.Invoke(ID);
+                break;
+            case BuildMode.Destroy:
+                if(floor.HasBuilding(position, out ID)) destroyBuildingCallback?.Invoke(ID);
                 break;
         }
     }
@@ -110,6 +115,10 @@ public class PlayerBuildingManager : MonoBehaviour{
         mode = BuildMode.Ground;
         chosenGround = g;
         temporalFloor.ActivateFloor(g);
+    }
+    public void ChooseDestroyMode(){
+        mode = BuildMode.Destroy;
+        temporalFloor.ActivateFloor(BuildMode.Destroy);
     }
     public void SetCancelCallback(Action callback){
         cancelBuildingActionCallback = callback;
@@ -161,4 +170,5 @@ public enum BuildMode{
     BridgeSpot,
     Building,
     Ground,
+    Destroy
 }

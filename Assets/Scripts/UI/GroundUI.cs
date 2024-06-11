@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -5,6 +6,7 @@ public delegate void UI_ID_Callback(int id);
 public class GroundUI : MonoBehaviour{
     private UI_ID_Callback onClick;
     [SerializeField] private Floor _floor;
+    [SerializeField] private TMP_Text text;
     public int uiID{get;private set;}
     void Awake(){
         _floor.Init(0, $"GroundUI");
@@ -21,6 +23,7 @@ public class GroundUI : MonoBehaviour{
         }
         Vector3 pos = new Vector3{x = Mathf.Min((-ga.width)/2, -.5f), y = (-ga.width)/2 + .5f, z = 0};
         _floor.transform.localPosition = pos;
+        text.text = ga.price.ToString();
     }
     public void SetTile(TileBase tile){
         _floor.ClearAllTiles();

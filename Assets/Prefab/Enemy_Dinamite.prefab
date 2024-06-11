@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189702414211034926}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.2983418, y: 9.120682, z: 2.3741446}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,7 +34,6 @@ Transform:
   m_Children:
   - {fileID: 8695976818814199125}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1325746399686741614
 SpriteRenderer:
@@ -103,13 +103,13 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5307833470203409925, guid: e096b61fff25bfe4e98f368d68c8b458, type: 3}
   hpBar: {fileID: 5620564550756596175}
   projectileSpeed: 5
-  damage: 20
+  damage: 10
   index: 0
-  _active: 0
   speed: 0.75
   attackrange: 3
   MaxHP: 100
   attackPeriod: 2
+  _killReward: 5
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +213,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 647510513473006261}
     m_Modifications:
     - target: {fileID: 4957916278593064903, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
@@ -312,6 +313,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
 --- !u!114 &5620564550756596175 stripped
 MonoBehaviour:

@@ -7,7 +7,10 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     [SerializeField] private int maxHP = 100;
     SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
     Archer[] archers;
-    int index;
+    public int index{get;private set;}
+    public Vector2Int gridPosition{get;private set;}
+    public int w{get;private set;}
+    public int h{get;private set;}
     bool _active;
     private int currentHP;
     CustomAnimator animator;
@@ -25,16 +28,18 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public bool alive{
         get{return HP > 0;}
     }
-
     void Awake(){
         archers = GetComponentsInChildren<Archer>();
         animator = GetComponent<CustomAnimator>();
         tweenAnimator = GetComponent<TweenAnimator>();
     }
-    public void Init(int sortingOrder, int sortingLayer, int index, OnKillEvent OnKill){
+    public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, int w, int h, OnKillEvent OnKill){
         currentHP = maxHP;
         hpBar?.gameObject.SetActive(true);
         this.index = index;
+        this.w = w;
+        this.h = h;
+        gridPosition = new Vector2Int(gridX, gridY);
         spriteRenderer.sortingOrder = sortingOrder;
         spriteRenderer.sortingLayerName = $"{sortingLayer}";
         animator.PlayAnimation(0);
@@ -64,6 +69,11 @@ public class BuildingObject : MonoBehaviour, IDamagable{
             a.Deactivate();
         }
         animator.PlayAnimation(1);
+    }
+    public void Deactivate(){
+        foreach(Archer a in archers){
+            a.Deactivate();
+        }
     }
     public void OnKillCallBack(){
         _active = false;

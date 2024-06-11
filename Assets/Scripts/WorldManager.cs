@@ -65,7 +65,20 @@ public class WorldManager : MonoBehaviour {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
-        playerBuildingManager.Init(buildingFailedCallback, temporalFloor, playerResourceManager.EnoughtResource, playerResourceManager.RemoveResource, null);
+        Action<int> destroyBuildingCb
+        = (int ID) => {
+            if(ID == 0) return;
+            buildingManager.DestroyBuilding(ID, out int gX, out int gY, out int w, out int h);
+            floorManager.DestroyBuilding(gX,gY,w,h);
+        };
+        playerBuildingManager.Init(
+            buildingFailedCallback,
+            temporalFloor,
+            playerResourceManager.EnoughtResource,
+            playerResourceManager.RemoveResource,
+            null,
+            destroyBuildingCb
+        );
         HideShowUI startLevelHideShow = nextWaweButton.GetComponent<HideShowUI>();
         HideShowUI shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
         Action cancelBuildingActionCallback = shop.Hide;
@@ -143,7 +156,7 @@ public class WorldManager : MonoBehaviour {
     //     }
     // }
     public void Win(){
-        StopLevel();
+        ResetWave();
         winScreen.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
     }

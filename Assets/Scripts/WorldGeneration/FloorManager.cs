@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.VisualScripting;
 public class FloorManager : MonoBehaviour{
     [SerializeField] private BuildingManager bm;
     [SerializeField] private int layers;
@@ -62,12 +64,13 @@ public class FloorManager : MonoBehaviour{
                 if(floorCells[x, y].currentFloor != floor) return;
             }
         }
+        bm.Build(pos,posX,posY, floor,b,out int index);
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
-                floorCells[x,y].building = true;
+                floorCells[x,y].buildingData.exist = true;
+                floorCells[x,y].buildingData.ID = index;
             }
         }
-        bm.Build(pos,floor,b);
         pathfinding.SetCastlePoint(posX, posY, b.width, b.height);
     }
     public bool CreateGroundArray(Vector3 input, GroundArray groundArray){
@@ -177,12 +180,13 @@ public class FloorManager : MonoBehaviour{
                 if(floorCells[x, y].occupied || floorCells[x, y].currentFloor != floor) return false;
             }
         }
+        bm.Build(pos,posX,posY, floor,b,out int index);
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
-                floorCells[x,y].building = true;
+                floorCells[x,y].buildingData.exist = true;
+                floorCells[x,y].buildingData.ID = index;
             }
         }
-        bm.Build(pos,floor,b);
         return true;
     }
     public void PlaceBuilding_DontCheck(Vector3 input, Building b){
@@ -190,12 +194,13 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
+        bm.Build(pos,posX,posY, floor,b,out int index);
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
-                floorCells[x,y].building = true;
+                floorCells[x,y].buildingData.exist = true;
+                floorCells[x,y].buildingData.ID = index;
             }
         }
-        bm.Build(pos,floor,b);
     }
     public bool PlaceBridgeSpot(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -323,16 +328,27 @@ public class FloorManager : MonoBehaviour{
             
         return true;
     }
-    public bool HasBuilding(Vector3 input, out int posX, out int posY)
+    public bool HasBuilding(Vector3 input, out int ID)
     {
         Vector3Int pos = floors[0].WorldToCell(input);
-        posX = -1;
-        posY = -1;
+        int posX = -1;
+        int posY = -1;
+        ID = -1;
         if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
         posX = pos.x + offset.x;
         posY = pos.y + offset.y;
-        if(floorCells[posX,posY].building) return true;
+        if(floorCells[posX,posY].building) {
+            ID = floorCells[posX,posY].buildingData.ID;
+            return true;
+        }
         return false;
+    }
+    public void DestroyBuilding(int gridX, int gridY, int w, int h){
+        for(int x = gridX; x < gridX + w; x++){
+            for(int y = gridY; y < gridY + h; y++){
+                floorCells[x,y].buildingData = new BuildingData();
+            }
+        }
     }
     public List<FloorCell> GetNeighbours4(int gridX, int gridY){
         List<FloorCell> neighbours = new List<FloorCell>();

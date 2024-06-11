@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour {
         currentHp -= damage;
         onDamage?.Invoke((float)currentHp/MaxHP);
         if(currentHp <= 0){
+            currentHp = MaxHP;
             onPlayerLost?.Invoke();
         }
     }

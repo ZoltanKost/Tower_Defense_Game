@@ -14,6 +14,12 @@ public class ArcherManager : MonoBehaviour, IHandler {
             projectileManager.AddProjectile(archer.GetProjectile());
         }
     }
+    public void RemoveArchers(Archer[] archer){
+        foreach(Archer a in archer){
+            projectileManager.RemoveProjectile(a.GetProjectile());
+            archersList.Remove(a);
+        }
+    }
     void Update(){
         float delta = Time.deltaTime;
         Tick(delta);
