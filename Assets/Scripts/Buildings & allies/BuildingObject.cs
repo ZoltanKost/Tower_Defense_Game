@@ -7,7 +7,7 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     [SerializeField] private int maxHP = 100;
     SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
     Archer[] archers;
-    public int index{get;private set;}
+    public int index;
     public Vector2Int gridPosition{get;private set;}
     public int w{get;private set;}
     public int h{get;private set;}
@@ -36,6 +36,8 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, int w, int h, OnKillEvent OnKill){
         currentHP = maxHP;
         hpBar?.gameObject.SetActive(true);
+        hpBar?.Reset();
+        Activate();
         this.index = index;
         this.w = w;
         this.h = h;
@@ -46,6 +48,12 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         onKillEvent = OnKill;
         active = true;
         Animate();
+    }
+    public void Activate(){
+        gameObject.SetActive(true);
+        foreach(Archer a in archers){
+            a.Activate();
+        }
     }
     public Archer[] GetArchers(){
         return archers;
@@ -87,5 +95,9 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         foreach(Archer archer in archers){
             archer.SetColor(color);
         }
+    }
+    public int GetIndex()
+    {
+        return index;
     }
 }

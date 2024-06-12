@@ -14,7 +14,7 @@ public class Pathfinding : MonoBehaviour{
 		FloorCell pos = floor.floorCells[gridX,gridY];
 		pos.road = true;
 		castlePositions.Add(pos);
-		Debug.Log(message: $"Castle: {gridX},{gridY}");
+		// Debug.Log(message: $"Castle: {gridX},{gridY}");
 	}
 	public void ClearCastlePoint(){
 		castlePositions.Clear();
@@ -32,7 +32,7 @@ public class Pathfinding : MonoBehaviour{
 		foreach(FloorCell graph in castlePositions){
 			BFSearch(graph,closedSet,vectors);
 		}
-		Debug.Log(vectors.Count);
+		// Debug.Log(vectors.Count);
 		return vectors.Count > 0;
 	}
 	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
@@ -40,19 +40,20 @@ public class Pathfinding : MonoBehaviour{
 		if(!(current.road || current.bridge || current.bridgeSpot)) return;
 		if(closedSet.Count != 0)
 		{
-			FloorCell temp = closedSet.Peek();
-			if(temp.bridge && !(current.bridge || current.bridgeSpot)) return;
-			if(current.bridge && !(temp.bridge||temp.bridgeSpot)) return;
-			if(current.currentFloor == temp.currentFloor - 1){
-				if(!(current.gridY == temp.gridY - 1))return; 
-			}else if(current.currentFloor == temp.currentFloor + 1){
-				if(!(current.gridY == temp.gridY + 1))return; 
+			FloorCell prev = closedSet.Peek();
+			if((prev.ladder || current.ladder) && prev.gridY == current.gridY) return;
+			if(prev.bridge && !(current.bridge || current.bridgeSpot)) return;
+			if(current.bridge && !(prev.bridge || prev.bridgeSpot)) return;
+			if(current.currentFloor == prev.currentFloor - 1){
+				if(!(current.gridY == prev.gridY - 1))return; 
+			}else if(current.currentFloor == prev.currentFloor + 1){
+				if(!(current.gridY == prev.gridY + 1))return;
 			}
 		}
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;
-			string s =
-			$"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
+			// string s =
+			// $"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
 			closedSet.Push(current);
 			Queue<Vector3> res = new Queue<Vector3>();
 			foreach(FloorCell cell in closedSet){
@@ -63,11 +64,11 @@ public class Pathfinding : MonoBehaviour{
 				res.Enqueue(pos);
 			}
 			closedSet.Pop();
-			s += "Path contains following:\n";
-			foreach(Vector3 cell in res){
-				s += $"Cell: {cell}\n";
-			}
-			Debug.Log(s);
+			// s += "Path contains following:\n";
+			// foreach(Vector3 cell in res){
+			// 	// s += $"Cell: {cell}\n";
+			// }
+			// Debug.Log(s);
 			result.Add(res);
 			return;
 		}

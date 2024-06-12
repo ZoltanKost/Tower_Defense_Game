@@ -24,7 +24,7 @@ public class ResourceUIManager : MonoBehaviour {
         }
     }
     public void UpdateResource(int ID, int count){
-        Debug.Log($" ID : {ID}, COunt: {count}");
+        // Debug.Log($" ID : {ID}, COunt: {count}");
         if(ID >= visuals.Count) return;
         foreach(ResourceTemplate temp in visuals){
             if((int)temp.resource == ID){

@@ -9,7 +9,7 @@ public class GroundArrayGenerator : MonoBehaviour {
         float _randomMultiplier = randomMultiplier;
         int width,height, targetFloor;
         HashSet<Vector2Int> grounds;
-        string s = "";
+        // string s = "";
         int d = Mathf.ClosestPowerOfTwo(Random.Range(1,_maxDimensions + 1)) + 1;
         width = d;
         height = d;
@@ -79,18 +79,18 @@ public class GroundArrayGenerator : MonoBehaviour {
         _trueCondition = Random.Range(0, _trueCondition + 1);
         float rel = (float)_trueCondition / _maxValue;
         int tCon = Mathf.RoundToInt(small + (big - small) * rel);
-        Debug.Log($"Max: {_maxValue}, True: {_trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
+        // Debug.Log($"Max: {_maxValue}, True: {_trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
                 if(ints[x,y] > tCon){
                     grounds.Add(new Vector2Int(x,y));
                 }
-                s += $"[{ints[x,y]}]";
+                // s += $"[{ints[x,y]}]";
             }
-            s += "\n";
+            // s += "\n";
         }
         
-        Debug.Log(s);
+        // Debug.Log(s);
         return new GroundArray{width = width,height = height, grounds = grounds, targetFloor = targetFloor, price = grounds.Count - targetFloor};
     }
 }

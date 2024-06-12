@@ -45,14 +45,14 @@ public class EnemyManager : MonoBehaviour, IHandler {
         enemy.gameObject.SetActive(true);
         var path = pathfinding.GetRandomPath();
         enemy.Init(path, path.Peek(),true, RemoveEnemy, RegisterKill, playerManager.Damage);
-        enemy.SetEnemyPool(buildingManager.bs.ToArray());
+        enemy.SetEnemyPool(buildingManager.bs);
         lowestInactive++;
     }
     void RemoveEnemy(int index){
         enemies[index].gameObject.SetActive(false);
         enemies[index].active = false;
         killed++;
-        Debug.Log($"Removed enemy: {index}, removed total:{killed}");
+        // Debug.Log($"Removed enemy: {index}, removed total:{killed}");
         if(killed >= enemyPoolCount) onEnemyFinished?.Invoke();
     }
     public void RegisterKill(int index){

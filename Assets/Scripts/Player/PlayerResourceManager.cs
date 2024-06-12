@@ -37,7 +37,7 @@ public class PlayerResourceManager : MonoBehaviour {
     }
     public void RemoveResource(Resource resource, int count){
         storage[resource] -= count;
-        Debug.Log($"Remove {count} of {resource}");
+        // Debug.Log($"Remove {count} of {resource}");
         updateUICallback?.Invoke((int)resource, storage[resource]);
     }
 }

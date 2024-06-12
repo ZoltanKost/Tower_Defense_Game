@@ -17,7 +17,7 @@ public class GroundUI : MonoBehaviour{
     }
     public void SetGroundArray(GroundArray ga){
         _floor.ClearAllTiles();
-        _floor.layer = ga.targetFloor;
+        _floor.floor = ga.targetFloor;
         foreach(Vector3Int g in ga.grounds){
             _floor.CreateGround(g);
         }

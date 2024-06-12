@@ -6,8 +6,9 @@ public class FloorCell{
     public bool bridgeSpot;
     public bool bridge;
     public bool road;
-    public bool building => buildingData.exist;
-    public BuildingData buildingData;
+    public bool ladder;
+    public bool building => GetBuildingIDCallback != null;
+    public Func<int> GetBuildingIDCallback;
     public bool occupied => road || building || bridgeSpot || bridge;
     public readonly int gridX;
 	public readonly int gridY;
@@ -17,8 +18,9 @@ public class FloorCell{
         gridY = y;
         currentFloor = lastFloor;
     }
-}
-public struct BuildingData{
-    public bool exist;
-    public int ID;
+    public void Reset()
+    {
+        road = false;
+        ladder = false;
+    }
 }

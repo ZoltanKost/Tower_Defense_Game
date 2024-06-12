@@ -69,7 +69,9 @@ public class WorldManager : MonoBehaviour {
         Action<int> destroyBuildingCb
         = (int ID) => {
             if(ID == 0) return;
+            Debug.Log($"Removing{ID}");
             buildingManager.DestroyBuilding(ID, out int gX, out int gY, out int w, out int h);
+            Debug.Log($"Removed{ID} on {gX},{gY}");
             floorManager.DestroyBuilding(gX,gY,w,h);
         };
         playerBuildingManager.Init(
@@ -196,12 +198,16 @@ public class WorldManager : MonoBehaviour {
         shop.ResetGroundArrays();
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
+        shop.Hide();
         shopButton.GetComponent<HideShowUI>().ShowUI();
         nextWaweButton.GetComponent<HideShowUI>().ShowUI();
         InputOn();
         gameState = GameState.Idle;
     }
     public void ResetLevel(){
+        shop.Hide();
+        shopButton.GetComponent<HideShowUI>().ShowUI();
+        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
         archerManager.ClearEntities();
         projectileManager.ClearEntities();
         buildingManager.ClearEntities();
@@ -225,6 +231,7 @@ public class WorldManager : MonoBehaviour {
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
         winScreen.gameObject.SetActive(false);
+        
         shopButton.GetComponent<HideShowUI>().ShowUI();
         nextWaweButton.GetComponent<HideShowUI>().ShowUI();
         Start();

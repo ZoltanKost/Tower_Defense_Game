@@ -27,7 +27,7 @@ public class TemporalFloor : Floor
     }
     public void CreateGroundArray(Vector3Int pos,  GroundArray ga){
         pos.z = 0;
-        layer = ga.targetFloor;
+        floor = ga.targetFloor;
         arrows[0].localPosition = pos;
         arrows[1].localPosition = pos + Vector3Int.right * ga.width * cellSize;
         arrows[2].localPosition = pos + Vector3Int.up * ga.height * cellSize;

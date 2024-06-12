@@ -14,21 +14,21 @@ public class Floor : MonoBehaviour{
     private TileID ground{
         get
         {
-            return layer == 0? TileID.Sand : TileID.Ground;
+            return floor == 0? TileID.Sand : TileID.Ground;
         } 
     }
     private TileID grass{
         get{
-            return layer == 0? TileID.None : TileID.Grass;
+            return floor == 0? TileID.None : TileID.Grass;
         }
     }
-    public int layer;
+    public int floor;
     protected void Awake(){
         visuals = GetComponentsInChildren<Tilemap>();
         tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int layer, string sortingLayerName){
-        this.layer = layer;
+        this.floor = layer;
         for(int i = 0; i < visuals.Length; i++){
             TilemapRenderer mapRenderer = visuals[i].GetComponent<TilemapRenderer>();
             mapRenderer.sortingLayerName = sortingLayerName;
@@ -44,33 +44,78 @@ public class Floor : MonoBehaviour{
     // Spawns one cell on the floor
     public void CreateGround(Vector3Int pos){
         pos.z = 0;
-        if(layer == 0) SetTile(pos, FOAMLAYER, TileID.Foam);
+        if(floor == 0) SetTile(pos, FOAMLAYER, TileID.Foam);
         SetTile(pos, SHADOWLAYER, TileID.Shadow);
         SetTile(pos,GROUNDLAYER, ground);
-        if(layer > 0 && !HasTile(pos + Vector3Int.down)){
+        if(floor > 0 && !HasTile(pos + Vector3Int.down)){
             SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.Rock);
             SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.Shadow);
         }
         SetTile(pos,GRASSLAYER, grass);
     }
-    // Spawns a single road ontop of the floor
+    public void RemoveGround(Vector3Int pos, bool replaceWithRock)
+    {
+        pos.z = 0;
+        if(floor == 0) SetTile(pos, FOAMLAYER, TileID.None);
+        if(!replaceWithRock)
+        {
+            SetTile(pos, SHADOWLAYER, TileID.None);
+            SetTile(pos,GROUNDLAYER, TileID.None);
+            if(floor > 0)
+            {
+                SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.None);
+                SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.None);
+            }
+        }
+        else
+        {
+            SetTile(pos,GROUNDLAYER, TileID.Rock);
+            SetTile(pos, SHADOWLAYER, TileID.Shadow);
+            if(floor > 0)
+            {
+                SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.None);
+                SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.None);
+            }
+        }
+        SetTile(pos,GRASSLAYER, TileID.None);
+    }
     public void PlaceRoad(Vector3Int pos){
         pos.z = 0;
         SetTile(pos, SANDLAYER,TileID.Sand);
     }
+    public void RemoveRoad(Vector3Int pos)
+    {
+        pos.z = 0;
+        SetTile(pos,SANDLAYER,TileID.None);
+    }
     public void PlaceStairs(Vector3Int pos){
         pos.z = 0;
-        if(visuals[GROUNDLAYER].GetTile(pos) == StaticTiles.GetTile(TileID.Rock))
-            SetTile(pos, GROUNDLAYER,TileID.Ladder);
+        SetTile(pos, GROUNDLAYER,TileID.Ladder);
+    }
+    public void RemoveStairs(Vector3Int pos)
+    {
+        pos.z = 0;
+        SetTile(pos, GROUNDLAYER,TileID.Rock);
     }
     public void PlaceBridge(Vector3Int pos){
         pos.z = 0;
         SetTile(pos,BRIDGELAYER, TileID.Bridge);
     }
+    public void RemoveBridge(Vector3Int pos)
+    {
+        pos.z = 0;
+        SetTile(pos,BRIDGELAYER,TileID.None);
+    }
     public void SetBridgeSpot(Vector3Int pos){
         pos.z = 0;
         SetTile(pos, BRIDGELAYER, TileID.BridgeOnGround);
         SetTile(pos,SANDLAYER,TileID.Sand);
+    }
+    public void RemoveBridgeSpot(Vector3Int pos)
+    {
+        pos.z = 0;
+        SetTile(pos, BRIDGELAYER, TileID.None);
+        SetTile(pos, SANDLAYER, TileID.None);
     }
     public void CreateGroundArray(Vector3Int start, int w, int h){
         for(int posX = 0; posX < w; posX++){

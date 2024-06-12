@@ -1,20 +1,39 @@
 using UnityEngine;
-
-using System.Collections.Generic;
+using System;
 
 public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private ArcherManager archerManager;
     [SerializeField] private ProjectileManager projectileManager;
-    public List<BuildingObject> bs = new List<BuildingObject>();
+    public BuildingObject[] bs;
+    int lastFree = 0;
     bool active;
-    public void Build(Vector3 worldPosition, int gridX,int gridY, int floor, Building building, out int index){
+    private void Awake() {
+        bs = new BuildingObject[4];   
+    }
+    public void Build(Vector3 worldPosition, int gridX,int gridY, int floor, Building building, out Func<int> getID){
         worldPosition.z = 0;
         Vector3 offset =  (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
-        BuildingObject s = Instantiate(building.prefab, worldPosition + offset, Quaternion.identity,transform);
-        index = bs.Count;
-        s.Init(6,floor,index, gridX, gridY, building.width,building.height, RemoveBuilding);
-        bs.Add(s);
-        InitArchers(s.GetArchers(), 7,floor);
+
+        if(bs[lastFree] != null)
+        {
+            BuildingObject buildingObject = bs[lastFree];
+            buildingObject.Init(6,floor,lastFree, gridX, gridY, building.width,building.height, RemoveBuilding);
+            buildingObject.transform.position = worldPosition + offset;
+            getID = bs[lastFree].GetIndex;
+        }
+        else
+        {
+            BuildingObject s = Instantiate(building.prefab, worldPosition + offset, Quaternion.identity,transform);
+            InitArchers(s.GetArchers(), 7,floor);
+            s.Init(6,floor,lastFree, gridX, gridY, building.width,building.height, RemoveBuilding);
+            bs[lastFree] = s;
+            getID = s.GetIndex;
+        }
+        lastFree++;
+        if(lastFree >= bs.Length){ 
+            Array.Resize(ref bs,lastFree * 2);
+            Debug.Log($"Array resized. new Length is {bs.Length}");
+        }
     }
     public void InitArchers(Archer[] archers, int sortingOrder, int sortingLayer){
         foreach(Archer a in archers){
@@ -26,7 +45,12 @@ public class BuildingManager : MonoBehaviour, IHandler {
         AnimatorTick(Time.deltaTime);
     }
     public void RemoveBuilding(int index){
-        Debug.Log($"Removed: {index}");
+        Debug.Log($"Building{index} removed. Building {lastFree-1} is nor building {index}.");
+        BuildingObject temp = bs[index];
+        bs[index] = bs[--lastFree];
+        bs[index].index = index;
+        bs[lastFree] = temp;
+        temp.index = lastFree;
     }
     public void DestroyBuilding(int index, out int gridX, out int gridY, out int w, out int h)
     {
@@ -35,14 +59,16 @@ public class BuildingManager : MonoBehaviour, IHandler {
         gridX = -1;
         gridY = -1;
         if(index == 0) return;
+        Debug.Log($"BuildingManager removing {index}!");
         BuildingObject b = bs[index];
+        Debug.Log($"Id in building: {b.index}");
         w = b.w;
         h = b.h;
         gridX = b.gridPosition.x;
         gridY = b.gridPosition.y;
-        archerManager.RemoveArchers(b.GetArchers());
-        Destroy(b.gameObject);
-        bs.RemoveAt(index);
+        b.Deactivate();
+        b.gameObject.SetActive(false);
+        RemoveBuilding(index);
     }
 
     public void Tick(float delta)
@@ -52,7 +78,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
     public void AnimatorTick(float delta)
     {
-        for(int i = 0; i < bs.Count; i++){
+        for(int i = 0; i < lastFree; i++){
             if(!bs[i].active) continue;
             bs[i].TickUpdate(delta);
         }
@@ -77,9 +103,14 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
     public void ClearEntities()
     {
-        foreach(BuildingObject b in bs){
-            Destroy(b.gameObject);
+        for(int i = 0; i < bs.Length; i++)
+        {
+            if(bs[i] != null)
+            {
+                Destroy(bs[i].gameObject);
+                bs[i] = null;
+            }
         }
-        bs.Clear();
+        lastFree = 0;
     }
 }

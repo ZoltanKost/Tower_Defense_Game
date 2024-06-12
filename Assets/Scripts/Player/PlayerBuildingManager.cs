@@ -21,7 +21,6 @@ public class PlayerBuildingManager : MonoBehaviour{
         highlightBuildingCallback = highlightBuildingCb;
         destroyBuildingCallback = destroyBuildingCb;
     }
-    // Returns True if chosen object can be built once per click
     public void ClickBuild(Vector3 position){
         switch(mode){
             case BuildMode.Ground:
@@ -37,13 +36,13 @@ public class PlayerBuildingManager : MonoBehaviour{
                 {
                     buildingFailedCallback?.Invoke();
                 }
-                break;
+            break;
             case BuildMode.Road:
                 if(!floor.PlaceRoad(position))
                 {
                     buildingFailedCallback?.Invoke();
                 }
-                break;
+            break;
             case BuildMode.Building:
                 if(floor.CheckBuilding(position,chosenBuilding.width, chosenBuilding.height) 
                    && canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
@@ -55,25 +54,31 @@ public class PlayerBuildingManager : MonoBehaviour{
                 {
                     buildingFailedCallback?.Invoke();
                 }
-                break;
+            break;
             case BuildMode.Bridge:
                 if(!floor.PlaceBridge(position))
                 {
                     buildingFailedCallback?.Invoke();
                 }
-                break;
+            break;
             case BuildMode.BridgeSpot:
                 if(!floor.PlaceBridgeSpot(position))
                 {
                     buildingFailedCallback?.Invoke();
                 }
-                break;
+            break;
             case BuildMode.None:
                 if(floor.HasBuilding(position, out int ID)) highlightBuildingCallback?.Invoke(ID);
-                break;
-            case BuildMode.Destroy:
+            break;
+            case BuildMode.DestroyBuilding:
                 if(floor.HasBuilding(position, out ID)) destroyBuildingCallback?.Invoke(ID);
-                break;
+            break;
+            case BuildMode.DestroyGround:
+                floor.DestroyGround(position);
+            break;
+            case BuildMode.DestroyRoad:
+                if(floor.HasRoad(position,out Vector3Int pos)) floor.DestroyRoad(pos);
+            break;
         }
     }
     public void HoldBuild(Vector3 position){
@@ -87,6 +92,9 @@ public class PlayerBuildingManager : MonoBehaviour{
             case BuildMode.BridgeSpot:
                 floor.PlaceBridgeSpot(position);
                 break;
+            case BuildMode.DestroyRoad:
+                if(floor.HasRoad(position,out Vector3Int pos)) floor.DestroyRoad(pos);
+            break;
         }
     }
     public void CancelBuildingAction(){
@@ -116,9 +124,17 @@ public class PlayerBuildingManager : MonoBehaviour{
         chosenGround = g;
         temporalFloor.ActivateFloor(g);
     }
-    public void ChooseDestroyMode(){
-        mode = BuildMode.Destroy;
-        temporalFloor.ActivateFloor(BuildMode.Destroy);
+    public void ChooseDestroyBuildingMode(){
+        mode = BuildMode.DestroyBuilding;
+        temporalFloor.ActivateFloor(BuildMode.DestroyBuilding);
+    }
+    public void ChooseDestroyGroundMode(){
+        mode = BuildMode.DestroyGround;
+        temporalFloor.ActivateFloor(BuildMode.DestroyBuilding);
+    }
+    public void ChooseDestroyRoadMode(){
+        mode = BuildMode.DestroyRoad;
+        temporalFloor.ActivateFloor(BuildMode.DestroyBuilding);
     }
     public void SetCancelCallback(Action callback){
         cancelBuildingActionCallback = callback;
@@ -128,9 +144,6 @@ public class PlayerBuildingManager : MonoBehaviour{
     }
     public void SetPlaceCallback(Action callback){
         placeCallback = callback;
-    }
-    public void AddPlaceCallback(Action callback){
-        placeCallback += callback;
     }
     public bool CanBuild(Vector3 position){
         switch(mode){
@@ -170,5 +183,7 @@ public enum BuildMode{
     BridgeSpot,
     Building,
     Ground,
-    Destroy
+    DestroyBuilding,
+    DestroyRoad,
+    DestroyGround
 }

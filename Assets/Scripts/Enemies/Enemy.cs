@@ -137,12 +137,13 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     public void SetEnemyPool(IDamagable[] enemies)
     {
         targets = enemies;
+        // Debug.Log($"Targets != null : {targets!=null}; enemies != null {enemies != null};");
     }
 
     public void Detect()
     {
         for(int i = 0; i < targets.Length; i++){
-            if(!targets[i].active || !targets[i].alive) continue;
+            if(targets[i] == null || !targets[i].active || !targets[i].alive) continue;
             IDamagable t = targets[i];
             float distance = (t.position - position).magnitude;
             if(distance > attackrange) continue;
@@ -168,6 +169,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
             break;
         }
     }
+    //CALLED BY CUSTOMANIMATOR(IN UNITY)
     public void ResetState(){
         state = EnemyState.idle;
     }
