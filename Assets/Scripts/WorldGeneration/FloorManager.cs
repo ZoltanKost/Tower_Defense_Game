@@ -234,11 +234,16 @@ public class FloorManager : MonoBehaviour{
         int posY = pos.y + offset.y;
         FloorCell target = floorCells[posX, posY];
         if(target.occupied) return;
-        bool replaceWithRock = false;
         int floor = target.currentFloor;
         if(floorCells[posX, posY + 1].currentFloor == floor + 1) return;
-        if(floor != 0 && floorCells[posX, posY + 1].currentFloor == floor) replaceWithRock = true;
-        floors[target.currentFloor].RemoveGround(pos,replaceWithRock);
+        bool replaceWithRock = false;
+        bool eraseUnder = false;        
+        if(floor != 0)
+        {
+            replaceWithRock = floorCells[posX, posY + 1].currentFloor == floor;
+            eraseUnder = floorCells[posX, posY - 1].currentFloor < floor;
+        } 
+        floors[target.currentFloor].RemoveGround(pos,replaceWithRock,eraseUnder);
         target.currentFloor--;
     }
     public bool CheckBuilding(Vector3 input, int w, int h){

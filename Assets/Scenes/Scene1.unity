@@ -4534,7 +4534,7 @@ MonoBehaviour:
   resourceUIManager: {fileID: 386335830}
   resourceSOs:
   - {fileID: 11400000, guid: 9125dc4a150d43c4a84c4d7a7667d167, type: 2}
-  counts: 32000000
+  counts: 64000000
 --- !u!1 &1025045077
 GameObject:
   m_ObjectHideFlags: 0

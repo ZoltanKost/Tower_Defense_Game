@@ -53,7 +53,7 @@ public class Floor : MonoBehaviour{
         }
         SetTile(pos,GRASSLAYER, grass);
     }
-    public void RemoveGround(Vector3Int pos, bool replaceWithRock)
+    public void RemoveGround(Vector3Int pos, bool replaceWithRock, bool eraseUnder)
     {
         pos.z = 0;
         if(floor == 0) SetTile(pos, FOAMLAYER, TileID.None);
@@ -61,9 +61,9 @@ public class Floor : MonoBehaviour{
         {
             SetTile(pos, SHADOWLAYER, TileID.None);
             SetTile(pos,GROUNDLAYER, TileID.None);
-            if(floor > 0)
+            if(floor > 0 && eraseUnder)
             {
-                SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.None);
+                SetTile(pos + Vector3Int.down,GROUNDLAYER,TileID.None);
                 SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.None);
             }
         }
@@ -71,7 +71,7 @@ public class Floor : MonoBehaviour{
         {
             SetTile(pos,GROUNDLAYER, TileID.Rock);
             SetTile(pos, SHADOWLAYER, TileID.Shadow);
-            if(floor > 0)
+            if(floor > 0 && eraseUnder)
             {
                 SetTile(pos + Vector3Int.down,GROUNDLAYER, TileID.None);
                 SetTile(pos + Vector3Int.down, SHADOWLAYER, TileID.None);
