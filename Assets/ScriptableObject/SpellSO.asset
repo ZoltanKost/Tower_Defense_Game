@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
+  m_Name: SpellSO
+  m_EditorClassIdentifier: 
+  manaCost: 0
+  goldCost: 25
+  radius: 5
+  damage: 50
+  spellType: 1
+  animation:
+    events:
+    - action:
+        m_PersistentCalls:
+          m_Calls: []
+      actionPoint: 10
+    sprites:
+    - {fileID: 1947654878, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 1152837009, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1317448817, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1574036310, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1723394443, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 801353645, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 214963811, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -749291233, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -2029427448, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1714290770, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1240689053, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    duration: 1.5
+  UIicon: {fileID: 650052441, guid: fb03cb2cef7589c41904c16936fba321, type: 3}

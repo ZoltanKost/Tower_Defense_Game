@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerBuildingManager : MonoBehaviour{
     [SerializeField] private FloorManager floor;
     [SerializeField] private TemporalFloor temporalFloor;
+    [SerializeField] private SpellManager spellManager;
     Action buildingFailedCallback;
     Action cancelBuildingActionCallback;
     Action placeCallback;
@@ -12,6 +13,7 @@ public class PlayerBuildingManager : MonoBehaviour{
     Action<int> destroyBuildingCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
+    SpellSO chosenSpell;
     BuildMode mode;
     public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         buildingFailedCallback = buildingFailedCb;
@@ -37,6 +39,13 @@ public class PlayerBuildingManager : MonoBehaviour{
                     buildingFailedCallback?.Invoke();
                 }
             break;
+            case BuildMode.CastSpell:
+                mode = 0;
+                // mana check
+                buyCallback?.Invoke(Resource.Gold, chosenSpell.goldCost);
+                spellManager.CastSpell(chosenSpell, position);
+                FinishBuildingAction();
+                break;
             case BuildMode.Road:
                 if(!floor.PlaceRoad(position))
                 {
@@ -119,6 +128,11 @@ public class PlayerBuildingManager : MonoBehaviour{
         chosenBuilding = b;
         temporalFloor.ActivateFloor(b);
     }
+    public void ChooseSpell(SpellSO b)
+    {
+        mode = BuildMode.CastSpell;
+        chosenSpell= b;
+    }
     public void ChooseGround(GroundArray g){
         mode = BuildMode.Ground;
         chosenGround = g;
@@ -139,6 +153,10 @@ public class PlayerBuildingManager : MonoBehaviour{
     public void SetCancelCallback(Action callback){
         cancelBuildingActionCallback = callback;
     }
+    public void ClearCancelCallback()
+    {
+        cancelBuildingActionCallback = null;
+    }
     public void AddCancelCallback(Action callback){
         cancelBuildingActionCallback += callback;
     }
@@ -152,6 +170,9 @@ public class PlayerBuildingManager : MonoBehaviour{
                     return false;
                 }
                 break;
+            case BuildMode.CastSpell:
+                // mana Check
+                return true;
             case BuildMode.Road:
                 if(!floor.CheckRoad(position)){
                     return false;
@@ -185,5 +206,6 @@ public enum BuildMode{
     Ground,
     DestroyBuilding,
     DestroyRoad,
-    DestroyGround
+    DestroyGround,
+    CastSpell
 }

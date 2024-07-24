@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 1791706988241740864}
   - component: {fileID: -7415387590434041790}
   m_Layer: 5
-  m_Name: BuildingButton
+  m_Name: EventButtonWithImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

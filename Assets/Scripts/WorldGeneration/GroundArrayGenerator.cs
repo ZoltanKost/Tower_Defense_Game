@@ -8,13 +8,13 @@ public class GroundArrayGenerator : MonoBehaviour {
         int _maxDimensions = maxDimensions, _maxValue = maxValue,_random = random,_trueCondition = trueCondition;
         float _randomMultiplier = randomMultiplier;
         int width,height, targetFloor;
-        HashSet<Vector2Int> grounds;
+        List<Vector2Int> grounds;
         // string s = "";
         int d = Mathf.ClosestPowerOfTwo(Random.Range(1,_maxDimensions + 1)) + 1;
         width = d;
         height = d;
-        d-=1;
-        grounds = new HashSet<Vector2Int>();
+        d--;
+        grounds = new List<Vector2Int>();
         int[,] ints = new int[width,height];
         targetFloor = Random.Range(0,2);
         Vector2Int start = Vector2Int.zero;

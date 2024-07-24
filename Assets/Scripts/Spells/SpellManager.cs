@@ -1,18 +1,26 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpellManager : MonoBehaviour {
-    [SerializeField] private EventSubscribeButton buttonPrefab;
-    public List<EventSubscribeButton> buttons;
-    public Dictionary<SpellSO,int> spells_Count;
-    public void AddSpell(SpellSO spell, int count){
-        if(spells_Count.ContainsKey(spell))
+    [SerializeField] private EnemyManager enemyManager;
+    public void CastSpell(SpellSO spell, Vector3 position)
+    {
+        switch (spell.spellType) 
         {
-            spells_Count[spell] += count;
-        }
-        else
-        {
-            spells_Count.Add(spell,count);
+            case SpellTarget.Area:
+                var g = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Quad));
+                g.AddComponent<CustomAnimator>();
+                CustomAnimator animator = g.GetComponent<CustomAnimator>();
+                animator.animations = new Animation[1];
+                animator.animations[0] = spell.animation;
+                animator.Init();
+                animator.animations[0].events[0].action.AddListener(() => enemyManager.AreaSpell(spell, position));
+                break;
+            case SpellTarget.Projectile:
+                break;
+            case SpellTarget.Targeted:
+                break;
+            case SpellTarget.Untargeted:
+                break;
         }
     }
 }

@@ -128,4 +128,13 @@ public class EnemyManager : MonoBehaviour, IHandler {
             if(enemy != null) Destroy(enemy.gameObject);
         }
     }
+
+    public void AreaSpell(SpellSO spell, Vector3 position)
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            if (Vector3.Distance(enemy.position, position) > spell.radius) continue;
+            enemy.Damage(spell.damage);
+        }
+    }
 }

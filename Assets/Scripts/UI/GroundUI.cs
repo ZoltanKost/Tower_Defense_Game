@@ -5,39 +5,38 @@ using UnityEngine.Tilemaps;
 public delegate void UI_ID_Callback(int id);
 public class GroundUI : MonoBehaviour{
     private UI_ID_Callback onClick;
-    [SerializeField] private Floor _floor;
+    [SerializeField] private UIFloor _floor;
     [SerializeField] private TMP_Text text;
+    [SerializeField] private int pixelPerUnit = 32;
     public int uiID{get;private set;}
-    void Awake(){
-        _floor.Init(0, $"GroundUI");
-    }
     public void Init(int ID,UI_ID_Callback onClick){
+        _floor.Init(pixelPerUnit);
         uiID = ID;
         this.onClick = onClick;
     }
     public void SetGroundArray(GroundArray ga){
         _floor.ClearAllTiles();
         _floor.floor = ga.targetFloor;
-        foreach(Vector3Int g in ga.grounds){
-            _floor.CreateGround(g);
+        foreach(Vector3Int v in ga.grounds){
+            _floor.CreateGround(v);
         }
-        Vector3 pos = new Vector3{x = Mathf.Min((-ga.width)/2, -.5f), y = (-ga.width)/2 + .5f, z = 0};
+        Vector3 pos = new Vector3{x = -ga.width/2f, y = -ga.height / 2f + ga.targetFloor, z = 0} * pixelPerUnit;
         _floor.transform.localPosition = pos;
         text.text = ga.price.ToString();
     }
     public void SetTile(TileBase tile){
         _floor.ClearAllTiles();
         _floor.transform.localPosition = Vector3.zero;
-        _floor.visuals[0].SetTile(Vector3Int.zero,tile);
+        _floor.SetTile(Vector3Int.zero,tile);
     }
     public void ActivateVisuals(){
-        _floor.gameObject.SetActive(true);
+        _floor.Activate();
     }
     public void DeactivateVisuals(){
-        _floor.gameObject.SetActive(false);
+        _floor.Deactivate();
     }
     public void OnGroundsChoosen(){
-        onClick?.Invoke(uiID);
         DeactivateVisuals();
+        onClick?.Invoke(uiID);
     }
 }

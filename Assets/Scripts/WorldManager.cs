@@ -32,7 +32,6 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private ArcherManager archerManager;
-    [SerializeField] private EventSubscribeButton nextWaweButton;
     [SerializeField] private EventSubscribeButton PauseButton;
     [SerializeField] private PlayerManager playerManager; 
     [SerializeField] private MenuUIManager defeatMenuManager;
@@ -41,8 +40,8 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private MenuUIManager winScreen;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
-    [SerializeField] private EventSubscribeButton shopButton;
     [SerializeField] private PlayerResourceManager playerResourceManager;
+    [SerializeField] private PlayerShopUIManager playerShopUIManager;
     private GameState gameState;
     int wave;
     
@@ -59,8 +58,13 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         temporalFloor.Init(0,"TempFloor");
-        Screen.SetResolution(1920,1080, true);
+        /*bool fullscreen = true;
+        #if UNITY_WEBGL
+            fullscreen = false;
+        #endif
+        Screen.SetResolution(1366,768, fullscreen);*/
         playerResourceManager.Init();
+        playerShopUIManager.Init(StartLevel);
         Action buildingFailedCallback = () => 
         {
             playerInput.Deactivate();
@@ -82,11 +86,7 @@ public class WorldManager : MonoBehaviour {
             null,
             destroyBuildingCb
         );
-        HideShowUI startLevelHideShow = nextWaweButton.GetComponent<HideShowUI>();
-        HideShowUI shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
-        Action cancelBuildingActionCallback = shop.Hide;
-        cancelBuildingActionCallback += startLevelHideShow.ShowUI;
-        cancelBuildingActionCallback += shopButtonHideShow.ShowUI;
+        Action cancelBuildingActionCallback = playerShopUIManager.CloseShop;
         cancelBuildingActionCallback += playerBuildingManager.CancelBuildingAction;
         playerInput.Init(
             temporalFloor,
@@ -96,11 +96,6 @@ public class WorldManager : MonoBehaviour {
             playerBuildingManager.HoldBuild, 
             playerBuildingManager.CanBuild
         );
-        Action shopButtonCallback = shop.Show;
-        shopButtonCallback += startLevelHideShow.HideUI;
-        shopButtonCallback += shopButtonHideShow.HideUI;
-        shopButton.Init(shopButtonCallback);
-        nextWaweButton.Init(StartLevel);
         PauseButton.Init(Pause);
         menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls, ResetWave});
         defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
@@ -178,9 +173,8 @@ public class WorldManager : MonoBehaviour {
         projectileManager.Switch(true);
         gameState = GameState.Wave;
         playerHealthBar.gameObject.SetActive(true);
-        playerHealthBar.Reset();
-        shopButton.GetComponent<HideShowUI>().HideUI();
-        nextWaweButton.GetComponent<HideShowUI>().HideUI();
+        // playerHealthBar.Reset();
+        playerShopUIManager.CloseShop();
     }
     public void StopLevel(){
         enemyManager.Switch(false);
@@ -199,15 +193,13 @@ public class WorldManager : MonoBehaviour {
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
         shop.Hide();
-        shopButton.GetComponent<HideShowUI>().ShowUI();
-        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
+        playerShopUIManager.CloseShop();
         InputOn();
         gameState = GameState.Idle;
     }
     public void ResetLevel(){
         shop.Hide();
-        shopButton.GetComponent<HideShowUI>().ShowUI();
-        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
+        playerShopUIManager.CloseShop();
         archerManager.ClearEntities();
         projectileManager.ClearEntities();
         buildingManager.ClearEntities();
@@ -231,9 +223,7 @@ public class WorldManager : MonoBehaviour {
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
         winScreen.gameObject.SetActive(false);
-        
-        shopButton.GetComponent<HideShowUI>().ShowUI();
-        nextWaweButton.GetComponent<HideShowUI>().ShowUI();
+        playerShopUIManager.CloseShop();
         Start();
     }
     public void Pause(){

@@ -26,6 +26,7 @@ public class GroundPageModel : MonoBehaviour {
         groundPage.ResetGroundArrays(_groundArrays);
     }
     public void OnGroundChosenCallBack(int uiID){
+        Debug.Log("OnGroundChosenCallback");
         playerBuildingManager.CancelBuildingAction();
         playerBuildingManager.ChooseGround(_groundArrays[uiID]);
         groundPage.DeactivateVisuals(uiID);
@@ -33,6 +34,7 @@ public class GroundPageModel : MonoBehaviour {
             {
                 CreateGroundArray(uiID);
                 groundPage.ActivateVisuals(uiID);
+                playerBuildingManager.ClearCancelCallback();
             }
         );
         playerBuildingManager.SetCancelCallback(() => groundPage.ActivateVisuals(uiID));

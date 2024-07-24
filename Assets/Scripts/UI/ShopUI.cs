@@ -14,7 +14,6 @@ public class ShopUI : MonoBehaviour {
     }
     public void Init(){
         InitTabs();
-        HideUI();
     }
     public void ShowUI(){
         hideShowUI.ShowUI();

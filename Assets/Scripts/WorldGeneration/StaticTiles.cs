@@ -15,6 +15,14 @@ public static class StaticTiles{
     public static TileBase GetTile(TileID layer){
         return ID_Tile[layer];
     }
+    public static TileID GetID(TileBase tile)
+    {
+        foreach(var pair in ID_Tile)
+        {
+            if(pair.Value ==  tile) return pair.Key;
+        }
+        return TileID.None;
+    }
 }
 
 public enum TileID{
