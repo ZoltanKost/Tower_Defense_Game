@@ -1,35 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class MagicPage : MonoBehaviour
 {
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
     [SerializeField] private BuildingButtonUI buttonPrefab;
-    [SerializeField] SpellSO[] spells;
-    private List<BuildingButtonUI> buttons;
-
-    public void Init()
+    private BuildingButtonUI[] buttonArray;
+    public void Init(SpellData[] spells, int spellCount, Action<int> OnMagicBuyCallBack)
     {
-        buttons = new List<BuildingButtonUI>();
-        foreach (SpellSO spell in spells)
+        buttonArray = new BuildingButtonUI[spellCount];
+        for (int i = 0; i < buttonArray.Length; i++)
         {
-            BuildingButtonUI ui = Instantiate(buttonPrefab, transform);
-            ui.Init(OnMagicChosenCallback, spell.spellData.UIicon,buttons.Count);
-            buttons.Add(ui);
+            buttonArray[i] = Instantiate(buttonPrefab, transform);
+            buttonArray[i].Init(OnMagicBuyCallBack, spells[i].UIicon, i);
         }
     }
 
-    void OnMagicChosenCallback(int uiID)
+    public void UpdateVisual(int ID, SpellData spell)
     {
-        playerBuildingManager.CancelBuildingAction();
-        playerBuildingManager.ChooseSpell(spells[uiID]);
-        //DeactivateVisuals(uiID);
-        playerBuildingManager.SetPlaceCallback(() =>
+        buttonArray[ID].SetSprite(spell.UIicon);
+    }
+    public void ResetGroundArrays(SpellData[] spells)
+    {
+        for (int i = 0; i < buttonArray.Length; i++)
         {
-            //ActivateVisuals(uiID);
+            buttonArray[i].SetSprite(spells[i].UIicon);
         }
-        );
-        //playerBuildingManager.SetCancelCallback(() => ActivateVisuals(uiID));
+    }
+    public void ActivateVisuals(int uiID)
+    {
+        buttonArray[uiID].ActivateVisuals();
+    }
+    public void DeactivateVisuals(int uiID)
+    {
+        buttonArray[uiID].DeactivateVisuals();
     }
 }

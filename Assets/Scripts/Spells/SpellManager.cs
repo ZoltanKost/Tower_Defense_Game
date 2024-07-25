@@ -6,7 +6,7 @@ public class SpellManager : MonoBehaviour {
     [SerializeField] private EnemyManager enemyManager;
     //[SerializeField] private AnimationManager animationManager;
     List<CustomAnimator> spells = new List<CustomAnimator>();
-    public void CastSpell(SpellSO.SpellData spell, Vector3 position)
+    public void CastSpell(SpellData spell, Vector3 position)
     {
         switch (spell.spellType) 
         {

@@ -5,16 +5,18 @@ public class Shop : MonoBehaviour {
     [SerializeField] private GroundPageModel groundPageModel;
     [SerializeField] private BuildingPage buildingPage;
     [SerializeField] private RoadPage roadPage;
-    [SerializeField] private MagicPage magicPage;
+    [SerializeField] private MagicPageModel magicPageModel;
+    [SerializeField] private PlayerInventoryModel playerInventoryModel;
     [SerializeField] private ShopUI shopUI;
     [SerializeField] private PlayerResourceManager playerResourceManager;
     bool shown;
-    public void Init(int groundsCount){
+    public void Init(int groundsCount, int spellCount = 6){
         groundPageModel.Init(groundsCount);
+        magicPageModel.Init(spellCount);
+        playerInventoryModel.Init();
         buildingPage.Init();
         shopUI.Init();
-        roadPage.Init(); 
-        magicPage.Init();
+        roadPage.Init();
     }
     public void ResetGroundArrays(){
         groundPageModel.ResetGroundArrays();

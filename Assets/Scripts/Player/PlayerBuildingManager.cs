@@ -13,7 +13,7 @@ public class PlayerBuildingManager : MonoBehaviour{
     Action<int> destroyBuildingCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
-    SpellSO.SpellData chosenSpell;
+    SpellData chosenSpell;
     BuildMode mode;
     public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         buildingFailedCallback = buildingFailedCb;
@@ -126,10 +126,10 @@ public class PlayerBuildingManager : MonoBehaviour{
         chosenBuilding = b;
         temporalFloor.ActivateFloor(b);
     }
-    public void ChooseSpell(SpellSO b)
+    public void ChooseSpell(SpellData b)
     {
         mode = BuildMode.CastSpell;
-        chosenSpell = b.spellData;
+        chosenSpell = b;
     }
     public void ChooseGround(GroundArray g){
         mode = BuildMode.Ground;

@@ -86,7 +86,7 @@ public class WorldManager : MonoBehaviour {
             null,
             destroyBuildingCb
         );
-        Action cancelBuildingActionCallback = playerShopUIManager.CloseShop;
+        Action cancelBuildingActionCallback = playerShopUIManager.CloseAll;
         cancelBuildingActionCallback += playerBuildingManager.CancelBuildingAction;
         playerInput.Init(
             temporalFloor,
@@ -174,7 +174,7 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Wave;
         playerHealthBar.gameObject.SetActive(true);
         // playerHealthBar.Reset();
-        playerShopUIManager.CloseShop();
+        playerShopUIManager.CloseAll();
     }
     public void StopLevel(){
         enemyManager.Switch(false);
@@ -193,13 +193,13 @@ public class WorldManager : MonoBehaviour {
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
         shop.Hide();
-        playerShopUIManager.CloseShop();
+        playerShopUIManager.CloseAll();
         InputOn();
         gameState = GameState.Idle;
     }
     public void ResetLevel(){
         shop.Hide();
-        playerShopUIManager.CloseShop();
+        playerShopUIManager.CloseAll();
         archerManager.ClearEntities();
         projectileManager.ClearEntities();
         buildingManager.ClearEntities();
@@ -223,7 +223,7 @@ public class WorldManager : MonoBehaviour {
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
         winScreen.gameObject.SetActive(false);
-        playerShopUIManager.CloseShop();
+        playerShopUIManager.CloseAll();
         Start();
     }
     public void Pause(){

@@ -1,15 +1,15 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
-public delegate void UI_ID_Callback(int id);
 public class GroundUI : MonoBehaviour{
-    private UI_ID_Callback onClick;
+    private Action<int> onClick;
     [SerializeField] private UIFloor _floor;
     [SerializeField] private TMP_Text text;
     [SerializeField] private int pixelPerUnit = 32;
     public int uiID{get;private set;}
-    public void Init(int ID,UI_ID_Callback onClick){
+    public void Init(int ID,Action<int> onClick){
         _floor.Init(pixelPerUnit);
         uiID = ID;
         this.onClick = onClick;
