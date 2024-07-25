@@ -13,7 +13,7 @@ public class PlayerBuildingManager : MonoBehaviour{
     Action<int> destroyBuildingCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
-    SpellSO chosenSpell;
+    SpellSO.SpellData chosenSpell;
     BuildMode mode;
     public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         buildingFailedCallback = buildingFailedCb;
@@ -26,8 +26,7 @@ public class PlayerBuildingManager : MonoBehaviour{
     public void ClickBuild(Vector3 position){
         switch(mode){
             case BuildMode.Ground:
-                if(floor.CheckGA(position,chosenGround) && 
-                canBuyCallBack(Resource.Gold,chosenGround.price))
+                if(canBuyCallBack(Resource.Gold,chosenGround.price))
                 {
                     mode = 0;
                     floor.CreateGroundArray_DontCheck(position,chosenGround);
@@ -40,7 +39,7 @@ public class PlayerBuildingManager : MonoBehaviour{
                 }
             break;
             case BuildMode.CastSpell:
-                mode = 0;
+                //mode = 0;
                 // mana check
                 buyCallback?.Invoke(Resource.Gold, chosenSpell.goldCost);
                 spellManager.CastSpell(chosenSpell, position);
@@ -53,8 +52,7 @@ public class PlayerBuildingManager : MonoBehaviour{
                 }
             break;
             case BuildMode.Building:
-                if(floor.CheckBuilding(position,chosenBuilding.width, chosenBuilding.height) 
-                   && canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
+                if(canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
                 {
                     buyCallback(Resource.Gold,chosenBuilding.price);
                     floor.PlaceBuilding_DontCheck(position,chosenBuilding);
@@ -131,7 +129,7 @@ public class PlayerBuildingManager : MonoBehaviour{
     public void ChooseSpell(SpellSO b)
     {
         mode = BuildMode.CastSpell;
-        chosenSpell= b;
+        chosenSpell = b.spellData;
     }
     public void ChooseGround(GroundArray g){
         mode = BuildMode.Ground;

@@ -15,7 +15,7 @@ public class MagicPage : MonoBehaviour
         foreach (SpellSO spell in spells)
         {
             BuildingButtonUI ui = Instantiate(buttonPrefab, transform);
-            ui.Init(OnMagicChosenCallback, spell.UIicon,buttons.Count);
+            ui.Init(OnMagicChosenCallback, spell.spellData.UIicon,buttons.Count);
             buttons.Add(ui);
         }
     }

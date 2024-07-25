@@ -6,57 +6,52 @@ public class CustomAnimator : MonoBehaviour{
     
     [SerializeField] public SpriteRenderer spriteRenderer;
     public Animation[] animations;
-    private Animation currentAnimation;
+    private int currentAnimation;
     float time = 0;
     public void Init(){
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         PlayAnimation(0);
     }
-    public void PlayAnimation(Animation animation){
-        currentAnimation = animation;
-        time = 0;
-        currentAnimation.Reset();
-    }
     public void PlayAnimation(int id){
-        currentAnimation = animations[id];
+        currentAnimation = id;
         time = 0;
-        currentAnimation.Reset();
-        spriteRenderer.sprite = currentAnimation.sprites[0];
+        animations[currentAnimation].Reset();
+        spriteRenderer.sprite = animations[currentAnimation].sprites[0];
     }
     public void UpdateAnimator(float delta){
         time += delta;
-        if(time >= currentAnimation.interval){
+        if (time >= animations[currentAnimation].interval){
             time = 0;
-            spriteRenderer.sprite = currentAnimation.nextSprite;
+            spriteRenderer.sprite = animations[currentAnimation].nextSprite;
         }
     }
-    public void SetAnimation(Animation animation){
-        if(currentAnimation == animation) return;
-        PlayAnimation(currentAnimation);
-    } 
     public void SetAnimation(int animation){
-        if(currentAnimation == animations[animation]) return;
+        if(currentAnimation == animation) return;
         PlayAnimation(animation);
     }
     public void SetSortingParams(int order, int layer){
-        currentAnimation = animations[0];
+        currentAnimation = 0;
         spriteRenderer.sortingOrder = order;
         spriteRenderer.sortingLayerName = $"{layer}";
     }
 }
 public delegate void AnimationDelegate();
 [Serializable]
-public class Animation{
+public struct Animation{
     [Serializable]
     public struct Event{
         public UnityEvent action;
         public int actionPoint;
     }
+    public event Action onAnimationEnd;
     public Event[] events;
     public Sprite[] sprites;
     public Sprite nextSprite{
         get{
-            if(number >= sprites.Length) number = 0;
+            if (number >= sprites.Length) { 
+                number = 0;
+                onAnimationEnd?.Invoke();
+            }
             CheckEvents();
             return sprites[number++];
         }

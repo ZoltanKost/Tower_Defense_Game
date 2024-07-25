@@ -43,14 +43,22 @@ public class PlayerInputManager : MonoBehaviour{
         Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
         bool canBuild = checkCallback.Invoke(input);
         temporalFloor.MoveTempFloor(input,canBuild);
-        if(Input.GetMouseButtonDown(0)){
-            if(currentEventSystem.IsPointerOverGameObject()){ 
-                return;
+        if (canBuild)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (currentEventSystem.IsPointerOverGameObject())
+                {
+                    return;
+                }
+                clickCallback?.Invoke(input);
             }
-            clickCallback?.Invoke(input);
-        }else if(Input.GetMouseButton(0)){
-            holdCallback?.Invoke(input);
-        }else if(Input.GetKeyDown(KeyCode.Space)){
+            else if (Input.GetMouseButton(0))
+            {
+                holdCallback?.Invoke(input);
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.Space)){
             cancelBuildingActionCallback?.Invoke();
             resetAllGroundsCallback?.Invoke();
         }else if(Input.GetKeyDown(KeyCode.Escape)){

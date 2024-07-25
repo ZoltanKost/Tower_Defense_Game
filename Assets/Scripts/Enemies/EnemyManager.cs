@@ -129,7 +129,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
         }
     }
 
-    public void AreaSpell(SpellSO spell, Vector3 position)
+    public void AreaSpell(SpellSO.SpellData spell, Vector3 position)
     {
         foreach (Enemy enemy in enemies)
         {

@@ -41,16 +41,19 @@ public class TemporalFloor : Floor
         temp.x = Mathf.FloorToInt(f: vector.x);
         temp.y = Mathf.FloorToInt(vector.y);
         temp.z = 0;
+        if (canBuild)
+        {
+            currentColor = Color.white;
+        }
+        else
+        {
+            currentColor = blockPlace;
+        }
+        UpdateColors();
         if (temp != currentPosition){
             tween.Kill();
             if(activated){
                 tween = transform.DOMove(temp, (temp - currentPosition).magnitude * tweenSpeed * (FixedDelta?Time.fixedDeltaTime:Time.deltaTime)).SetEase(moveEase,amplitude_overshoot);
-                if(canBuild){
-                    currentColor = Color.white;
-                }else{
-                    currentColor = blockPlace;
-                }
-                UpdateColors();
             }else{
                 transform.position = temp;
             }

@@ -12,28 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
   m_Name: SpellSO
   m_EditorClassIdentifier: 
-  manaCost: 0
-  goldCost: 25
-  radius: 5
-  damage: 50
-  spellType: 1
-  animation:
-    events:
-    - action:
-        m_PersistentCalls:
-          m_Calls: []
-      actionPoint: 10
-    sprites:
-    - {fileID: 1947654878, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: 1152837009, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -1317448817, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -1574036310, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -1723394443, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: 801353645, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: 214963811, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -749291233, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -2029427448, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -1714290770, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    - {fileID: -1240689053, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
-    duration: 1.5
-  UIicon: {fileID: 650052441, guid: fb03cb2cef7589c41904c16936fba321, type: 3}
+  spellData:
+    manaCost: 0
+    goldCost: 25
+    radius: 5
+    damage: 50
+    spellType: 1
+    animation:
+      events:
+      - action:
+          m_PersistentCalls:
+            m_Calls: []
+        actionPoint: 6
+      sprites:
+      - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -533503148, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 2140119943, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 771251994, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -448887172, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1473750787, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1567760858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1336804858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1201027298, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1037483818, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1497425469, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      duration: 1
+    UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
