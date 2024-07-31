@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 [RequireComponent(typeof(CustomAnimator))]
 public class Enemy : MonoBehaviour, IDamagable, IAttacking {
-    public delegate void DamageCastleEvent(int damage);
-    DamageCastleEvent damageCastleEvent;
+    Action<int> damageCastleEvent;
     OnKillEvent onKillEvent;
     OnKillEvent onRemoveEvent;
     public int HP{
@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     public void OnKillInvoke(){
         onRemoveEvent?.Invoke(index);
     }
-    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, DamageCastleEvent damageCastleEvent){
+    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, Action<int> damageCastleEvent){
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;

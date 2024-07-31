@@ -1117,7 +1117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryUIView: {fileID: 0}
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
 --- !u!114 &139541025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5739,9 +5739,10 @@ MonoBehaviour:
   possibleSpells:
   - {fileID: 11400000, guid: cbab5d4757d4ce14a9dd48b39a5fb183, type: 2}
   - {fileID: 11400000, guid: c13a67db31760b84b93a412894d6b7fb, type: 2}
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
   magicPage: {fileID: 0}
   inventoryModel: {fileID: 139541024}
+  playerResourceManager: {fileID: 1018600452}
 --- !u!1 &1101839434
 GameObject:
   m_ObjectHideFlags: 0
@@ -7736,7 +7737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbfa731aa4b0b548b38b0fefdaab252, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
   prefab: {fileID: 340509466061575731, guid: 6c820858ecccc6e47a7687019347b6b3, type: 3}
   roads:
   - {fileID: 11400000, guid: 349c05ee57215964ea809cb430e63dbb, type: 2}
@@ -7953,7 +7954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundArrayGenerator: {fileID: 82367863}
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
   groundPage: {fileID: 0}
 --- !u!114 &1484985152
 MonoBehaviour:
@@ -10756,7 +10757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350d74c5d6c0a3147b256aaa67bbfbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
   prefab: {fileID: 1791706988241740864, guid: ccb32b40b1fc66e46bfe171745582fa6, type: 3}
   buildings:
   - {fileID: 11400000, guid: f85dc92116536b142b56f6472ca281e0, type: 2}
@@ -11492,7 +11493,7 @@ MonoBehaviour:
   temporalFloor: {fileID: 393348947}
   shop: {fileID: 178731195}
   buildingUI: {fileID: 1955536665}
-  playerBuildingManager: {fileID: 1018600448}
+  playerActionManager: {fileID: 1018600448}
   buildingManager: {fileID: 65913790}
   playerInput: {fileID: 1018600450}
   pathfinding: {fileID: 1963445667}

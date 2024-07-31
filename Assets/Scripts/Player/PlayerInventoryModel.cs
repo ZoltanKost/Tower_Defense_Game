@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PlayerInventoryModel : MonoBehaviour
 {
     [SerializeField] private DynamicItemPageUI inventoryUIView;
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     private List<SpellData> spells;
 
     public void Init()
@@ -29,15 +29,15 @@ public class PlayerInventoryModel : MonoBehaviour
     }
     public void SetPlayerAction(int uiID)
     {
-        playerBuildingManager.CancelBuildingAction();
-        playerBuildingManager.ChooseSpell(spells[uiID]);
+        playerActionManager.CancelBuildingAction();
+        playerActionManager.ChooseSpell(spells[uiID]);
         inventoryUIView.DeactivateVisuals(uiID);
-        playerBuildingManager.SetPlaceCallback(() =>
+        playerActionManager.SetPlaceCallback(() =>
         {
             inventoryUIView.ActivateVisuals(uiID);
             RemoveSpell(uiID);
         }
         );
-        playerBuildingManager.SetCancelCallback(() => inventoryUIView.ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => inventoryUIView.ActivateVisuals(uiID));
     }
 }

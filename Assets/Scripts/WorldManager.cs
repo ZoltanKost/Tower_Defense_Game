@@ -26,7 +26,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private TemporalFloor temporalFloor;
     [SerializeField] private Shop shop;
     [SerializeField] private ShopUI buildingUI;
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private PlayerInputManager playerInput;
     [SerializeField] private Pathfinding pathfinding;
@@ -65,7 +65,7 @@ public class WorldManager : MonoBehaviour {
         Screen.SetResolution(1366,768, fullscreen);*/
         playerResourceManager.Init();
         playerShopUIManager.Init(StartLevel);
-        Action buildingFailedCallback = () => 
+        Action actionFailedCallback = () => 
         {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
@@ -78,23 +78,23 @@ public class WorldManager : MonoBehaviour {
             Debug.Log($"Removed{ID} on {gX},{gY}");
             floorManager.DestroyBuilding(gX,gY,w,h);
         };
-        playerBuildingManager.Init(
-            buildingFailedCallback,
+        playerActionManager.Init(
+            actionFailedCallback,
             temporalFloor,
             playerResourceManager.EnoughtResource,
             playerResourceManager.RemoveResource,
             null,
             destroyBuildingCb
         );
-        Action cancelBuildingActionCallback = playerShopUIManager.CloseAll;
-        cancelBuildingActionCallback += playerBuildingManager.CancelBuildingAction;
+        Action cancelActionCallback = playerShopUIManager.CloseAll;
+        cancelActionCallback += playerActionManager.CancelBuildingAction;
         playerInput.Init(
             temporalFloor,
             shop.ResetGroundArrays, 
-            cancelBuildingActionCallback, 
-            playerBuildingManager.ClickBuild, 
-            playerBuildingManager.HoldBuild, 
-            playerBuildingManager.CanBuild
+            cancelActionCallback, 
+            playerActionManager.ClickBuild, 
+            playerActionManager.HoldBuild, 
+            playerActionManager.CanBuild
         );
         PauseButton.Init(Pause);
         menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls, ResetWave});
@@ -121,6 +121,7 @@ public class WorldManager : MonoBehaviour {
         floorManager.CreateCastle(mid,castle);
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
+        playerActionManager.Switch(gameState);
     }
     // void Update(){
     //     bool esc = Input.GetKeyDown(KeyCode.Escape);
@@ -165,13 +166,13 @@ public class WorldManager : MonoBehaviour {
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
         enemyManager.SpawnEnemies(wave++);
-        InputOff();
-        playerBuildingManager.CancelBuildingAction();
+        playerActionManager.CancelBuildingAction();
         buildingManager.Switch(true);
         enemyManager.Switch(true);
         archerManager.Switch(true);
         projectileManager.Switch(true);
         gameState = GameState.Wave;
+        playerActionManager.Switch(gameState);
         playerHealthBar.gameObject.SetActive(true);
         // playerHealthBar.Reset();
         playerShopUIManager.CloseAll();
@@ -194,8 +195,8 @@ public class WorldManager : MonoBehaviour {
         playerHealthBar.gameObject.SetActive(false);
         shop.Hide();
         playerShopUIManager.CloseAll();
-        InputOn();
         gameState = GameState.Idle;
+        playerActionManager.Switch(gameState);
     }
     public void ResetLevel(){
         shop.Hide();
@@ -210,15 +211,14 @@ public class WorldManager : MonoBehaviour {
         playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
-        InputOff();
         StopLevel();
         defeatMenuManager.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
         gameState = GameState.Defeat;
+        playerActionManager.Switch(gameState);
     }
     public void Restart(){
         floorManager.ClearFloor();
-        InputOn();
         ResetLevel();
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
@@ -227,16 +227,14 @@ public class WorldManager : MonoBehaviour {
         Start();
     }
     public void Pause(){
-        InputOff();
         StopLevel();
         menuUIManager.gameObject.SetActive(true);
         gameState = gameState + 1;
+        playerActionManager.Switch(gameState);
     }
     public void Unpause(){
         if(gameState == GameState.WavePaused){
             enemyManager.Switch(true);
-        }else{
-            InputOn();
         }
         buildingManager.Switch(true);
         archerManager.Switch(true);
@@ -245,20 +243,14 @@ public class WorldManager : MonoBehaviour {
         menuUIManager.gameObject.SetActive(false);
         controlsMenu.gameObject.SetActive(false);
         gameState = gameState - 1;
+        playerActionManager.Switch(gameState);
     }
-    public void InputOn(){
-        playerInput.Activate();
-        // buildingUI.ShowUI();
-    }
-    public void InputOff(){
-        // buildingUI.HideUI();
-        playerInput.Deactivate();
-    }
-    enum GameState{
-        Idle, 
-        IdlePaused,
-        Wave, 
-        WavePaused,
-        Defeat
-    } 
+}
+public enum GameState
+{
+    Idle,
+    IdlePaused,
+    Wave,
+    WavePaused,
+    Defeat
 }

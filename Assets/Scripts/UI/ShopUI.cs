@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 public class ShopUI : MonoBehaviour {
-    [SerializeField] private PlayerBuildingManager buildingManager;
+    [SerializeField] private PlayerActionManager buildingManager;
     [SerializeField] private TMP_Text text;
     [SerializeField] private List<ShopTab> tabs;
     [SerializeField] private List<Transform> pages;

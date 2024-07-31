@@ -5,7 +5,7 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     [SerializeField] private HealthBar hpBar;
     [SerializeField] private TweenAnimator tweenAnimator;
     [SerializeField] private int maxHP = 100;
-    SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
+    public SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
     Archer[] archers;
     public int index;
     public Vector2Int gridPosition{get;private set;}

@@ -3,9 +3,10 @@
 public class MagicPageModel : MonoBehaviour
 {
     [SerializeField] private SpellSO[] possibleSpells;
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     [SerializeField] private MagicPage magicPage;
     [SerializeField] private PlayerInventoryModel inventoryModel;
+    [SerializeField] private PlayerResourceManager playerResourceManager;
 
 private SpellData[] _spells;
     public SpellData[] spells { get => _spells; }
@@ -34,16 +35,19 @@ private SpellData[] _spells;
 
     void OnMagicBuyCallBack(int uiID)
     {
-        playerBuildingManager.CancelBuildingAction();
-        inventoryModel.AddSpell(spells[uiID]);
+        playerActionManager.CancelBuildingAction();
+        SpellData spellData = spells[uiID];
+        if (!playerResourceManager.EnoughtResource(Resource.Gold, spellData.goldCost)) return;
+        playerResourceManager.RemoveResource(Resource.Gold, spellData.goldCost);
+        inventoryModel.AddSpell(spellData);
         magicPage.DeactivateVisuals(uiID);
         CreateSpell(uiID);
-        /*playerBuildingManager.SetPlaceCallback(() =>
+        /*playerActionManager.SetPlaceCallback(() =>
         {
             magicPage.ActivateVisuals(uiID);
             CreateSpell(uiID);
         }
         );
-        playerBuildingManager.SetCancelCallback(() => magicPage.ActivateVisuals(uiID));*/
+        playerActionManager.SetCancelCallback(() => magicPage.ActivateVisuals(uiID));*/
     }
 }

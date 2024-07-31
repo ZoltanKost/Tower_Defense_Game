@@ -70,15 +70,15 @@ public class TemporalFloor : Floor
         arrows[2].localPosition = Vector3Int.up * building.height * cellSize;
         arrows[3].localPosition = new Vector3Int(building.width, building.height) * cellSize;
     }
-    public void SetObject(BuildMode mode){
+    public void SetObject(ActionMode mode){
         switch(mode){
-            case BuildMode.Bridge: 
+            case ActionMode.Bridge: 
             PlaceBridge(Vector3Int.zero);
             break;
-            case BuildMode.BridgeSpot:
+            case ActionMode.BridgeSpot:
             PlaceBridge(Vector3Int.zero);
             break;
-            case BuildMode.Road:
+            case ActionMode.Road:
             PlaceRoad(Vector3Int.zero);
             break;
         }
@@ -105,7 +105,7 @@ public class TemporalFloor : Floor
         }
         SetBuilding(b);
     }
-    public void ActivateFloor(BuildMode m){
+    public void ActivateFloor(ActionMode m){
         activated = true;
         ClearAllTiles();
         if(visual != null){

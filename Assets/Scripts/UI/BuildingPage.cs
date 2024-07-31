@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingPage : MonoBehaviour {
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     [SerializeField] private BuildingButtonUI prefab;
     [SerializeField] private Building[] buildings;
     private List<BuildingButtonUI> buttons;
@@ -15,15 +15,15 @@ public class BuildingPage : MonoBehaviour {
         }
     }
     public void OnGroundChosenCallBack(int uiID){
-        playerBuildingManager.CancelBuildingAction();
-        playerBuildingManager.ChooseBuilding(buildings[uiID]);
+        playerActionManager.CancelBuildingAction();
+        playerActionManager.ChooseBuilding(buildings[uiID]);
         DeactivateVisuals(uiID);
-        playerBuildingManager.SetPlaceCallback(() => 
+        playerActionManager.SetPlaceCallback(() => 
             {
                 ActivateVisuals(uiID);
             }
         );
-        playerBuildingManager.SetCancelCallback(() => ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => ActivateVisuals(uiID));
     }
     public void DeactivateVisuals(int ID){
 

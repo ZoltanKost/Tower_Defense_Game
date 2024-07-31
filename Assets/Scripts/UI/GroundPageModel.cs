@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(GroundPage))]
 public class GroundPageModel : MonoBehaviour {
     [SerializeField] private GroundArrayGenerator groundArrayGenerator;
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     [SerializeField] private GroundPage groundPage;
     private GroundArray[] _groundArrays;
     public GroundArray[] groundArrays{get => _groundArrays;}
@@ -27,16 +27,16 @@ public class GroundPageModel : MonoBehaviour {
     }
     public void OnGroundChosenCallBack(int uiID){
         Debug.Log("OnGroundChosenCallback");
-        playerBuildingManager.CancelBuildingAction();
-        playerBuildingManager.ChooseGround(_groundArrays[uiID]);
+        playerActionManager.CancelBuildingAction();
+        playerActionManager.ChooseGround(_groundArrays[uiID]);
         groundPage.DeactivateVisuals(uiID);
-        playerBuildingManager.SetPlaceCallback(() => 
+        playerActionManager.SetPlaceCallback(() => 
             {
                 CreateGroundArray(uiID);
                 groundPage.ActivateVisuals(uiID);
-                playerBuildingManager.ClearCancelCallback();
+                playerActionManager.ClearCancelCallback();
             }
         );
-        playerBuildingManager.SetCancelCallback(() => groundPage.ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => groundPage.ActivateVisuals(uiID));
     }
 }

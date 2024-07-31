@@ -28,7 +28,7 @@ public class Floor : MonoBehaviour{
         tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int layer, string sortingLayerName){
-        this.floor = layer;
+        floor = layer;
         for(int i = 0; i < visuals.Length; i++){
             TilemapRenderer mapRenderer = visuals[i].GetComponent<TilemapRenderer>();
             mapRenderer.sortingLayerName = sortingLayerName;

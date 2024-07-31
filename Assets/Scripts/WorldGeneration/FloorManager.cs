@@ -415,6 +415,5 @@ public class FloorManager : MonoBehaviour{
         return floorCells[gridX, gridY].road && 
             floorCells[gridX, gridY].currentFloor == 0 &&
             floorCells[gridX,gridY - 1].currentFloor == 0;
-            
     }
 }

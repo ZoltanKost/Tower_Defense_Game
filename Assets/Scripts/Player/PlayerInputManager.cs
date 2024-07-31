@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,15 +8,16 @@ public class PlayerInputManager : MonoBehaviour{
     private CheckCallback checkCallback;
     private ClickCallback clickCallback;
     private ClickCallback holdCallback;
-    private Action cancelBuildingActionCallback;
+    private Action cancelActionCallback;
     private Action resetAllGroundsCallback;
-    bool active;
     protected Camera mCamera;
     protected TemporalFloor temporalFloor;
     protected EventSystem currentEventSystem;
     Vector3 camMovePosition = new();
     Vector3 fixedCameraPosition = new();
-    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelBuildingActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback, CheckCallback checkCallback){
+
+    bool active;
+    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback, CheckCallback checkCallback){
         active = true;
         mCamera = Camera.main;
         currentEventSystem = FindObjectOfType<EventSystem>();
@@ -26,10 +26,10 @@ public class PlayerInputManager : MonoBehaviour{
         clickCallback = clickBuildCallback;
         this.holdCallback = holdCallback;
         this.checkCallback = checkCallback;
-        this.cancelBuildingActionCallback = cancelBuildingActionCallback;
+        this.cancelActionCallback = cancelActionCallback;
     }
     public void Update(){
-        if(active) Tick();
+        if(active)Tick();
         if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;
             fixedCameraPosition = mCamera.transform.position;
@@ -39,7 +39,7 @@ public class PlayerInputManager : MonoBehaviour{
             mCamera.transform.position = fixedCameraPosition + direction * Time.fixedDeltaTime;
         }
     }
-    public virtual void Tick(){
+    public void Tick(){
         Vector3 input = mCamera.ScreenToWorldPoint(Input.mousePosition);
         bool canBuild = checkCallback.Invoke(input);
         temporalFloor.MoveTempFloor(input,canBuild);
@@ -59,21 +59,18 @@ public class PlayerInputManager : MonoBehaviour{
             }
         }
         if(Input.GetKeyDown(KeyCode.Space)){
-            cancelBuildingActionCallback?.Invoke();
+            cancelActionCallback?.Invoke();
             resetAllGroundsCallback?.Invoke();
         }else if(Input.GetKeyDown(KeyCode.Escape)){
-            cancelBuildingActionCallback?.Invoke();
+            cancelActionCallback?.Invoke();
         }
     }
-    public void Deactivate(){
-        active = false;
-    }
-    public void Activate(){
+    public void Activate()
+    {
         active = true;
     }
-    public IEnumerator WaitForActivate(float time){
-        yield return new WaitForSeconds(time);
-        Activate();
-        Debug.Log("Activated");
+    public void Deactivate()
+    {
+        active = false;
     }
 }

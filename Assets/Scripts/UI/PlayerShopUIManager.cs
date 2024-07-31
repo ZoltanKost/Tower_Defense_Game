@@ -11,6 +11,8 @@ public class PlayerShopUIManager : MonoBehaviour {
     [SerializeField] private ShopUI shopUI;
     [SerializeField] private ShopUI inventoryUI;
     bool shopOpen = false;
+    bool inventoryOpen = false;
+    bool buttonsOpen = true;
     public void Init(Action startLevelCallback)
     {
         shopButtonHideShow = shopButton.GetComponent<HideShowUI>();
@@ -24,39 +26,52 @@ public class PlayerShopUIManager : MonoBehaviour {
     }
     public void CloseAll()
     {
+        ShowButtons();
         CloseShop();
         CloseInventory();
     }
     void OpenShop()
     {
         if(shopOpen) return;
-        shopButtonHideShow.HideUI();
-        startButtonHideShow.HideUI();
-        inventoryButtonHideShow.HideUI();
+        HideButtons();
         shopUI.ShowUI();
         shopOpen = true;
     }
     void CloseShop()
     {
         if(!shopOpen) return;
-        shopButtonHideShow.ShowUI();
-        startButtonHideShow.ShowUI();
-        inventoryButtonHideShow.ShowUI();
+        ShowButtons();
         shopUI.HideUI();
         shopOpen = false;
     }
     void OpenInventory()
     {
-        shopButtonHideShow.HideUI();
-        startButtonHideShow.HideUI();
-        inventoryButtonHideShow.HideUI();
+        if(inventoryOpen) return;
+        HideButtons();
         inventoryUI.ShowUI();
+        inventoryOpen = true;
     }
-    public void CloseInventory()
+    void CloseInventory()
     {
+        if (!inventoryOpen) return;
+        ShowButtons();
+        inventoryUI.HideUI();
+        inventoryOpen = false;
+    }
+    void ShowButtons()
+    {
+        if (buttonsOpen) return;
         shopButtonHideShow.ShowUI();
         startButtonHideShow.ShowUI();
         inventoryButtonHideShow.ShowUI();
-        inventoryUI.HideUI();
+        buttonsOpen = true;
+    }
+    void HideButtons()
+    {
+        if (!buttonsOpen) return;
+        shopButtonHideShow.HideUI();
+        startButtonHideShow.HideUI();
+        inventoryButtonHideShow.HideUI();
+        buttonsOpen = false;
     }
 }

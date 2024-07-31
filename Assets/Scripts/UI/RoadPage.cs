@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class RoadPage : MonoBehaviour {
-    [SerializeField] private PlayerBuildingManager playerBuildingManager;
+    [SerializeField] private PlayerActionManager playerActionManager;
     [SerializeField] private GroundUI prefab;
     [SerializeField] private TileBase[] roads;
     private List<GroundUI> buttons;
@@ -17,15 +17,15 @@ public class RoadPage : MonoBehaviour {
         }
     }
     public void OnGroundChosenCallBack(int uiID){
-        playerBuildingManager.CancelBuildingAction();
-        playerBuildingManager.ChooseMode((BuildMode)uiID+1);
+        playerActionManager.CancelBuildingAction();
+        playerActionManager.ChooseMode((ActionMode)uiID+1);
         DeactivateVisuals(uiID);
-        playerBuildingManager.SetPlaceCallback(() => 
+        playerActionManager.SetPlaceCallback(() => 
             {
                 ActivateVisuals(uiID);
             }
         );
-        playerBuildingManager.SetCancelCallback(() => ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => ActivateVisuals(uiID));
     }
     void ActivateVisuals(int id){
 
