@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     Action<int> damageCastleEvent;
     OnKillEvent onKillEvent;
     OnKillEvent onRemoveEvent;
+    public bool ProjectileFlag;
     public int HP{
         get{return currentHP;}
         set{currentHP = value;}
@@ -28,7 +29,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     }
     [SerializeField] private Transform projectilePrefab;
     [SerializeField] private HealthBar hpBar;
-    private IProjectile projectile;
+    private ProjectileData projectileData;
     [SerializeField] private float projectileSpeed;
 
     private EnemyState state;
@@ -52,16 +53,6 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     void Awake(){
         animator = GetComponent<CustomAnimator>();
         animator.Init();
-        if(attackType == AttackType.Projectile){
-            if(projectile == null)projectile = Instantiate(projectilePrefab).GetComponent<IProjectile>();
-            projectile.Init(this, damage);
-        }
-    }
-    public IProjectile GetProjectile(){
-        if(projectile == null){
-            projectile = Instantiate(projectilePrefab).GetComponent<IProjectile>();
-        }
-        return projectile;
     }
     public void Damage(int damage){
         if(state == EnemyState.dead) return;
@@ -165,7 +156,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
                 currentTarget.Damage(damage);
             break;
             case AttackType.Projectile:
-                projectile.Send(currentTarget, projectileSpeed);
+                ProjectileFlag = true;
             break;
         }
     }

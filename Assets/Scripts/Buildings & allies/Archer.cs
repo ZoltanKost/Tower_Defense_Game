@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Archer : MonoBehaviour, IAttacking{
+public class Archer : MonoBehaviour{
     [SerializeField] private CustomAnimator animator;
     [SerializeField] private Transform arrow;
-    private IProjectile arrowObject;
-    [SerializeField] private float shootSpeed = 5f;
+    [SerializeField] public ProjectileData projectileData;
+    [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] IDamagable target;
     [SerializeField] private float attackRange;
     [SerializeField] private int damage;
     public bool _active;
+    public bool ProjectileFlag;
     public Vector3 position{
         get{return transform.position;}
     }
@@ -22,13 +23,8 @@ public class Archer : MonoBehaviour, IAttacking{
     public void Init(List<Enemy> enemies){
         animator.Init();
         enemyList = enemies;
-        arrowObject = Instantiate(arrow).GetComponent<IProjectile>();
-        arrowObject.Init(this, damage);
         _active = true;
-    }
-    public IProjectile GetProjectile()
-    {
-        return arrowObject;
+        projectileData.startPosition = position;
     }
     public void TickAnimator(float delta){
         animator.UpdateAnimator(delta);
@@ -45,7 +41,11 @@ public class Archer : MonoBehaviour, IAttacking{
         animator.SetAnimation(0);
     }
     public void Attack(){
-        arrowObject.Send(target, shootSpeed);
+        ProjectileFlag = true;
+        projectileData.startPosition = transform.position;
+        projectileData.target = target;
+        projectileData.speed = projectileSpeed;
+        projectileData.damage = damage;
     }
     public void Detect(){
         shooting = false;
@@ -82,13 +82,10 @@ public class Archer : MonoBehaviour, IAttacking{
     public void Deactivate(){
         gameObject.SetActive(false);
         _active = false;
-        arrowObject.alive = false;
     }
     public void Activate(){
         gameObject.SetActive(true);
         _active = true;
-        arrowObject.alive = true;
-        arrowObject.Deactivate();
     }
     public void SetColor(Color color){
         animator.spriteRenderer.color = color;

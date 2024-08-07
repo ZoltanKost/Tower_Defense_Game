@@ -70,11 +70,13 @@ public class WorldManager : MonoBehaviour {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
+        buildingManager.Init();
+        projectileManager.Init();
         Action<int> destroyBuildingCb
         = (int ID) => {
             if(ID == 0) return;
             Debug.Log($"Removing{ID}");
-            buildingManager.DestroyBuilding(ID, out int gX, out int gY, out int w, out int h);
+            buildingManager.RemoveBuilding(ID, out int gX, out int gY, out int w, out int h);
             Debug.Log($"Removed{ID} on {gX},{gY}");
             floorManager.DestroyBuilding(gX,gY,w,h);
         };

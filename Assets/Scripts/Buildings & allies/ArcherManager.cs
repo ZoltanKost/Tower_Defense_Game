@@ -10,13 +10,9 @@ public class ArcherManager : MonoBehaviour, IHandler {
     public void AddArcher(Archer archer){
         archersList.Add(archer);
         archer.Init(enemyManager.enemies);
-        if(archer.attackType == AttackType.Projectile){
-            projectileManager.AddProjectile(archer.GetProjectile());
-        }
     }
     public void RemoveArchers(Archer[] archer){
         foreach(Archer a in archer){
-            projectileManager.RemoveProjectile(a.GetProjectile());
             archersList.Remove(a);
         }
     }
@@ -30,6 +26,11 @@ public class ArcherManager : MonoBehaviour, IHandler {
         if(!active) return;
         for(int i = 0; i < archersList.Count; i++){
             archersList[i].TickDetection(delta);
+            if (archersList[i].ProjectileFlag)
+            {
+                projectileManager.SendProjectile(archersList[i].projectileData);
+                archersList[i].ProjectileFlag = false;
+            }
         }
     }
 

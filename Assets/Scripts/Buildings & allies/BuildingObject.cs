@@ -33,17 +33,22 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         animator = GetComponent<CustomAnimator>();
         tweenAnimator = GetComponent<TweenAnimator>();
     }
-    public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, int w, int h, OnKillEvent OnKill){
+    public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, Building b, OnKillEvent OnKill){
         currentHP = maxHP;
-        hpBar?.gameObject.SetActive(true);
-        hpBar?.Reset();
+        if(index != 0 && hpBar != null)
+        {
+            hpBar?.gameObject.SetActive(true);
+            hpBar?.Reset();
+        }
         Activate();
         this.index = index;
-        this.w = w;
-        this.h = h;
+        w = b.width;
+        h = b.height;
+        spriteRenderer.sprite = b.sprite;
         gridPosition = new Vector2Int(gridX, gridY);
         spriteRenderer.sortingOrder = sortingOrder;
         spriteRenderer.sortingLayerName = $"{sortingLayer}";
+        animator.animations[0].sprites[0] = b.sprite;
         animator.PlayAnimation(0);
         onKillEvent = OnKill;
         active = true;
@@ -79,7 +84,8 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         animator.PlayAnimation(1);
     }
     public void Deactivate(){
-        foreach(Archer a in archers){
+        gameObject.SetActive(false);
+        foreach (Archer a in archers){
             a.Deactivate();
         }
     }

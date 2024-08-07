@@ -536,6 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2103c152a24381544883f192355d7f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 4047626471853321614, guid: e760dd09984175f4c9ec46483bbedc16, type: 3}
   archerManager: {fileID: 508184927}
   projectileManager: {fileID: 0}
   bs: []
@@ -1963,6 +1964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0846e3fe3f760894b818a1c0c1cd3a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 7778037953086895800, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
 --- !u!1 &386335827
 GameObject:
   m_ObjectHideFlags: 0
@@ -5161,6 +5163,7 @@ MonoBehaviour:
   floor: {fileID: 2051073313}
   temporalFloor: {fileID: 0}
   spellManager: {fileID: 2016557579}
+  highlighter: {fileID: 0}
 --- !u!4 &1018600449
 Transform:
   m_ObjectHideFlags: 0

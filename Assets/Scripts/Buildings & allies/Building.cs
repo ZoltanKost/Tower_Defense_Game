@@ -7,4 +7,6 @@ public class Building : ScriptableObject{
     public Sprite sprite;
     public Resource resource = Resource.Gold;
     public int price = 2;
+    // public ArcherSO[] archers;
+    // public Vector3 localPositions
 }

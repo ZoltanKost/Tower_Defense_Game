@@ -1,14 +1,42 @@
-using System.Collections.Generic;
+using System;
+using System.Reflection;
 using UnityEngine;
 
-public class ProjectileManager : MonoBehaviour, IHandler {
-    List<IProjectile> projectiles = new List<IProjectile>();
+public class ProjectileManager : MonoBehaviour {
+    [SerializeField] private Projectile projectilePrefab;
+    Projectile[] projectiles;
+    int Count;
     bool active = false;
-    public void AddProjectile(IProjectile projectile){
-        projectiles.Add(projectile);
+    public void Init()
+    {
+        projectiles = new Projectile[16];
+        for(int i = 0; i < 16; i++)
+        {
+            projectiles[i] = Instantiate(projectilePrefab, transform);
+        }   
     }
-    public void RemoveProjectile(IProjectile projectile){
-        projectiles.Remove(projectile);
+    public void SendProjectile(ProjectileData data){
+        int index = Count++;
+        projectiles[index].Send(data);
+        if(Count>= projectiles.Length)
+        {
+            Resize();
+        }
+    }
+    void Resize()
+    {
+        Array.Resize(ref projectiles, Count * 2);
+        for (int i = Count; i < projectiles.Length; i++)
+        {
+            projectiles[i] = Instantiate(projectilePrefab,transform);
+        }
+    }
+    public void RemoveProjectile(int index){
+        Projectile b = projectiles[index];
+        projectiles[index] = projectiles[--Count];
+        //projectiles[index].index = index;
+        projectiles[Count] = b;
+        b.Deactivate();
     }
     void Update(){
         if(!active) return;
@@ -20,47 +48,43 @@ public class ProjectileManager : MonoBehaviour, IHandler {
     }
     public void Tick(float delta)
     {
-        for(int i = 0; i < projectiles.Count; i++){
+        for(int i = 0; i < Count; i++){
             if(!projectiles[i].active) continue;
             projectiles[i].Move(delta);
+            if (!projectiles[i].enable) RemoveProjectile(i);
         }
     }
-
     public void AnimatorTick(float delta)
     {
-        for(int i = 0; i < projectiles.Count; i++){
+        for(int i = 0; i < Count; i++){
             projectiles[i].UpdateAnimator(delta);
         }
     }
-
     public void Switch(bool active)
     {
         this.active = active;
     }
-
-    public void DeactivateEntities()
-    {
-        for(int i = 0; i < projectiles.Count; i++){
-            projectiles[i].Deactivate();
-        }
-    }
-
     public void ResetEntities()
     {
-        for(int i = 0; i < projectiles.Count; i++){
-            if(projectiles[i] != null){
-                projectiles[i].Deactivate();
-            }
+        for(int i = 0; i < Count; i++){
+           projectiles[i].Deactivate();
         }
     }
-
     public void ClearEntities()
     {
-        for(int i = 0; i < projectiles.Count; i++){
+        for(int i = 0; i < projectiles.Length; i++){
             if(projectiles[i] != null){
                 Destroy(projectiles[i].gameObject);
             }
         }
-        projectiles.Clear();
     }
+}
+[Serializable]
+public struct ProjectileData
+{
+    public IDamagable target;
+    public Vector3 startPosition;
+    public float speed;
+    public Sprite sprite;
+    public int damage;
 }

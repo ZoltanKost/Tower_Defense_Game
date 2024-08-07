@@ -1,48 +1,37 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, IProjectile{
+public class Projectile : MonoBehaviour{
     [SerializeField] private Transform visuals;
-    [SerializeField] private int damage;
     [SerializeField] private CustomAnimator animator;
-    IAttacking _parent;
-    IDamagable _target; 
-    public IDamagable target{get{return _target;}}
-    public bool _alive;
-    public bool active{
-        get {return _active;}
-    }
-    public bool alive{get => _alive; set {_alive = value;}}
+    IDamagable target;
+    int damage;
     void Awake(){
         if(animator == null) animator = visuals.GetComponent<CustomAnimator>();
         animator.Init();
         visuals.gameObject.SetActive(false);
     }
-
     float speed;
-    public bool _active;
-    public void Init(IAttacking parent, int damage){
-        _parent = parent;
-        this.damage = damage;
-        visuals.gameObject.SetActive(false);
-        _alive = true;
-    }
-    public void Send(IDamagable target, float speed){
-        if(!alive) return;
-        _active = true;
-        transform.position = _parent.position;
-        _target = target;
+    public bool active;
+    public bool enable;
+    public void Send(ProjectileData data){
+        active = true;
+        enable = true;
+        transform.position = data.startPosition;
+        target = data.target;
         visuals.gameObject.SetActive(true);
         animator.SetAnimation(0);
-        this.speed = speed;
+        animator.animations[0].sprites[0] = data.sprite;
+        speed = data.speed;
+        damage = data.damage;
     }
     public void UpdateAnimator(float delta){
         animator.UpdateAnimator(delta);
     }
     public void Move(float delta){
-        Vector3 dir = target.position - _parent.position;
+        Vector3 dir = target.position - transform.position;
         dir.z = 0;
         float angle = Vector2.Angle(Vector2.right,dir);
-        if(_parent.position.y > target.position.y) angle = -angle;
+        if(transform.position.y > target.position.y) angle = -angle;
         Quaternion rot = Quaternion.Euler(0f,0f,angle);
         visuals.rotation = rot;
         transform.position += delta * speed * dir.normalized;
@@ -52,11 +41,15 @@ public class Projectile : MonoBehaviour, IProjectile{
             if(!target.alive) {
                 animator.SetAnimation(2);
             }
+            else
+            {
+                enable = false;
+            }
             target.Damage(damage);
         }
     }
     public void Disable(){
-        _active = false;
+        active = false;
     }
     public void HideVisuals(){
         visuals.gameObject.SetActive(false);
@@ -65,10 +58,9 @@ public class Projectile : MonoBehaviour, IProjectile{
         Disable();
         HideVisuals();
     }
-
     public void Activate()
     {
-        _active = true;
+        active = true;
         visuals.gameObject.SetActive(true);
     }
 }

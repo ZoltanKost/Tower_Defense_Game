@@ -15,7 +15,6 @@ public class EnemyManager : MonoBehaviour, IHandler {
     int lowestInactive = 0;
     int killed = 0;
     [SerializeField] private float timeToSpawn = 10f;
-    // [SerializeField] private int EnemyCount = 10;
     float time;
     bool active;
     void Awake(){
@@ -116,9 +115,6 @@ public class EnemyManager : MonoBehaviour, IHandler {
             Enemy enemy = Instantiate(enemyPrefabs[x], transform);
             enemy.index = i; 
             enemies.Add(enemy);
-            if(enemies[i].attackType == AttackType.Projectile){
-                projectileManager.AddProjectile(enemies[i].GetProjectile());
-            }
         }
     }
 
