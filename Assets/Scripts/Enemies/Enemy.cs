@@ -4,32 +4,37 @@ using DG.Tweening;
 using System;
 
 [RequireComponent(typeof(CustomAnimator))]
-public class Enemy : MonoBehaviour, IDamagable, IAttacking {
+public class Enemy : MonoBehaviour, IDamagable, IAttacking
+{
     Action<int> damageCastleEvent;
     OnKillEvent onKillEvent;
     OnKillEvent onRemoveEvent;
     public bool ProjectileFlag;
-    public int HP{
-        get{return currentHP;}
-        set{currentHP = value;}
+    public ProjectileData ProjectileData;
+    public int HP
+    {
+        get { return currentHP; }
+        set { currentHP = value; }
     }
-    public Vector3 position{
-        get {return transform.position;}
-    }
-
-    public bool active { 
-        get {return _active;} 
-        set {_active = value;}
+    public Vector3 position
+    {
+        get { return transform.position; }
     }
 
-    public bool alive {get{return active && state != EnemyState.dead;}}
+    public bool active
+    {
+        get { return _active; }
+        set { _active = value; }
+    }
+
+    public bool alive { get { return active && state != EnemyState.dead; } }
     [SerializeField] private AttackType _attackType;
-    public AttackType attackType{
-        get {return _attackType;}
+    public AttackType attackType
+    {
+        get { return _attackType; }
     }
     [SerializeField] private Transform projectilePrefab;
     [SerializeField] private HealthBar hpBar;
-    private ProjectileData projectileData;
     [SerializeField] private float projectileSpeed;
 
     private EnemyState state;
@@ -46,33 +51,39 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     [SerializeField] private int MaxHP = 100;
     [SerializeField] private float attackPeriod = 5f;
     [SerializeField] private int _killReward = 5;
-    public int killReward{get=>_killReward;}
+    public int killReward { get => _killReward; }
     float time;
     int currentHP;
     Vector3 destination;
-    void Awake(){
+    void Awake()
+    {
         animator = GetComponent<CustomAnimator>();
         animator.Init();
     }
-    public void Damage(int damage){
-        if(state == EnemyState.dead) return;
+    public void Damage(int damage)
+    {
+        if (state == EnemyState.dead) return;
         HP -= damage;
-        hpBar.Set((float)HP/MaxHP);
+        hpBar.Set((float)HP / MaxHP);
         Animate();
-        if(HP <= 0){
+        if (HP <= 0)
+        {
             Kill();
         }
     }
-    public void Kill(){
+    public void Kill()
+    {
         state = EnemyState.dead;
         hpBar.gameObject.SetActive(false);
         animator.PlayAnimation(1);
         onKillEvent?.Invoke(index);
     }
-    public void OnKillInvoke(){
+    public void OnKillInvoke()
+    {
         onRemoveEvent?.Invoke(index);
     }
-    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, Action<int> damageCastleEvent){
+    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, Action<int> damageCastleEvent)
+    {
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;
@@ -90,15 +101,17 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
     {
         currentPath = path;
     }
-    public void Tick(float delta){
-        switch(state){
+    public void Tick(float delta)
+    {
+        switch (state)
+        {
             case EnemyState.dead:
                 return;
             case EnemyState.run:
                 animator.SetAnimation(0);
                 Move(delta);
                 time += delta;
-                if(time < attackPeriod) return;
+                if (time < attackPeriod) return;
                 Detect();
                 return;
             case EnemyState.attack:
@@ -110,17 +123,21 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
                 break;
         }
     }
-    public void UpdateAnimator(float delta){
+    public void UpdateAnimator(float delta)
+    {
         animator.UpdateAnimator(delta);
     }
-    public void Move(float delta){
+    public void Move(float delta)
+    {
         transform.position += (destination - transform.position).normalized * delta * speed;
-        if((destination - transform.position).magnitude <= .1f){ 
-            if(currentPath.Count > 0) destination = currentPath.Dequeue();
+        if ((destination - transform.position).magnitude <= .1f)
+        {
+            if (currentPath.Count > 0) destination = currentPath.Dequeue();
             else DamageCastle();
         }
     }
-    public void DamageCastle(){
+    public void DamageCastle()
+    {
         damageCastleEvent?.Invoke(damage);
         onRemoveEvent?.Invoke(index);
     }
@@ -133,38 +150,47 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
 
     public void Detect()
     {
-        for(int i = 0; i < targets.Length; i++){
-            if(targets[i] == null || !targets[i].active || !targets[i].alive) continue;
+        for (int i = 0; i < targets.Length; i++)
+        {
+            if (targets[i] == null || !targets[i].active || !targets[i].alive) continue;
             IDamagable t = targets[i];
             float distance = (t.position - position).magnitude;
-            if(distance > attackrange) continue;
+            if (distance > attackrange) continue;
             float minDistance;
-            if(currentTarget == null || !currentTarget.active || !currentTarget.alive) minDistance = attackrange;
+            if (currentTarget == null || !currentTarget.active || !currentTarget.alive) minDistance = attackrange;
             else minDistance = (currentTarget.position - position).magnitude;
             // Debug.Log($"Min: {minDistance}, distance: {distance};");
-            if(distance >= minDistance) continue;
+            if (distance >= minDistance) continue;
             currentTarget = t;
         }
         bool attack = currentTarget != null && currentTarget.active && currentTarget.alive;
-        if(attack) state = EnemyState.attack;
+        if (attack) state = EnemyState.attack;
     }
 
     public void Attack()
     {
-        switch(attackType){
+        switch (attackType)
+        {
             case AttackType.Melee:
                 currentTarget.Damage(damage);
-            break;
+                break;
             case AttackType.Projectile:
                 ProjectileFlag = true;
-            break;
+                ProjectileData.speed = projectileSpeed;
+                ProjectileData.target = currentTarget;
+                //ProjectileData.sprite =
+                ProjectileData.damage = damage;
+                ProjectileData.startPosition = transform.position;
+                break;
         }
     }
     //CALLED BY CUSTOMANIMATOR(IN UNITY)
-    public void ResetState(){
+    public void ResetState()
+    {
         state = EnemyState.idle;
     }
-    public void Animate(){
+    public void Animate()
+    {
         Tween tween = transform.DOScale(.99f, .05f);
         tween.onComplete += () => {
             Tween tween1 = transform.DOScale(1.01f, .1f);
@@ -172,7 +198,8 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking {
         };
     }
 }
-public enum EnemyState{
+public enum EnemyState
+{
     idle,
     run,
     dead,
