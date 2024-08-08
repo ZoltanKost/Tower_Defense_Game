@@ -99,6 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjectileFlag: 0
+  ProjectileData:
+    startPosition: {x: 0, y: 0, z: 0}
+    speed: 5
+    sprite: {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    damage: 15
   _attackType: 1
   projectilePrefab: {fileID: 5307833470203409925, guid: e096b61fff25bfe4e98f368d68c8b458, type: 3}
   hpBar: {fileID: 5620564550756596175}
