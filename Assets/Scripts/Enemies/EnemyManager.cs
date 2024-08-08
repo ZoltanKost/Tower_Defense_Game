@@ -60,9 +60,15 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void Tick(float delta)
     {
-        for(int x = 0; x < enemies.Count; x++){
-            if(!enemies[x].active) continue;
+        for (int x = 0; x < enemies.Count; x++)
+        {
+            if (!enemies[x].active) continue;
             enemies[x].Tick(delta);
+            if (enemies[x].ProjectileFlag)
+            {
+                projectileManager.SendProjectile(enemies[x].ProjectileData);
+                enemies[x].ProjectileFlag = false;
+            }
         }
     }
 

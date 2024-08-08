@@ -186,9 +186,9 @@ MonoBehaviour:
   projectileData:
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
-    sprite: {fileID: -6622014165603291528, guid: 18cdebc488b206b4dab991e645c6a7a3, type: 3}
+    sprite: {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     damage: 0
-  projectileSpeed: 5
+  projectileSpeed: 12.5
   attackRange: 5
   damage: 15
   _active: 0
