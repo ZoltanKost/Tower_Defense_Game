@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEngine;
 
 public class ProjectileManager : MonoBehaviour {
@@ -87,4 +86,14 @@ public struct ProjectileData
     public float speed;
     public Sprite sprite;
     public int damage;
+    public OnProjectileMeetTargetBehaviour behaviour;
+}
+[Flags]
+public enum OnProjectileMeetTargetBehaviour
+{
+    None = 0,
+    Animate = 1, // 0x0001
+    CastSpell = 2, // 0x0010
+    Damage = 4, // 0x0100
+    StayIfMissed = 8 // 0x1000
 }

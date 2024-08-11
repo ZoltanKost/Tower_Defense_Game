@@ -51,35 +51,7 @@ MonoBehaviour:
     sprites:
     - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     duration: 0.1
-  - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: Disable
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: HideVisuals
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 0
+  - events: []
     sprites:
     - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     duration: 0.01
@@ -202,5 +174,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visuals: {fileID: 8399754741217680444}
   animator: {fileID: 0}
+  meetTarget: 0
+  behaviour: 0
+  HitAnimation: 2
   active: 0
   enable: 0

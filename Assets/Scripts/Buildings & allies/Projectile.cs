@@ -5,14 +5,17 @@ public class Projectile : MonoBehaviour{
     [SerializeField] private CustomAnimator animator;
     IDamagable target;
     int damage;
+    float speed;
+    public bool meetTarget;
+    public OnProjectileMeetTargetBehaviour behaviour;
+    public int HitAnimation = 2;
+    public bool active;
+    public bool enable;
     void Awake(){
         if(animator == null) animator = visuals.GetComponent<CustomAnimator>();
         animator.Init();
         visuals.gameObject.SetActive(false);
     }
-    float speed;
-    public bool active;
-    public bool enable;
     public void Send(ProjectileData data){
         active = true;
         enable = true;
@@ -23,6 +26,7 @@ public class Projectile : MonoBehaviour{
         animator.animations[0].sprites[0] = data.sprite;
         speed = data.speed;
         damage = data.damage;
+        behaviour = data.behaviour;
     }
     public void UpdateAnimator(float delta){
         animator.UpdateAnimator(delta);
@@ -31,21 +35,32 @@ public class Projectile : MonoBehaviour{
         Vector3 dir = target.position - transform.position;
         dir.z = 0;
         float angle = Vector2.Angle(Vector2.right,dir);
-        if(transform.position.y > target.position.y) angle = -angle;
+        if(dir.y < 0) angle = -angle;
         Quaternion rot = Quaternion.Euler(0f,0f,angle);
         visuals.rotation = rot;
         transform.position += delta * speed * dir.normalized;
-        if((transform.position - target.position).magnitude < .3f){
-            animator.SetAnimation(1);
-            Disable();
-            if(!target.alive) {
-                animator.SetAnimation(2);
-            }
-            else
+        if(dir.magnitude < .3f){
+            active = false;
+            enable = false;
+            if ((behaviour & OnProjectileMeetTargetBehaviour.StayIfMissed) != 0
+                && !target.alive)
             {
-                enable = false;
+                enable = true;
+                animator.SetAnimation(1);
             }
-            target.Damage(damage);
+            if ((behaviour & OnProjectileMeetTargetBehaviour.Damage) != 0)
+            {
+                target.Damage(damage);
+            }
+            if ((behaviour & OnProjectileMeetTargetBehaviour.Animate) != 0)
+            {
+                animator.SetAnimation(1);
+                enable = true;
+            }
+            if((behaviour & OnProjectileMeetTargetBehaviour.CastSpell) != 0)
+            {
+                //target.
+            }
         }
     }
     public void Disable(){
@@ -63,4 +78,11 @@ public class Projectile : MonoBehaviour{
         active = true;
         visuals.gameObject.SetActive(true);
     }
+}
+public enum TargetType
+{
+    Building,
+    Character,
+    Enemy,
+    Position
 }

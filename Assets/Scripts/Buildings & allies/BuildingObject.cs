@@ -85,9 +85,6 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     }
     public void Deactivate(){
         gameObject.SetActive(false);
-        foreach (Archer a in archers){
-            a.Deactivate();
-        }
     }
     public void OnKillCallBack(){
         _active = false;

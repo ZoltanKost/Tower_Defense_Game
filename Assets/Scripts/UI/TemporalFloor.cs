@@ -137,4 +137,17 @@ public class TemporalFloor : Floor
         if(visual == null) return;
         visual.SetColor(currentColor);
     }
+    public void SetArrows(Vector2Int gridPosition, Vector3Int rectSize)
+    {
+        foreach (var ar in arrows)
+        {
+            ar.gameObject.SetActive(true);
+        }
+        Vector3 position = new Vector3(gridPosition.x, gridPosition.y) * cellSize;
+        transform.position = position;
+        arrows[0].localPosition = Vector3.zero * cellSize;
+        arrows[1].localPosition = Vector3Int.right * rectSize.x * cellSize;
+        arrows[2].localPosition = Vector3Int.up * rectSize.y * cellSize;
+        arrows[3].localPosition = rectSize * cellSize;
+    }
 }

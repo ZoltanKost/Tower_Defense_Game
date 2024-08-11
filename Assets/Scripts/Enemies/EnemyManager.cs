@@ -133,10 +133,27 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void AreaSpell(SpellData spell, Vector3 position)
     {
-        foreach (Enemy enemy in enemies)
+        for (int i = 0; i < lowestInactive; i++)
         {
-            if (Vector3.Distance(enemy.position, position) > spell.radius) continue;
-            enemy.Damage(spell.damage);
+            if (!enemies[i].active) continue;
+            float distance = Vector3.Distance(enemies[i].position, position);
+            if (distance > spell.radius) continue;
+            enemies[i].Damage(spell.damage);
         }
+    }
+    public bool TryHighlightEntity(Vector3 position, out Enemy archer, float radius)
+    {
+        archer = null;
+        if (!active) return false;
+        for (int i = 0; i < lowestInactive; i++)
+        {
+            var temp = enemies[i];
+            Vector3 pos = temp.position - position;
+            pos.z = 0;
+            if (pos.magnitude > radius) continue;
+            archer = temp;
+            return true;
+        }
+        return false;
     }
 }

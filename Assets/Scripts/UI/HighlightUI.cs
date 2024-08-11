@@ -1,13 +1,37 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HighlightUI : MonoBehaviour
 {
     [SerializeField] Image m_HighlightUI;
-    int _hp;
-    public void SetEntity(Sprite sprite, int hp)
+    [SerializeField] TMP_Text damage;
+    [SerializeField] TMP_Text speed;
+    [SerializeField] TMP_Text health;
+    [SerializeField] private HideShowUI hideShow;
+    bool open;
+    public void SetEntity(Sprite sprite, int hp, int dmg, int spd)
     {
+        if (!open)
+        {
+            hideShow.ShowUI();
+            open = true;
+        }
         m_HighlightUI.sprite = sprite;
-        _hp = hp;
+        health.text = hp.ToString();
+        damage.text = dmg.ToString();
+        speed.text = spd.ToString();
+    }
+    public void ResetEntity()
+    {
+        if (!open) return;
+        hideShow.HideUI();
+        open = false;
+    }
+    public void Close()
+    {
+        if (!open) return;
+        hideShow.HideUI();
+        open = false;
     }
 }

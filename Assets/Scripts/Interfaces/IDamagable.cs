@@ -9,8 +9,3 @@ public interface IDamagable{
     public void Damage(int damage);
     public void Kill();
 }
-public interface IBuildable : IDamagable{
-    public void Init(int sortingOrder, int sortingLayer, int index, OnKillEvent OnKill);
-    public void TickUpdate(float delta);
-    public void InitArchers(Enemy[] enemies);
-}

@@ -197,6 +197,10 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
             tween1.onComplete += () => transform.DOScale(1, .05f);
         };
     }
+    public Sprite GetSprite()
+    {
+        return  animator.spriteRenderer.sprite;
+    }
 }
 public enum EnemyState
 {

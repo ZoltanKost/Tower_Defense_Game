@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Archer : MonoBehaviour{
     [SerializeField] private CustomAnimator animator;
-    [SerializeField] private Transform arrow;
+    [SerializeField] private Sprite arrow;
     [SerializeField] public ProjectileData projectileData;
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] IDamagable target;
@@ -24,9 +24,15 @@ public class Archer : MonoBehaviour{
         animator.Init();
         enemyList = enemies;
         _active = true;
-        projectileData.startPosition = position;
+        projectileData.sprite = arrow;
+        projectileData.startPosition = transform.position;
+        projectileData.target = target;
+        projectileData.speed = projectileSpeed;
+        projectileData.damage = damage;
+        projectileData.behaviour = OnProjectileMeetTargetBehaviour.Damage | OnProjectileMeetTargetBehaviour.StayIfMissed;
     }
     public void TickAnimator(float delta){
+        if (!_active) return;
         animator.UpdateAnimator(delta);
     }
     public void TickDetection(float delta){
@@ -89,5 +95,9 @@ public class Archer : MonoBehaviour{
     }
     public void SetColor(Color color){
         animator.spriteRenderer.color = color;
+    }
+    public Sprite GetSprite()
+    {
+        return animator.spriteRenderer.sprite;
     }
 }

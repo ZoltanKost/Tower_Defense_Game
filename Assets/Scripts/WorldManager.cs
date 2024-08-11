@@ -70,8 +70,6 @@ public class WorldManager : MonoBehaviour {
             playerInput.Deactivate();
             temporalFloor.GetAnimationTween().onKill += playerInput.Activate;
         };
-        buildingManager.Init();
-        projectileManager.Init();
         Action<int> destroyBuildingCb
         = (int ID) => {
             if(ID == 0) return;
@@ -113,6 +111,8 @@ public class WorldManager : MonoBehaviour {
         shop.Init(6);
     }
     void Start(){
+        buildingManager.Init();
+        projectileManager.Init();
         Vector3 input = Camera.main.transform.position;
         GroundArray ga = new GroundArray(new Vector2Int(10,10),0);
         input -= new Vector3(10,10)*.5f;

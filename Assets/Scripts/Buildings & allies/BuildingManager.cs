@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Reflection;
 
 public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private BuildingObject prefab;
@@ -24,7 +25,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
         BuildingObject buildingObject = bs[Count];
         InitArchers(buildingObject.GetArchers());
-        buildingObject.Init(6,floor,Count, gridX, gridY, building, null);
+        buildingObject.Init(6,floor,Count, gridX, gridY, building, KillBuilding);
         buildingObject.transform.position = worldPosition + WidthAlignmentOffset;
         buildingObject.gameObject.SetActive(true);
         getID = bs[Count].GetIndex;
@@ -52,7 +53,10 @@ public class BuildingManager : MonoBehaviour, IHandler {
         if(!active) return;
         AnimatorTick(Time.deltaTime);
     }
-    
+    void KillBuilding(int index)
+    {
+        archerManager.RemoveArchers(bs[index].GetArchers());
+    }
     public void RemoveBuilding(int index, out int gridX, out int gridY, out int w, out int h)
     {
         w = -1;

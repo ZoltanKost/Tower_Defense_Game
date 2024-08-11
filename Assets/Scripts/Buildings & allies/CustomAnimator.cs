@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class CustomAnimator : MonoBehaviour{
     
@@ -16,7 +16,7 @@ public class CustomAnimator : MonoBehaviour{
         currentAnimation = id;
         time = 0;
         animations[currentAnimation].Reset();
-        spriteRenderer.sprite = animations[currentAnimation].sprites[0];
+        spriteRenderer.sprite = animations[currentAnimation].nextSprite;
     }
     public void UpdateAnimator(float delta){
         time += delta;
@@ -39,36 +39,51 @@ public delegate void AnimationDelegate();
 [Serializable]
 public struct Animation{
     [Serializable]
-    public struct Event{
-        public UnityEvent action;
-        public int actionPoint;
+    public struct AnimationEvent
+    {
+        public string name;
+        public int frame;
     }
-    public event Action onAnimationEnd;
-    public Event[] events;
-    public Sprite[] sprites;
+    [Serializable]
+    public struct AnimationFrame
+    {
+        public Sprite sprite;
+        public float duration;
+    }
+    public AnimationEvent onAnimationEnd;
+    public AnimationEvent[] events;
+    public AnimationFrame[] frames;
+    public int currentFrame;
+    public List<string> eventsToInvoke;
     public Sprite nextSprite{
         get{
-            if (number >= sprites.Length) { 
-                number = 0;
-                onAnimationEnd?.Invoke();
-            }
             CheckEvents();
-            return sprites[number++];
+            Sprite sprite = frames[currentFrame++].sprite;
+            if (currentFrame >= frames.Length)
+            {
+                currentFrame = 0;
+                eventsToInvoke.Add(onAnimationEnd.name);
+            }
+            return sprite;
         }
     }
     public float duration;
-    private int number;
     public float interval{
         get{
-            return duration / sprites.Length;
+            float res = frames[currentFrame].duration;
+            if (res == 0)
+            {
+                res = duration / frames.Length;
+            }
+            return res;
         }
     }
     public void CheckEvents(){
-        foreach(Event e in events){
-            if(e.actionPoint == number) e.action?.Invoke();
+        foreach(AnimationEvent e in events){
+            if(e.frame == currentFrame) eventsToInvoke.Add(e.name);
         }
     }
     public void Reset(){
-        number = 0;
+        currentFrame = 0;
     }
 }

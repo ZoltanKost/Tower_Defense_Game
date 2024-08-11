@@ -14,6 +14,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     public void RemoveArchers(Archer[] archer){
         foreach(Archer a in archer){
             archersList.Remove(a);
+            a.Deactivate();
         }
     }
     void Update(){
@@ -33,7 +34,6 @@ public class ArcherManager : MonoBehaviour, IHandler {
             }
         }
     }
-
     public void AnimatorTick(float delta)
     {
         if(!animate) return;
@@ -54,19 +54,31 @@ public class ArcherManager : MonoBehaviour, IHandler {
             a.Deactivate();
         }
     }
-
     public void ResetEntities()
     {
         foreach(Archer a in archersList){
             a.Reset();
         }
     }
-
     public void ClearEntities()
     {
         foreach(Archer archer in archersList){
             Destroy(archer.gameObject);
         }
         archersList.Clear();
+    }
+    public bool TryHighlightEntity(Vector3 position, out Archer archer, float radius)
+    {
+        archer = null;
+        for (int i = 0; i < archersList.Count; i++)
+        {
+            var temp = archersList[i];
+            Vector3 pos = temp.position - position;
+            pos.z = 0;
+            if (pos.magnitude > radius) continue;
+            archer = temp;
+            return true;
+        }
+        return false;
     }
 }
