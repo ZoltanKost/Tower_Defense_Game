@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189702414211034926}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.2983418, y: 9.120682, z: 2.3741446}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,7 +34,6 @@ Transform:
   m_Children:
   - {fileID: 369418222498006550}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1325746399686741614
 SpriteRenderer:
@@ -99,17 +99,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjectileFlag: 0
+  ProjectileData:
+    startPosition: {x: 0, y: 0, z: 0}
+    speed: 0
+    animations: []
+    damage: 0
+    behaviour: 0
   _attackType: 0
   projectilePrefab: {fileID: 0}
   hpBar: {fileID: 3715045914147068556}
   projectileSpeed: 0
   damage: 15
   index: 0
-  _active: 0
   speed: 0.7
   attackrange: 0
   MaxHP: 100
   attackPeriod: 5
+  _killReward: 5
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,22 +139,8 @@ MonoBehaviour:
     - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
     duration: 0.5
   - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7266588368055346098}
-            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-            m_MethodName: OnKillInvoke
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 13
+    - acitonID: 0
+      frame: 13
     sprites:
     - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
@@ -164,11 +157,27 @@ MonoBehaviour:
     - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     duration: 1.5
+  actions:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: RemoveInvoke
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &8888878782865141935
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 647510513473006261}
     m_Modifications:
     - target: {fileID: 4957916278593064903, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
@@ -268,6 +277,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
 --- !u!224 &369418222498006550 stripped
 RectTransform:

@@ -24,7 +24,6 @@ public class Archer : MonoBehaviour{
         animator.Init();
         enemyList = enemies;
         _active = true;
-        projectileData.sprite = arrow;
         projectileData.startPosition = transform.position;
         projectileData.target = target;
         projectileData.speed = projectileSpeed;

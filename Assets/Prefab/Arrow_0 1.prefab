@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 76448684581883948}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5307833470203409925}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &704569826120457826
 SpriteRenderer:
@@ -107,40 +107,9 @@ MonoBehaviour:
     - {fileID: 394637170, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
     - {fileID: 1265161102, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
     - {fileID: -1867172308, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    currentFrame: 0
     duration: 0.25
-  - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: Disable
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 0
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: HideVisuals
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 8
+  - events: []
     sprites:
     - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
     - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
@@ -151,39 +120,13 @@ MonoBehaviour:
     - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
     - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
     - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    currentFrame: 0
     duration: 0.75
-  - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: Disable
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-          - m_Target: {fileID: 7778037953086895800}
-            m_TargetAssemblyTypeName: Arrow, Assembly-CSharp
-            m_MethodName: HideVisuals
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 0
+  - events: []
     sprites:
     - {fileID: 0}
     - {fileID: 0}
+    currentFrame: 0
     duration: 0.1
 --- !u!1 &3189570932686458792
 GameObject:
@@ -209,6 +152,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3189570932686458792}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.2983418, y: 9.120682, z: 2.3741446}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -216,7 +160,6 @@ Transform:
   m_Children:
   - {fileID: 6056175986238031692}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7778037953086895800
 MonoBehaviour:
@@ -231,6 +174,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visuals: {fileID: 6056175986238031692}
-  damage: 10
   animator: {fileID: 5877313773062140966}
-  _active: 0
+  meetTarget: 0
+  behaviour: 0
+  HitAnimation: 2
+  active: 0
+  enable: 0

@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
         animator.PlayAnimation(1);
         onKillEvent?.Invoke(index);
     }
-    public void OnKillInvoke()
+    public void RemoveInvoke()
     {
         onRemoveEvent?.Invoke(index);
     }

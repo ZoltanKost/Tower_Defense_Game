@@ -103,8 +103,32 @@ MonoBehaviour:
   ProjectileData:
     startPosition: {x: 0, y: 0, z: 0}
     speed: 5
-    sprite: {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+    animations:
+    - events: []
+      sprites:
+      - {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: -315356772, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 1045102975, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 394637170, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 1265161102, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: -1867172308, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      duration: 0.75
+    - events:
+      - acitonID: 0
+        frame: 8
+      sprites:
+      - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      duration: 1
     damage: 15
+    behaviour: 5
   _attackType: 1
   projectilePrefab: {fileID: 5307833470203409925, guid: e096b61fff25bfe4e98f368d68c8b458, type: 3}
   hpBar: {fileID: 5620564550756596175}
@@ -140,22 +164,8 @@ MonoBehaviour:
     - {fileID: -826793336, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
     duration: 0.75
   - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7266588368055346098}
-            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-            m_MethodName: OnKillInvoke
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 13
+    - acitonID: 1
+      frame: 13
     sprites:
     - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
@@ -173,38 +183,10 @@ MonoBehaviour:
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     duration: 1.5
   - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7266588368055346098}
-            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-            m_MethodName: Attack
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 3
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 7266588368055346098}
-            m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-            m_MethodName: ResetState
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 6
+    - acitonID: 0
+      frame: 3
+    - acitonID: 2
+      frame: 6
     sprites:
     - {fileID: 1625108643, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
     - {fileID: -1770765844, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
@@ -214,6 +196,49 @@ MonoBehaviour:
     - {fileID: -1464688720, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
     - {fileID: -2107198726, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
     duration: 1
+  actions:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: RemoveInvoke
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: ResetState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &492470248928285676
 PrefabInstance:
   m_ObjectHideFlags: 0

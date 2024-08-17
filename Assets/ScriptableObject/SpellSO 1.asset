@@ -15,15 +15,13 @@ MonoBehaviour:
   spellData:
     manaCost: 0
     goldCost: 25
-    radius: 5
+    radius: 3
     damage: 50
     spellType: 1
     animation:
       events:
-      - action:
-          m_PersistentCalls:
-            m_Calls: []
-        actionPoint: 6
+      - acitonID: 0
+        frame: 5
       sprites:
       - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
       - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}

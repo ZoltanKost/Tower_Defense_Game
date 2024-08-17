@@ -142,22 +142,8 @@ MonoBehaviour:
     - {fileID: -307928747, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     duration: 1
   - events:
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 4542933486884538503}
-            m_TargetAssemblyTypeName: Archer, Assembly-CSharp
-            m_MethodName: Attack
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-      actionPoint: 7
+    - acitonID: 0
+      frame: 7
     sprites:
     - {fileID: -1952945416, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -192223159, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
@@ -167,8 +153,55 @@ MonoBehaviour:
     - {fileID: 1551958000, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -1451691696, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: 723166192, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-    - {fileID: 1658287207, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     duration: 1
+  - events:
+    - acitonID: 2
+      frame: 12
+    sprites:
+    - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -129017550, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -368744008, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 2112967236, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1076972744, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 324086716, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 872446035, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1988140810, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1866946633, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 70982598, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -1686293569, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
+    duration: 1
+  actions:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4542933486884538503}
+        m_TargetAssemblyTypeName: Archer, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4542933486884538503}
+        m_TargetAssemblyTypeName: Archer, Assembly-CSharp
+        m_MethodName: Deactivate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4542933486884538503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +219,25 @@ MonoBehaviour:
   projectileData:
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
-    sprite: {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+    animations:
+    - events: []
+      sprites:
+      - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+      duration: 0.1
+    - events:
+      - acitonID: 0
+        frame: 0
+      sprites:
+      - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+      duration: 0.01
+    - events:
+      - acitonID: 0
+        frame: 0
+      sprites:
+      - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+      duration: 0.1
     damage: 0
+    behaviour: 0
   projectileSpeed: 12.5
   attackRange: 5
   damage: 15

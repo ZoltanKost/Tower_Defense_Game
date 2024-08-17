@@ -47,6 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 3645971230426295518}
   animations: []
+  actions:
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
 --- !u!212 &3645971230426295518
 SpriteRenderer:
   m_ObjectHideFlags: 0

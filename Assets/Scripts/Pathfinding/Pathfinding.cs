@@ -11,8 +11,8 @@ public class Pathfinding : MonoBehaviour{
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
 		if(castlePositions == null)castlePositions = new List<FloorCell>();
 		gridX += width/2;
-		FloorCell pos = floor.floorCells[gridX,gridY];
-		pos.road = true;
+		floor.floorCells[gridX, gridY].road = true;
+        FloorCell pos = floor.floorCells[gridX,gridY];
 		castlePositions.Add(pos);
 		// Debug.Log(message: $"Castle: {gridX},{gridY}");
 	}
@@ -87,4 +87,26 @@ public class Pathfinding : MonoBehaviour{
 		int r = Random.Range(0, vectors.Count);
 		return new Queue<Vector3>(vectors[r]);
 	}
+
+	public void DijkstraSearch(Vector3 start, Vector3 end)
+	{
+		FloorCell[,] floorCells = floor.floorCells;
+		Vector3Int gridStart = floor.WorldToCell(start);
+        Vector3Int gridEnd = floor.WorldToCell(end);
+		/*List<FloorCell> openList = new()
+        {
+            floorCells[gridStart.x, gridStart.y]
+        };
+		HashSet<FloorCell> closedSet = new();
+		while ()
+		{
+
+		}*/
+
+        /*Vector3 pos = new()
+        {
+            x = cell.gridX - offsetX + cellSize / 2,
+            y = cell.gridY - offsetY + cellSize / 2
+        };*/
+    }
 }

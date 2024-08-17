@@ -216,7 +216,7 @@ public class FloorManager : MonoBehaviour{
             if(c.currentFloor == floor && c.bridgeSpot) return false;
         }
         if(!edge) return false;*/
-        target.bridgeSpot = true;
+        floorCells[posX, posY].bridgeSpot = true;
         floors[floor].SetBridgeSpot(pos);
         return true;
     }
@@ -244,7 +244,7 @@ public class FloorManager : MonoBehaviour{
             eraseUnder = floorCells[posX, posY - 1].currentFloor < floor;
         } 
         floors[target.currentFloor].RemoveGround(pos,replaceWithRock,eraseUnder);
-        target.currentFloor--;
+        floorCells[posX, posY].currentFloor--;
     }
     public bool CheckBuilding(Vector3 input, int w, int h){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -415,5 +415,9 @@ public class FloorManager : MonoBehaviour{
         return floorCells[gridX, gridY].road && 
             floorCells[gridX, gridY].currentFloor == 0 &&
             floorCells[gridX,gridY - 1].currentFloor == 0;
+    }
+    public Vector3Int WorldToCell(Vector3 position)
+    {
+        return floors[0].WorldToCell(position);
     }
 }

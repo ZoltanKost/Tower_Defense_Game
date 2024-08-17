@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public class FloorCell{
+public struct FloorCell{
     public int currentFloor;
     public bool bridgeSpot;
     public bool bridge;
@@ -17,7 +17,12 @@ public class FloorCell{
         gridX = x;
         gridY = y;
         currentFloor = lastFloor;
-    }
+        bridgeSpot = false;
+        bridge = false;
+        road = false;
+        ladder = false;
+        GetBuildingIDCallback = null;
+}
     public void Reset()
     {
         road = false;

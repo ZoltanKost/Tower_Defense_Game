@@ -21,12 +21,12 @@ public class Projectile : MonoBehaviour{
         enable = true;
         transform.position = data.startPosition;
         target = data.target;
-        visuals.gameObject.SetActive(true);
         animator.SetAnimation(0);
-        animator.animations[0].sprites[0] = data.sprite;
+        animator.animations = data.animations;
         speed = data.speed;
         damage = data.damage;
         behaviour = data.behaviour;
+        visuals.gameObject.SetActive(true);
     }
     public void UpdateAnimator(float delta){
         animator.UpdateAnimator(delta);
@@ -65,6 +65,7 @@ public class Projectile : MonoBehaviour{
     }
     public void Disable(){
         active = false;
+        enable = false;
     }
     public void HideVisuals(){
         visuals.gameObject.SetActive(false);

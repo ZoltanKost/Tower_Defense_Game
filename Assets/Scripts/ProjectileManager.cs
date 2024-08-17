@@ -56,6 +56,7 @@ public class ProjectileManager : MonoBehaviour {
     public void AnimatorTick(float delta)
     {
         for(int i = 0; i < Count; i++){
+            if (projectiles[i].enable)
             projectiles[i].UpdateAnimator(delta);
         }
     }
@@ -84,7 +85,7 @@ public struct ProjectileData
     public IDamagable target;
     public Vector3 startPosition;
     public float speed;
-    public Sprite sprite;
+    public Animation[] animations;
     public int damage;
     public OnProjectileMeetTargetBehaviour behaviour;
 }
