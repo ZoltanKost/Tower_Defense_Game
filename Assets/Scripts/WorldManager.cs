@@ -94,7 +94,8 @@ public class WorldManager : MonoBehaviour {
             cancelActionCallback, 
             playerActionManager.ClickBuild, 
             playerActionManager.HoldBuild, 
-            playerActionManager.CanBuild
+            playerActionManager.CanBuild,
+            playerActionManager.HighlightedAction
         );
         PauseButton.Init(Pause);
         menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls, ResetWave});

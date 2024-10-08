@@ -3952,6 +3952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a7cc5ffe2f9e641b61bad99dbcd17f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathfinding: {fileID: 1963445667}
   buildingManager: {fileID: 65913790}
   floorManager: {fileID: 2051073313}
   tempFloor: {fileID: 393348947}
@@ -12806,6 +12807,7 @@ MonoBehaviour:
   - {fileID: 7266588368055346098, guid: 6b7f7d0c8e1918e4c9d313fc3ac81175, type: 3}
   enemyPoolCount: 50
   enemies: []
+  lowestInactive: 0
   timeToSpawn: 2
 --- !u!4 &1830662302
 Transform:

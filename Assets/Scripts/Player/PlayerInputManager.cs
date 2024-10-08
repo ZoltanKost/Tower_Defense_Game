@@ -10,6 +10,7 @@ public class PlayerInputManager : MonoBehaviour{
     private ClickCallback holdCallback;
     private Action cancelActionCallback;
     private Action resetAllGroundsCallback;
+    private Action<Vector3> rmbCallback;
     protected Camera mCamera;
     protected TemporalFloor temporalFloor;
     protected EventSystem currentEventSystem;
@@ -17,7 +18,7 @@ public class PlayerInputManager : MonoBehaviour{
     Vector3 fixedCameraPosition = new();
 
     bool active;
-    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback, CheckCallback checkCallback){
+    public void Init(TemporalFloor tempFloor, Action resetAllGroundsCallback, Action cancelActionCallback, ClickCallback clickBuildCallback, ClickCallback holdCallback, CheckCallback checkCallback, Action<Vector3> rmbCallback){
         active = true;
         mCamera = Camera.main;
         currentEventSystem = FindObjectOfType<EventSystem>();
@@ -27,9 +28,14 @@ public class PlayerInputManager : MonoBehaviour{
         this.holdCallback = holdCallback;
         this.checkCallback = checkCallback;
         this.cancelActionCallback = cancelActionCallback;
+        this.rmbCallback = rmbCallback;
     }
     public void Update(){
         if(active)Tick();
+        if (Input.GetMouseButtonDown(1))
+        {
+            rmbCallback?.Invoke(mCamera.ScreenToWorldPoint(Input.mousePosition));
+        }
         if(Input.GetMouseButtonDown(2)){
             camMovePosition = Input.mousePosition;
             fixedCameraPosition = mCamera.transform.position;

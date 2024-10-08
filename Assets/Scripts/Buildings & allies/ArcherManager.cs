@@ -9,7 +9,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     bool animate;
     public void AddArcher(Archer archer){
         archersList.Add(archer);
-        archer.Init(enemyManager.enemies);
+        archer.Init();
     }
     public void RemoveArchers(Archer[] archer){
         foreach(Archer a in archer){
@@ -24,14 +24,46 @@ public class ArcherManager : MonoBehaviour, IHandler {
     }
     public void Tick(float delta)
     {
-        if(!active) return;
-        for(int i = 0; i < archersList.Count; i++){
-            archersList[i].TickDetection(delta);
+        //if(!active) return;
+        TickDetection();
+        for (int i = 0; i < archersList.Count; i++){
+            archersList[i].TickState(delta);
             if (archersList[i].ProjectileFlag)
             {
                 projectileManager.SendProjectile(archersList[i].projectileData);
                 archersList[i].ProjectileFlag = false;
             }
+        }
+    }
+    public void TickDetection()
+    {
+        for (int i = 0; i < archersList.Count; i++)
+        {
+            archersList[i].shooting = false;
+            archersList[i].target = null;
+            float attackRange = archersList[i].attackRange;
+            List<Enemy> enemyList = enemyManager.enemies;
+            for (int k = 0; k < enemyManager.lowestInactive; k++)
+            {
+                if (!enemyList[k].alive) continue;
+                Vector3 vector = archersList[i].transform.position - enemyList[k].position;
+                vector.z = 0;
+                float distance = vector.magnitude;
+                if (distance > attackRange) continue;
+                float minDistance;
+                if (archersList[i].target == null || !archersList[i].target.active || !archersList[i].target.alive) minDistance = attackRange;
+                else
+                {
+                    vector = archersList[i].transform.position - archersList[i].target.position;
+                    vector.z = 0;
+                    minDistance = vector.magnitude;
+                }
+                if (distance < minDistance)
+                {
+                    archersList[i].target = enemyList[k];
+                }
+            }
+            if (archersList[i].target == null) archersList[i].state = ArcherState.Idle;
         }
     }
     public void AnimatorTick(float delta)

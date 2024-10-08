@@ -12,7 +12,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private int enemyPoolCount;
     Action onEnemyFinished;
     public List<Enemy> enemies;
-    int lowestInactive = 0;
+    public int lowestInactive = 0;
     int killed = 0;
     [SerializeField] private float timeToSpawn = 10f;
     float time;

@@ -31,6 +31,10 @@ public class PlayerActionManager : MonoBehaviour{
     {
         gameState_int = (byte)state;
     }
+    public void HighlightedAction(Vector3 position)
+    {
+        highlighter.HighlighterCallback(position);
+    }
     public void ClickBuild(Vector3 position){
         switch(mode){
             case ActionMode.Ground:
@@ -198,5 +202,6 @@ public enum ActionMode{
     DestroyBuilding,
     DestroyRoad,
     DestroyGround,
-    CastSpell
+    CastSpell,
+    Command
 }

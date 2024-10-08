@@ -88,11 +88,12 @@ public class Pathfinding : MonoBehaviour{
 		return new Queue<Vector3>(vectors[r]);
 	}
 
-	public void DijkstraSearch(Vector3 start, Vector3 end)
+	public Vector3[] DijkstraSearch(Vector3 start, Vector3 end)
 	{
 		FloorCell[,] floorCells = floor.floorCells;
-		Vector3Int gridStart = floor.WorldToCell(start);
-        Vector3Int gridEnd = floor.WorldToCell(end);
+		/*Vector3Int gridStart = floor.WorldToCell(start);
+        Vector3Int gridEnd = floor.WorldToCell(end);*/
+		return new Vector3[] { start, end };
 		/*List<FloorCell> openList = new()
         {
             floorCells[gridStart.x, gridStart.y]

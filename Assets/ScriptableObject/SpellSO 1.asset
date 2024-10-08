@@ -22,6 +22,8 @@ MonoBehaviour:
       events:
       - acitonID: 0
         frame: 5
+      - acitonID: 1
+        frame: 11
       sprites:
       - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
       - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}

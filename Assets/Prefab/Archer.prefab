@@ -145,6 +145,45 @@ MonoBehaviour:
     - acitonID: 0
       frame: 7
     sprites:
+    - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 984822411, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -884798839, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -657068332, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1003314039, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 394114619, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1068950297, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1126352034, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    duration: 1
+  - events:
+    - acitonID: 0
+      frame: 7
+    sprites:
+    - {fileID: -1721738573, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -6581287, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -234226614, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 586974098, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1483327000, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1033869165, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1316647078, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -902253958, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    duration: 1
+  - events:
+    - acitonID: 0
+      frame: 7
+    sprites:
+    - {fileID: 1292448663, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1452993177, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1689711876, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1879399076, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 619597304, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -865249479, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1978467794, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    duration: 1
+  - events:
+    - acitonID: 0
+      frame: 7
+    sprites:
     - {fileID: -1952945416, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -192223159, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -1331850020, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
@@ -153,6 +192,19 @@ MonoBehaviour:
     - {fileID: 1551958000, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -1451691696, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: 723166192, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    duration: 1
+  - events:
+    - acitonID: 0
+      frame: 7
+    sprites:
+    - {fileID: 278970801, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -250413075, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1591028698, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1862586622, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 250641267, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: 101799382, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -20156242, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+    - {fileID: -1666959431, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     duration: 1
   - events:
     - acitonID: 2
@@ -239,8 +291,12 @@ MonoBehaviour:
     damage: 0
     behaviour: 0
   projectileSpeed: 12.5
-  attackRange: 5
+  moveSpeed: 5
   damage: 15
   _active: 0
   ProjectileFlag: 0
+  attackRange: 5
   _attackType: 1
+  shooting: 0
+  movement: []
+  state: 0
