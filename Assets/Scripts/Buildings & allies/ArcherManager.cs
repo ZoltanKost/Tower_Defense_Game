@@ -4,9 +4,19 @@ using UnityEngine;
 public class ArcherManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private EnemyManager enemyManager;
+    [SerializeField] private Transform archer;
     public List<Archer> archersList = new List<Archer>();
     bool active;
     bool animate;
+    public void SpawnArcher()
+    {
+        Archer _archer = Instantiate(archer,transform).GetComponentInChildren<Archer>();
+        if (_archer == null) { return; }
+        Vector3 temp = Camera.main.transform.position;
+        temp.z = 0;
+        _archer.transform.position = temp;
+        AddArcher(_archer);
+    }
     public void AddArcher(Archer archer){
         archersList.Add(archer);
         archer.Init();
@@ -39,6 +49,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     {
         for (int i = 0; i < archersList.Count; i++)
         {
+            if(archersList[i].state != ArcherState.Idle) continue; 
             archersList[i].shooting = false;
             archersList[i].target = null;
             float attackRange = archersList[i].attackRange;

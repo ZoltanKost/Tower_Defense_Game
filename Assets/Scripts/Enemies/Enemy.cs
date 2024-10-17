@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     {
         state = EnemyState.dead;
         hpBar.gameObject.SetActive(false);
-        animator.PlayAnimation(1);
+        animator.PlayAnimation(0);
         onKillEvent?.Invoke(index);
     }
     public void RemoveInvoke()
@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
         currentHP = MaxHP;
         hpBar.gameObject.SetActive(true);
         hpBar.Set(1);
-        animator.PlayAnimation(0);
+        animator.SetDirectionAnimation(0, (destination - position).normalized);
     }
     public void Pathfinding_SetPath(Queue<Vector3> path)
     {
@@ -108,7 +108,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
             case EnemyState.dead:
                 return;
             case EnemyState.run:
-                animator.SetAnimation(0);
+                animator.SetDirectionAnimation(0, (destination - position).normalized);
                 Move(delta);
                 time += delta;
                 if (time < attackPeriod) return;
@@ -116,7 +116,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
                 return;
             case EnemyState.attack:
                 time = 0;
-                animator.SetAnimation(2);
+                animator.SetDirectionAnimation(1, (currentTarget.position - position).normalized);
                 break;
             default:
                 state = EnemyState.run;

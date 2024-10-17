@@ -51,14 +51,18 @@ MonoBehaviour:
     sprites:
     - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     duration: 0.1
+    flipX: 0
   - events: []
     sprites:
     - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     duration: 0.01
+    flipX: 0
   - events: []
     sprites:
     - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
     duration: 0.1
+    flipX: 0
+  directionAnimations: []
   actions:
   - m_PersistentCalls:
       m_Calls:
@@ -174,7 +178,7 @@ MonoBehaviour:
   visuals: {fileID: 8399754741217680444}
   animator: {fileID: 0}
   meetTarget: 0
-  behaviour: 0
+  behaviour: 12
   HitAnimation: 2
   active: 0
   enable: 0

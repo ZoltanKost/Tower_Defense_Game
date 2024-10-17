@@ -3,16 +3,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Archer : MonoBehaviour{
-    const float cos22_5 = 0.092f;
-    const float cos90 = 0;
-    const float cos180 = -1;
-    const int IDLEANIMATION = 0;
-    const int SHOOTANIMATION_TOP = 2;
-    const int SHOOTANIMATION_TOP_RIGHT = 3;
-    const int SHOOTANIMATION_RIGHT = 1;
-    const int SHOOTANIMATION_BOT_RIGHT = 5;
-    const int SHOOTANIMATION_BOT = 4;
-
     [SerializeField] private CustomAnimator animator;
     [SerializeField] private Sprite arrow;
     [SerializeField] public ProjectileData projectileData;
@@ -23,6 +13,8 @@ public class Archer : MonoBehaviour{
     public bool _active;
     public bool ProjectileFlag;
     public float attackRange;
+    public int floor;
+    public bool building;
     public Vector3 position
     {
         get{return transform.position;}
@@ -65,36 +57,12 @@ public class Archer : MonoBehaviour{
                 break;
             case ArcherState.Shooting:
                 Vector2 direction = (target.position - transform.position).normalized;
-                bool y = direction.y > 0;
-                float cos = direction.x / direction.magnitude;
-                float cosAbs = Mathf.Abs(cos);
-                int res = 0;
-                Debug.Log(cosAbs);
-                if (cosAbs >= 1 - cos22_5)
-                {
-                    if (cosAbs <= (2 * cos22_5 - 1))
-                    {
-                        res = SHOOTANIMATION_TOP_RIGHT; // forward
-                    }
-                    else
-                    {
-                        res = SHOOTANIMATION_RIGHT; // forward
-                    }
-                }
-                else
-                {
-                    res = SHOOTANIMATION_TOP;// forward
-                }
-                if (cos < 0) transform.localScale = new Vector2(-1,1);// forward
-                else transform.localScale = Vector2.one;
-                if (!y && res != SHOOTANIMATION_RIGHT)
-                {
-                    res += 2;
-                }
-                animator.SetAnimation(res);
+                animator.SetDirectionAnimation(0, direction);
                 break;
             case ArcherState.Moving:
+                
                 Vector3 dir = moveTarget - transform.position;
+                Debug.Log(dir);
                 if (dir.magnitude <= 0.3f)
                 {
                     currentMovementIndex++;
@@ -116,6 +84,7 @@ public class Archer : MonoBehaviour{
         currentMovementIndex = 0;
         moveTarget = movement[0];
         state = ArcherState.Moving;
+        Debug.Log($"movement Set!{state}");
     }
     public void ResetAnimation(){
         animator.SetAnimation(0);
