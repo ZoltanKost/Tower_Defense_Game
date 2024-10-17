@@ -49,7 +49,6 @@ public class ArcherManager : MonoBehaviour, IHandler {
     {
         for (int i = 0; i < archersList.Count; i++)
         {
-            if(archersList[i].state != ArcherState.Idle) continue; 
             archersList[i].shooting = false;
             archersList[i].target = null;
             float attackRange = archersList[i].attackRange;
