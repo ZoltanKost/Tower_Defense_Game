@@ -25,7 +25,7 @@ public class DynamicItemPageUI : MonoBehaviour
         {
             foreach(var b in buttons)
             {
-                b.DeactivateVisuals();
+                b.gameObject.SetActive(false);
             }
             length = 0;
         }
@@ -64,8 +64,14 @@ public class DynamicItemPageUI : MonoBehaviour
     }
     public void RemoveItem(int id)
     {
-        buttons[id] = buttons[--length];
-        buttons[id].SetID(id);
-        buttons[length].gameObject.SetActive(false);
+        var remove = buttons[id];
+        if (id != length - 1)
+        {
+            buttons[id] = buttons[length - 1];
+            buttons[id].SetID(id);
+            buttons[length - 1] = remove;
+            remove.SetID(id);
+        }
+        remove.gameObject.SetActive(false);
     }
 }

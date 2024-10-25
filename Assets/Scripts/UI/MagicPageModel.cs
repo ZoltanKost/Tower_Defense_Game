@@ -40,7 +40,7 @@ private SpellData[] _spells;
         if (!playerResourceManager.EnoughtResource(Resource.Gold, spellData.goldCost)) return;
         playerResourceManager.RemoveResource(Resource.Gold, spellData.goldCost);
         inventoryModel.AddSpell(spellData);
-        magicPage.DeactivateVisuals(uiID);
+        //magicPage.DeactivateVisuals(uiID);
         CreateSpell(uiID);
         /*playerActionManager.SetPlaceCallback(() =>
         {

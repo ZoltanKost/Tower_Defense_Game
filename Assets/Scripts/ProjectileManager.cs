@@ -83,6 +83,7 @@ public class ProjectileManager : MonoBehaviour {
 public struct ProjectileData
 {
     public IDamagable target;
+    public Vector3 targetPosition;
     public Vector3 startPosition;
     public float speed;
     public Animation[] animations;

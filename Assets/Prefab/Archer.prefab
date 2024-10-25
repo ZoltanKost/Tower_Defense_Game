@@ -321,6 +321,7 @@ MonoBehaviour:
   animator: {fileID: 3429721088360299154}
   arrow: {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
   projectileData:
+    targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
     animations:
@@ -345,12 +346,15 @@ MonoBehaviour:
       flipX: 0
     damage: 0
     behaviour: 12
-  projectileSpeed: 12.5
+  projectileSpeed: 15
   moveSpeed: 5
+  target: {fileID: 0}
   damage: 15
   _active: 0
   ProjectileFlag: 0
   attackRange: 5
+  floor: 0
+  building: 0
   _attackType: 1
   shooting: 0
   movement: []

@@ -129,6 +129,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
         foreach(Enemy enemy in enemies){
             if(enemy != null) Destroy(enemy.gameObject);
         }
+        lowestInactive = 0;
     }
 
     public void AreaSpell(SpellData spell, Vector3 position)

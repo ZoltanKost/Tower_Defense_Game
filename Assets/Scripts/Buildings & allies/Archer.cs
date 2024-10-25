@@ -8,7 +8,7 @@ public class Archer : MonoBehaviour{
     [SerializeField] public ProjectileData projectileData;
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] private float moveSpeed = 5f;
-    public IDamagable target;
+    public Enemy target;
     [SerializeField] private int damage;
     public bool _active;
     public bool ProjectileFlag;
@@ -95,6 +95,10 @@ public class Archer : MonoBehaviour{
         projectileData.target = target;
         projectileData.speed = projectileSpeed;
         projectileData.damage = damage;
+        projectileData.targetPosition = 
+            target.position + 
+            (target.destination - target.position).normalized * target.speed * 
+            (transform.position - target.position).magnitude/projectileData.speed;
     }
     public void Switch(bool active){
         _active = active;

@@ -40,4 +40,8 @@ public class PlayerInventoryModel : MonoBehaviour
         );
         playerActionManager.SetCancelCallback(() => inventoryUIView.ActivateVisuals(uiID));
     }
+    public void ResetInventory()
+    {
+        inventoryUIView.ResetVisuals(null);
+    }
 }

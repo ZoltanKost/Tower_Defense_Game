@@ -11,7 +11,7 @@ public class TemporalFloor : Floor
     [SerializeField] private Color canPlace;
     [SerializeField] private Color blockPlace;
     private Color currentColor;
-    BuildingObject visual;
+    [SerializeField] SpriteRenderer visual;
     private int cellSize;
     Vector3Int currentPosition;
     [SerializeField] Transform[] arrows;
@@ -55,16 +55,14 @@ public class TemporalFloor : Floor
     }
     public void SetGroundArray(GroundArray array){
         ClearAllTiles();
-        if(visual != null){
-            Destroy(visual.gameObject);
-        }
+        visual.gameObject.SetActive(false);
         CreateGroundArray(Vector3Int.zero, array);
     }
     public void SetBuilding(Building building){
-        visual = Instantiate(building.prefab, transform);
+        visual.sprite = building.sprite;
         Vector3 offset = (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
         visual.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
-        visual.SetColor(visuals[0].color);
+        visual.color = visuals[0].color;
         arrows[0].localPosition = Vector3.zero * cellSize;
         arrows[1].localPosition = Vector3Int.right * building.width * cellSize;
         arrows[2].localPosition = Vector3Int.up * building.height * cellSize;
@@ -97,28 +95,35 @@ public class TemporalFloor : Floor
     public void ActivateFloor(Building b){
         activated = true;
         ClearAllTiles();
-        if(visual != null){
-            Destroy(visual.gameObject);
-        }
         foreach(var ar in arrows){
             ar.gameObject.SetActive(true);
         }
         SetBuilding(b);
+        visual.gameObject.SetActive(true);
     }
     public void ActivateFloor(ActionMode m){
         activated = true;
         ClearAllTiles();
-        if(visual != null){
-            Destroy(visual.gameObject);
-        }
+        visual.gameObject.SetActive(false);
         foreach(var ar in arrows){
             ar.gameObject.SetActive(true);
         }
         SetObject(m);
     }
+    public void ActivateFloor(SpellData data)
+    {
+        activated = true;
+        ClearAllTiles();
+        foreach (var ar in arrows)
+        {
+            ar.gameObject.SetActive(true);
+        }
+        SetSpell(data);
+        visual.gameObject.SetActive(true);
+    }
     public void DeactivateFloor(){
         ClearAllTiles();
-        if(visual != null) Destroy(visual.gameObject); 
+        visual.gameObject.SetActive(false); 
         foreach(var ar in arrows){
             ar.gameObject.SetActive(false);
         }
@@ -134,8 +139,18 @@ public class TemporalFloor : Floor
         foreach(Tilemap tilemap in visuals){
             tilemap.color = currentColor;
         }
-        if(visual == null) return;
-        visual.SetColor(currentColor);
+        visual.color = currentColor;
+    }
+    public void SetSpell(SpellData spellData)
+    {
+        visual.sprite = spellData.UIicon;
+        Vector3 offset = (spellData.radius % 2 == 0 ? (spellData.radius/ 2) : (float)spellData.radius / 2) * Vector3.right;
+        visual.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
+        visual.color = visuals[0].color;
+        arrows[0].localPosition = Vector3.zero * cellSize;
+        arrows[1].localPosition = Vector3Int.right * spellData.radius * cellSize;
+        arrows[2].localPosition = Vector3Int.up * spellData.radius * cellSize;
+        arrows[3].localPosition = new Vector3Int(spellData.radius, spellData.radius) * cellSize;
     }
     public void SetArrows(Vector2Int gridPosition, Vector3Int rectSize)
     {

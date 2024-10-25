@@ -141,6 +141,7 @@ public class PlayerActionManager : MonoBehaviour{
     {
         mode = ActionMode.CastSpell;
         chosenSpell = b;
+        temporalFloor.ActivateFloor(b);
     }
     public void ChooseGround(GroundArray g){
         mode = ActionMode.Ground;

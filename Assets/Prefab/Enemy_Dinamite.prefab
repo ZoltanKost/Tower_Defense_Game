@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileFlag: 0
   ProjectileData:
+    targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 5
     animations:
@@ -142,6 +143,7 @@ MonoBehaviour:
   MaxHP: 100
   attackPeriod: 2
   _killReward: 5
+  destination: {x: 0, y: 0, z: 0}
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,7 +204,7 @@ MonoBehaviour:
   - animations:
     - events:
       - acitonID: 0
-        frame: 3
+        frame: 2
       - acitonID: 2
         frame: 6
       sprites:
@@ -217,7 +219,7 @@ MonoBehaviour:
       flipX: 0
     - events:
       - acitonID: 0
-        frame: 3
+        frame: 2
       - acitonID: 2
         frame: 6
       sprites:

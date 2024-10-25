@@ -20,6 +20,8 @@ public class Shop : MonoBehaviour {
     }
     public void ResetGroundArrays(){
         groundPageModel.ResetGroundArrays();
+        magicPageModel.ResetSpells();
+        playerInventoryModel.ResetInventory();
     }
     public void Show(){
         if(shown) return;

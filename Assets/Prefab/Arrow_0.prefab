@@ -49,17 +49,17 @@ MonoBehaviour:
   animations:
   - events: []
     sprites:
-    - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+    - {fileID: 0}
     duration: 0.1
     flipX: 0
   - events: []
     sprites:
-    - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+    - {fileID: 0}
     duration: 0.01
     flipX: 0
   - events: []
     sprites:
-    - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+    - {fileID: 0}
     duration: 0.1
     flipX: 0
   directionAnimations: []

@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     Queue<Vector3> currentPath;
     public int index;
     private bool _active;
-    [SerializeField] private float speed;
+    [SerializeField] public float speed;
     [SerializeField] private float attackrange = 3f;
     [SerializeField] private int MaxHP = 100;
     [SerializeField] private float attackPeriod = 5f;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     public int killReward { get => _killReward; }
     float time;
     int currentHP;
-    Vector3 destination;
+    public Vector3 destination;
     void Awake()
     {
         animator = GetComponent<CustomAnimator>();
@@ -181,6 +181,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
                 //ProjectileData.sprite =
                 ProjectileData.damage = damage;
                 ProjectileData.startPosition = transform.position;
+                ProjectileData.targetPosition = currentTarget.position;
                 break;
         }
     }

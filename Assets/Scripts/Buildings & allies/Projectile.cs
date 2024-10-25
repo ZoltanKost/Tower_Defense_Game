@@ -4,6 +4,7 @@ public class Projectile : MonoBehaviour{
     [SerializeField] private Transform visuals;
     [SerializeField] private CustomAnimator animator;
     IDamagable target;
+    Vector3 targetPosition;
     int damage;
     float speed;
     public bool meetTarget;
@@ -21,18 +22,19 @@ public class Projectile : MonoBehaviour{
         enable = true;
         transform.position = data.startPosition;
         target = data.target;
-        animator.SetAnimation(0);
         animator.animations = data.animations;
+        animator.PlayAnimation(0);
         speed = data.speed;
         damage = data.damage;
         behaviour = data.behaviour;
         visuals.gameObject.SetActive(true);
+        targetPosition = data.targetPosition;
     }
     public void UpdateAnimator(float delta){
         animator.UpdateAnimator(delta);
     }
     public void Move(float delta){
-        Vector3 dir = target.position - transform.position;
+        Vector3 dir = targetPosition - transform.position;
         dir.z = 0;
         float angle = Vector2.Angle(Vector2.right,dir);
         if(dir.y < 0) angle = -angle;
