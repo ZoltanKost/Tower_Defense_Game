@@ -4,6 +4,7 @@ using UnityEngine;
 public class ProjectileManager : MonoBehaviour {
     [SerializeField] private Projectile projectilePrefab;
     Projectile[] projectiles;
+    [SerializeField] private float FreeFallAccelleration;
     int Count;
     bool active = false;
     public void Init()
@@ -16,7 +17,7 @@ public class ProjectileManager : MonoBehaviour {
     }
     public void SendProjectile(ProjectileData data){
         int index = Count++;
-        projectiles[index].Send(data);
+        projectiles[index].Send(data, FreeFallAccelleration);
         if(Count>= projectiles.Length)
         {
             Resize();
@@ -47,10 +48,42 @@ public class ProjectileManager : MonoBehaviour {
     }
     public void Tick(float delta)
     {
-        for(int i = 0; i < Count; i++){
-            if(!projectiles[i].active) continue;
-            projectiles[i].Move(delta);
+        for (int i = 0; i < Count; i++) {
             if (!projectiles[i].enable) RemoveProjectile(i);
+            if (!projectiles[i].active) continue;
+            Projectile projectile = projectiles[i];
+            float angle = Vector2.Angle(Vector2.right, projectile.moveVector);
+            if (projectile.moveVector.y < 0) angle = -angle;
+            Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+            projectile.visuals.rotation = rot;
+            projectile.transform.position += projectile.moveVector * delta;
+            if(projectile.ballistic)projectile.moveVector.y -= FreeFallAccelleration * delta;
+            projectile.time += delta;
+            if (projectile.time >= projectile.maxTime)
+            {
+                projectile.active = false;
+                projectile.enable = false;
+                if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.StayIfMissed) != 0
+                    && !projectile.target.alive)
+                {
+                    projectile.enable = true;
+                    projectile.animator.SetAnimation(1);
+                }
+                if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.Damage) != 0)
+                {
+                    projectile.target.Damage(projectile.damage);
+                }
+                if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.Animate) != 0)
+                {
+                    projectile.animator.SetAnimation(1);
+                    projectile.enable = true;
+                }
+                if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.CastSpell) != 0)
+                {
+                    //target.
+                }
+            }
+            if (!projectile.enable) RemoveProjectile(i);
         }
     }
     public void AnimatorTick(float delta)
@@ -89,6 +122,8 @@ public struct ProjectileData
     public Animation[] animations;
     public int damage;
     public OnProjectileMeetTargetBehaviour behaviour;
+    public bool ballistic;
+    public float flightTime;
 }
 [Flags]
 public enum OnProjectileMeetTargetBehaviour

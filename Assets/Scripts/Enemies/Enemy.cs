@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     IDamagable[] targets;
     IDamagable currentTarget;
     private CustomAnimator animator;
-    Queue<Vector3> currentPath;
+    public Queue<Vector3> currentPath;
     public int index;
     private bool _active;
     [SerializeField] public float speed;

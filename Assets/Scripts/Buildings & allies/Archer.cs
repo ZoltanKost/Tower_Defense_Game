@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,6 +6,7 @@ public class Archer : MonoBehaviour{
     [SerializeField] private Sprite arrow;
     [SerializeField] public ProjectileData projectileData;
     [SerializeField] private float projectileSpeed = 5f;
+    [SerializeField] private float ProjectileFlightTime;
     [SerializeField] private float moveSpeed = 5f;
     public Enemy target;
     [SerializeField] private int damage;
@@ -95,10 +95,29 @@ public class Archer : MonoBehaviour{
         projectileData.target = target;
         projectileData.speed = projectileSpeed;
         projectileData.damage = damage;
-        projectileData.targetPosition = 
-            target.position + 
-            (target.destination - target.position).normalized * target.speed * 
-            (transform.position - target.position).magnitude/projectileData.speed;
+        projectileData.flightTime = projectileData.ballistic?
+            ProjectileFlightTime:
+            (target.position - transform.position).magnitude / projectileData.speed;
+        float enemyTimeToDest = 
+            (target.destination - target.position).magnitude 
+            / target.speed;
+        float time; Vector3 direction; Vector3 start;
+        if (enemyTimeToDest < projectileData.flightTime && target.currentPath.TryPeek(out Vector3 nextDest))
+        {
+            start = target.destination;
+            direction = nextDest - target.destination;
+            time = projectileData.flightTime - enemyTimeToDest;
+        }
+        else
+        {
+            start = target.position;
+            direction = target.destination - target.position;
+            time = projectileData.flightTime;
+        }
+        projectileData.targetPosition =
+            start +
+            (direction).normalized *
+            target.speed * time;
     }
     public void Switch(bool active){
         _active = active;

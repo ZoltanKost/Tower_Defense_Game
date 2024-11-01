@@ -135,19 +135,16 @@ public class EnemyManager : MonoBehaviour, IHandler {
     public void AreaSpell(SpellData spell, Vector3 position)
     {
         string s = "Area spell Cast...";
-        Debug.DrawLine(position, position + Vector3.up * spell.radius);
-        Debug.DrawLine(position, position + Vector3.left * spell.radius);
-        Debug.DrawLine(position, position + Vector3.right * spell.radius);
-        Debug.DrawLine(position, position + Vector3.down * spell.radius);
         for (int i = 0; i < lowestInactive; i++)
         {
             if (!enemies[i].active) continue;
-            float distance = Vector3.Distance(enemies[i].position, position);
-            if (distance > spell.radius) continue;
+            //float distance = Vector3.Distance(, position);
+            float dX = Mathf.Abs(enemies[i].position.x - position.x);
+            float dY = Mathf.Abs(enemies[i].position.y - position.y);
+
+            if (dX > spell.radius || dY > spell.radius) continue;
             enemies[i].Damage(spell.damage);
-            s += $"Damage id{i}: distance = {distance}";
-            
-            Debug.DrawLine(position, enemies[i].position);
+            s += $"Damage id{i}: distanceX = {dX}, distanceY = {dY}";
         }
         Debug.Log(s);
     }
