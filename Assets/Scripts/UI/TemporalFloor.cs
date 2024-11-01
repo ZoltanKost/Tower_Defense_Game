@@ -8,15 +8,17 @@ public class TemporalFloor : Floor
     [SerializeField] private bool FixedDelta;
     [SerializeField] private float amplitude_overshoot = 1.15f;
     [SerializeField] private Ease moveEase;
+    [SerializeField] private Ease nonSnapEase;
     [SerializeField] private Color canPlace;
     [SerializeField] private Color blockPlace;
     private Color currentColor;
     [SerializeField] SpriteRenderer visual;
     private int cellSize;
-    Vector3Int currentPosition;
+    Vector3 currentCursorPosition;
     [SerializeField] Transform[] arrows;
-    Vector3Int temp;
+    Vector3 targetPosition;
     bool activated;
+    bool snap;
     Tween tween;
     void Start(){
         cellSize = Mathf.FloorToInt(visuals[0].cellSize.x);
@@ -36,21 +38,35 @@ public class TemporalFloor : Floor
             CreateGround(pos + g);
         }
     }
-    public void MoveTempFloor(Vector3 position, bool canBuild){
-        Vector3 vector = position / cellSize;
-        temp.x = Mathf.FloorToInt(f: vector.x);
-        temp.y = Mathf.FloorToInt(vector.y);
-        temp.z = 0;
-        currentColor = canBuild?Color.white: blockPlace;
+    public void MoveTempFloor(Vector3 position, bool canBuild) {
+        targetPosition = position / cellSize;
+        targetPosition.z = 0;
+        currentColor = canBuild ? Color.white : blockPlace;
         UpdateColors();
-        if (temp != currentPosition){
-            tween.Kill();
-            if(activated){
-                tween = transform.DOMove(temp, (temp - currentPosition).magnitude * tweenSpeed * (FixedDelta?Time.fixedDeltaTime:Time.deltaTime)).SetEase(moveEase,amplitude_overshoot);
-            }else{
-                transform.position = temp;
+        if (!activated)
+        {
+            transform.position = new Vector2 { x = position.x, y = position.y };
+            return;
+        }
+        if (!snap)
+        {
+            //targetPosition = new Vector2 { x = position.x, y = position.y };
+            if((targetPosition - currentCursorPosition).magnitude > .3f)
+            {
+                tween.Kill();
+                tween = transform.DOMove(targetPosition, (targetPosition - currentCursorPosition).magnitude * .5f * tweenSpeed * (FixedDelta ? Time.fixedDeltaTime : Time.deltaTime)).SetEase(nonSnapEase, amplitude_overshoot);
+                currentCursorPosition = targetPosition;
             }
-            currentPosition = temp;
+            return;
+        }
+        targetPosition.x = Mathf.FloorToInt(targetPosition.x);
+        targetPosition.y = Mathf.FloorToInt(targetPosition.y);
+        targetPosition.z = 0;
+        if (targetPosition != currentCursorPosition)
+        {
+            tween.Kill();
+            tween = transform.DOMove(targetPosition, (targetPosition - currentCursorPosition).magnitude * tweenSpeed * (FixedDelta ? Time.fixedDeltaTime : Time.deltaTime)).SetEase(moveEase, amplitude_overshoot);
+            currentCursorPosition = targetPosition;
         }
     }
     public void SetGroundArray(GroundArray array){
@@ -87,6 +103,7 @@ public class TemporalFloor : Floor
     }
     public void ActivateFloor(GroundArray ga){
         activated = true;
+        snap = true;
         SetGroundArray(ga);
         foreach(var ar in arrows){
             ar.gameObject.SetActive(true);
@@ -94,6 +111,7 @@ public class TemporalFloor : Floor
     }
     public void ActivateFloor(Building b){
         activated = true;
+        snap = true;
         ClearAllTiles();
         foreach(var ar in arrows){
             ar.gameObject.SetActive(true);
@@ -103,6 +121,7 @@ public class TemporalFloor : Floor
     }
     public void ActivateFloor(ActionMode m){
         activated = true;
+        snap = true;
         ClearAllTiles();
         visual.gameObject.SetActive(false);
         foreach(var ar in arrows){
@@ -113,7 +132,9 @@ public class TemporalFloor : Floor
     public void ActivateFloor(SpellData data)
     {
         activated = true;
+        snap = false;
         ClearAllTiles();
+        Debug.Log("Activated, spell");
         foreach (var ar in arrows)
         {
             ar.gameObject.SetActive(true);
@@ -144,13 +165,13 @@ public class TemporalFloor : Floor
     public void SetSpell(SpellData spellData)
     {
         visual.sprite = spellData.UIicon;
-        Vector3 offset = (spellData.radius % 2 == 0 ? (spellData.radius/ 2) : (float)spellData.radius / 2) * Vector3.right;
-        visual.transform.SetLocalPositionAndRotation(offset, Quaternion.identity);
-        visual.color = visuals[0].color;
-        arrows[0].localPosition = Vector3.zero * cellSize;
-        arrows[1].localPosition = Vector3Int.right * spellData.radius * cellSize;
-        arrows[2].localPosition = Vector3Int.up * spellData.radius * cellSize;
-        arrows[3].localPosition = new Vector3Int(spellData.radius, spellData.radius) * cellSize;
+        float offsetF = spellData.radius / cellSize;
+        visual.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        //visual.color = visuals[0].color;
+        arrows[0].localPosition = new Vector3(-offsetF, -offsetF);
+        arrows[1].localPosition = new Vector3(offsetF, - offsetF);
+        arrows[2].localPosition = new Vector3(-offsetF, offsetF);
+        arrows[3].localPosition = new Vector3(offsetF, offsetF);
     }
     public void SetArrows(Vector2Int gridPosition, Vector3Int rectSize)
     {
