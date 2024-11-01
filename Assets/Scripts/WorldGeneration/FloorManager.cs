@@ -36,7 +36,7 @@ public class FloorManager : MonoBehaviour{
     public void ClearFloor(){
         floorCells = new FloorCell[width,height];
         for(int x = 0; x < width; x++){
-            for(int y = 0; y < width; y++){
+            for(int y = 0; y < height; y++){
                 floorCells[x,y] = new FloorCell(x,y,-1);
             }
         }
@@ -198,6 +198,18 @@ public class FloorManager : MonoBehaviour{
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
+            }
+        }
+    }
+    public void PlaceBuilding_DontCheck(BuildingSaveData data)
+    {
+        int floor = floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor;
+        bm.Build(data, out Func<int> getIndex);
+        for (int x = data.gridPosition.x; x < data.gridPosition.x + data.width; x++)
+        {
+            for (int y = data.gridPosition.y; y < data.gridPosition.y + data.height; y++)
+            {
+                floorCells[x, y].GetBuildingIDCallback = getIndex;
             }
         }
     }
@@ -419,5 +431,65 @@ public class FloorManager : MonoBehaviour{
     public Vector3Int WorldToCell(Vector3 position)
     {
         return floors[0].WorldToCell(position);
+    }
+    public void LoadFloorCells(FloorCellSaveData[] load, Vector3Int offset)
+    {
+        foreach (Floor floor in floors)
+        {
+            floor.ClearAllTiles();
+        }
+        HashSet<Vector3Int> changed = new();
+        foreach (FloorCellSaveData data in load)
+        {
+            floorCells[data.gridX, data.gridY] = new FloorCell
+            (
+                data.gridX,
+                data.gridY, 
+                data.currentFloor,
+                data.bridgeSpot,
+                data.bridge,
+                data.road,
+                data.ladder
+            );
+            changed.Add(new Vector3Int(data.gridX, data.gridY));
+        }
+        foreach(FloorCell cell in floorCells)
+        {
+            Vector3Int pos = new Vector3Int {x = cell.gridX, y = cell.gridY};
+            if (changed.Contains(pos))
+            {
+                int floor = cell.currentFloor;
+                while(floor >= 0)
+                {
+                    floors[floor--].CreateGround(pos - offset);
+                }
+                if (cell.road)
+                {
+                    if (cell.ladder)
+                    {
+                        floors[cell.currentFloor].PlaceStairs(pos - offset);
+                    }
+                    else
+                    {
+                        floors[cell.currentFloor].PlaceRoad(pos - offset);
+                    }
+                }
+                if (cell.bridgeSpot) floors[cell.currentFloor].SetBridgeSpot(pos - offset);
+                if (cell.bridge) floors[cell.currentFloor].PlaceBridge(pos - offset);
+                Debug.Log("Creating changed location...");
+            }
+            else
+            {
+                floorCells[cell.gridX, cell.gridY] = new FloorCell(cell.gridX, cell.gridY);
+            }
+        }
+        foreach (Floor floor in floors)
+        {
+            floor.Animate();
+        }
+    }
+    public void UpdateFloorCell(FloorCell floorCell)
+    {
+
     }
 }

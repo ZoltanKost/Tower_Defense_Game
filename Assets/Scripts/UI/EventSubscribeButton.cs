@@ -8,6 +8,7 @@ public class EventSubscribeButton : MonoBehaviour{
     public void Init(Action start){
         if(targetButton == null) targetButton = GetComponent<Button>();
         if(start == null) return;
+        targetButton.onClick.RemoveAllListeners();
         targetButton.onClick.AddListener(start.Invoke);
     }
 }

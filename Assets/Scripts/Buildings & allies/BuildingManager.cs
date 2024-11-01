@@ -1,13 +1,14 @@
 using UnityEngine;
 using System;
-using System.Reflection;
 
 public class BuildingManager : MonoBehaviour, IHandler {
+    [SerializeField] private FloorManager floorManager;
+    [SerializeField] private Building[] buildingData;
     [SerializeField] private BuildingObject prefab;
     [SerializeField] private ArcherManager archerManager;
     [SerializeField] private ProjectileManager projectileManager;
     public BuildingObject[] bs;
-    int Count;
+    public int Count { get; private set; }
     bool active;
     public void Init()
     {
@@ -22,8 +23,14 @@ public class BuildingManager : MonoBehaviour, IHandler {
     public void Build(Vector3 worldPosition, int gridX,int gridY, int floor, Building building, out Func<int> getID){
         worldPosition.z = 0;
         Vector3 WidthAlignmentOffset =  (building.width % 2 == 0? (building.width / 2) : (float)building.width/2) * Vector3.right;
-
+        
         BuildingObject buildingObject = bs[Count];
+        
+        for (int i = 0; i < buildingData.Length; i++)
+        {
+            if (building == buildingData[i]) buildingObject.AssetID = i;
+        }
+
         InitArchers(buildingObject.GetArchers());
         buildingObject.Init(6,floor,Count, gridX, gridY, building, KillBuilding);
         buildingObject.transform.position = worldPosition + WidthAlignmentOffset;
@@ -32,6 +39,26 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
         Count++;
         if(Count >= bs.Length){
+            Resize();
+        }
+    }
+    public void Build(BuildingSaveData data, out Func<int> getID)
+    {
+        BuildingObject buildingObject = bs[Count];
+
+        buildingObject.AssetID = data.AssetID;
+        InitArchers(buildingObject.GetArchers());
+            buildingObject.Init(6, 
+                floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
+                Count, data.gridPosition.x, data.gridPosition.y,
+                buildingData[data.AssetID], KillBuilding);
+        buildingObject.transform.position = data.position;
+        buildingObject.gameObject.SetActive(true);
+        getID = bs[Count].GetIndex;
+
+        Count++;
+        if (Count >= bs.Length)
+        {
             Resize();
         }
     }
@@ -73,6 +100,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
         gridX = b.gridPosition.x;
         gridY = b.gridPosition.y;
         b.Deactivate();
+        archerManager.RemoveArchers(b.GetArchers());
     }
 
     public void Tick(float delta)
@@ -102,7 +130,12 @@ public class BuildingManager : MonoBehaviour, IHandler {
 
     public void ResetEntities()
     {
-        
+        for (int i = 0; i < Count; i++)
+        {
+            bs[i].Deactivate();
+            archerManager.RemoveArchers(bs[i].GetArchers());
+        }
+        Count = 0;
     }
 
     public void ClearEntities()

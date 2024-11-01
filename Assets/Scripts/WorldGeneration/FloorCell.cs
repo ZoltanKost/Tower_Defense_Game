@@ -22,7 +22,24 @@ public struct FloorCell{
         road = false;
         ladder = false;
         GetBuildingIDCallback = null;
-}
+    }
+    public FloorCell(
+        int x, int y, 
+        int currentFloor,
+        bool bridgeSpot,
+        bool bridge,
+        bool road,
+        bool ladder)
+    {
+        gridX = x;
+        gridY = y;
+        this.currentFloor = currentFloor;
+        this.bridgeSpot = false;
+        this.bridge = false;
+        this.road = false;
+        this.ladder = false;
+        GetBuildingIDCallback = null;
+    }
     public void Reset()
     {
         road = false;

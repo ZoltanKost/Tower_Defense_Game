@@ -6,7 +6,7 @@ public class PlayerResourceManager : MonoBehaviour {
     [SerializeField] private ResourceUIManager resourceUIManager;
     [SerializeField] private ResourceSO[] resourceSOs;
     [SerializeField] private int[] counts;
-    Dictionary<Resource,int> storage;
+    public Dictionary<Resource,int> storage;
     ID_Count_Callback updateUICallback;
     public void Init(){
         updateUICallback = resourceUIManager.UpdateResource;
@@ -39,6 +39,11 @@ public class PlayerResourceManager : MonoBehaviour {
         storage[resource] -= count;
         // Debug.Log($"Remove {count} of {resource}");
         updateUICallback?.Invoke((int)resource, storage[resource]);
+    }
+    public void SetResource(Resource res, int count)
+    {
+        storage[res] = count;
+        updateUICallback?.Invoke((int)res, storage[res]);
     }
 }
 public enum Resource{

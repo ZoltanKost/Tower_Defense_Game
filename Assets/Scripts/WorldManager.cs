@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.IO;
+using System.Collections.Generic;
 
 public class WorldManager : MonoBehaviour {
     [Header("Dimensions")]
@@ -36,12 +38,12 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private PlayerManager playerManager; 
     [SerializeField] private MenuUIManager defeatMenuManager;
     [SerializeField] private MenuUIManager menuUIManager;
-    [SerializeField] private MenuUIManager controlsMenu;
     [SerializeField] private MenuUIManager winScreen;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private PlayerShopUIManager playerShopUIManager;
+    [SerializeField] private GameLoadManager gameLoadManager;
     private GameState gameState;
     int wave;
     
@@ -98,14 +100,14 @@ public class WorldManager : MonoBehaviour {
             playerActionManager.HighlightedAction
         );
         PauseButton.Init(Pause);
-        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,OpenControls, ResetWave});
+        gameLoadManager.Init(Load);
+        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,null, ResetWave, () => { gameLoadManager.ReadSaveData(); menuUIManager.gameObject.SetActive(false); }, Save});
         defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
         Action playerDefeat = () => {
             Defeat();
             playerHealthBar.gameObject.SetActive(false);
         };
         playerManager.Init(playerDefeat,playerHealthBar.Set);
-        controlsMenu.Init(new Action[]{Unpause});
         winScreen.Init(new Action[]{Restart,Application.Quit});
         playerHealthBar.gameObject.SetActive(false);
         enemyManager.SetWinAction(Win);
@@ -126,45 +128,10 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
     }
-    // void Update(){
-    //     bool esc = Input.GetKeyDown(KeyCode.Escape);
-    //     switch(gameState){
-    //         case GameState.Idle:
-    //             if(esc) {
-    //                 UIOff();
-    //                 Pause();
-    //             }
-    //             break;
-    //         case GameState.IdlePaused:
-    //             if(esc) {
-    //                 Unpause();
-    //             }
-    //             break;
-    //         case GameState.Wave:
-    //             if(esc) {
-    //                 Pause();
-    //             }
-    //             break;
-    //         case GameState.WavePaused:
-    //             if(esc) {
-    //                 Unpause();
-    //             }
-    //             break;
-    //         case GameState.Defeat:
-    //             if(esc) {
-    //                 Restart();
-    //             }
-    //             break;
-    //     }
-    // }
     public void Win(){
         ResetWave();
         // winScreen.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
-    }
-    public void OpenControls(){
-        controlsMenu.gameObject.SetActive(true);
-        menuUIManager.gameObject.SetActive(false);
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
@@ -196,6 +163,7 @@ public class WorldManager : MonoBehaviour {
         shop.ResetGroundArrays();
         menuUIManager.gameObject.SetActive(false);
         playerHealthBar.gameObject.SetActive(false);
+        gameLoadManager.CloseWindow();
         shop.Hide();
         playerShopUIManager.CloseAll();
         gameState = GameState.Idle;
@@ -244,10 +212,113 @@ public class WorldManager : MonoBehaviour {
         archerManager.SwitchAnimation(true);
         projectileManager.Switch(true);
         menuUIManager.gameObject.SetActive(false);
-        controlsMenu.gameObject.SetActive(false);
         gameState = gameState - 1;
         playerActionManager.Switch(gameState);
     }
+    public void Load(LevelData data)
+    {
+        ResetWave();
+        floorManager.LoadFloorCells(data.floorCells, data.offset);
+        buildingManager.ResetEntities();
+        foreach (var b in data.buildings)
+        {
+            floorManager.PlaceBuilding_DontCheck(b);
+        }
+        playerManager.currentHp = data.playerHP;
+        playerResourceManager.SetResource(Resource.Gold, data.goldCount);
+        //pathfinding.SetCastlePoint(,);
+    }
+    public void Save()
+    {
+        LevelData levelData = new LevelData
+        {
+            floorCells = FloorCellToSaveData().ToArray(),
+            castlePositions = floorManager.castlePositions,
+            offset = floorManager.offset,
+            buildings = BuildingToSaveData(),
+            goldCount = playerResourceManager.storage[Resource.Gold],
+            playerHP = playerManager.currentHp
+        };
+        string save = JsonUtility.ToJson(levelData);
+        string dir = Application.persistentDataPath + "\\saves";
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+        File.WriteAllText(dir + $"\\save{Directory.GetFiles(dir).Length}.json", save);
+    }
+    public List<FloorCellSaveData> FloorCellToSaveData()
+    {
+        int width = floorManager.floorCells.GetLength(0);
+        List<FloorCellSaveData> result = new();// FloorCellSaveData[width * floorManager.floorCells.GetLength(1)];
+        foreach (FloorCell cell in floorManager.floorCells)
+        {
+            if (cell.currentFloor < 0) continue;
+            result.Add(new FloorCellSaveData
+            {
+                currentFloor = cell.currentFloor,
+                bridgeSpot = cell.bridgeSpot, 
+                bridge = cell.bridge,
+                road = cell.road,
+                ladder = cell.ladder,
+                gridX = cell.gridX,
+                gridY = cell.gridY,
+            });
+        }
+        return result;
+    }
+    public BuildingSaveData[] BuildingToSaveData()
+    {
+        BuildingSaveData[] result = new BuildingSaveData[buildingManager.Count];
+        foreach (BuildingObject building in buildingManager.bs)
+        {
+            if (!building.active) continue;
+            result[building.index] = new BuildingSaveData
+            {
+                AssetID = building.AssetID,
+                index = building.index,
+                gridPosition = building.gridPosition,
+                position = building.transform.position,
+                currentHP = building.HP,
+                active = building.active, // indicates if a building is active and visible;
+                width = building.w, 
+                height = building.h
+            };
+        }
+        return result;
+    }
+}
+[Serializable]
+public class LevelData
+{
+    public FloorCellSaveData[] floorCells;
+    public Vector3Int[] castlePositions;
+    public Vector3Int offset;
+    public BuildingSaveData[] buildings;
+    public int goldCount;
+    public int playerHP;
+}
+[Serializable]
+public struct BuildingSaveData
+{
+    public int AssetID;
+    public int width, height;
+    public int index;
+    public Vector2Int gridPosition;
+    public Vector3 position;
+    public int currentHP;
+    public bool active; // indicates if a building is active and visible;
+}
+[Serializable]
+public struct FloorCellSaveData
+{
+    public int currentFloor;
+    public bool bridgeSpot;
+    public bool bridge;
+    public bool road;
+    public bool ladder;
+    public int gridX;
+    public int gridY;
 }
 public enum GameState
 {

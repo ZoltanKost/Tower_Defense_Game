@@ -61,6 +61,7 @@ public class DynamicItemPageUI : MonoBehaviour
             buttons.Add(ui);
         }
         ui.Init(callback, item.UIicon, id);
+        ui.gameObject.SetActive(true);
     }
     public void RemoveItem(int id)
     {
@@ -73,5 +74,6 @@ public class DynamicItemPageUI : MonoBehaviour
             remove.SetID(id);
         }
         remove.gameObject.SetActive(false);
+        length--;
     }
 }
