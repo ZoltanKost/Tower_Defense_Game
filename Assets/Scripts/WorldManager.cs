@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
 using System.Collections.Generic;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEditor;
 
 public class WorldManager : MonoBehaviour {
     [Header("Dimensions")]
@@ -93,11 +95,7 @@ public class WorldManager : MonoBehaviour {
         playerInput.Init(
             temporalFloor,
             shop.ResetGroundArrays, 
-            cancelActionCallback, 
-            playerActionManager.ClickBuild, 
-            playerActionManager.HoldBuild, 
-            playerActionManager.CanBuild,
-            playerActionManager.HighlightedAction
+            cancelActionCallback
         );
         PauseButton.Init(Pause);
         gameLoadManager.Init(Load);
@@ -224,6 +222,8 @@ public class WorldManager : MonoBehaviour {
         {
             floorManager.PlaceBuilding_DontCheck(b);
         }
+        pathfinding.ClearCastlePoint();
+        pathfinding.SetCastlePoint(data.castlePositions[0].x, data.castlePositions[0].y,castle.width, castle.height);
         playerManager.currentHp = data.playerHP;
         playerResourceManager.SetResource(Resource.Gold, data.goldCount);
         //pathfinding.SetCastlePoint(,);
@@ -233,12 +233,13 @@ public class WorldManager : MonoBehaviour {
         LevelData levelData = new LevelData
         {
             floorCells = FloorCellToSaveData().ToArray(),
-            castlePositions = floorManager.castlePositions,
+            castlePositions = new Vector3Int[1],
             offset = floorManager.offset,
             buildings = BuildingToSaveData(),
             goldCount = playerResourceManager.storage[Resource.Gold],
             playerHP = playerManager.currentHp
         };
+        levelData.castlePositions[0] = (Vector3Int)buildingManager.bs[0].gridPosition;
         string save = JsonUtility.ToJson(levelData);
         string dir = Application.persistentDataPath + "\\saves";
         if (!Directory.Exists(dir))
@@ -249,7 +250,6 @@ public class WorldManager : MonoBehaviour {
     }
     public List<FloorCellSaveData> FloorCellToSaveData()
     {
-        int width = floorManager.floorCells.GetLength(0);
         List<FloorCellSaveData> result = new();// FloorCellSaveData[width * floorManager.floorCells.GetLength(1)];
         foreach (FloorCell cell in floorManager.floorCells)
         {
@@ -257,22 +257,32 @@ public class WorldManager : MonoBehaviour {
             result.Add(new FloorCellSaveData
             {
                 currentFloor = cell.currentFloor,
-                bridgeSpot = cell.bridgeSpot, 
+                bridgeData = cell.bridgeData, 
                 bridge = cell.bridge,
                 road = cell.road,
                 ladder = cell.ladder,
                 gridX = cell.gridX,
                 gridY = cell.gridY,
             });
+            if(cell.bridge && cell.bridgeData.start)
+            {
+                Debug.Log($"Cell wrote to CellData : {cell.gridX}, {cell.gridY}: " +
+                $"currentFloor = {cell.currentFloor} " +
+                $"bridgeData = {cell.bridgeData.floor}, {cell.bridgeData.bridgeDirection}, " +
+                $"bridge = {cell.bridge} " +
+                $"road = {cell.road} " +
+                $"ladder = {cell.ladder} ");
+            }
+            
         }
         return result;
     }
     public BuildingSaveData[] BuildingToSaveData()
     {
         BuildingSaveData[] result = new BuildingSaveData[buildingManager.Count];
-        foreach (BuildingObject building in buildingManager.bs)
+        for(int i = 0; i < buildingManager.Count; i++) 
         {
-            if (!building.active) continue;
+            BuildingObject building  = buildingManager.bs[i];
             result[building.index] = new BuildingSaveData
             {
                 AssetID = building.AssetID,
@@ -280,10 +290,19 @@ public class WorldManager : MonoBehaviour {
                 gridPosition = building.gridPosition,
                 position = building.transform.position,
                 currentHP = building.HP,
-                active = building.active, // indicates if a building is active and visible;
+                active = building.active,
                 width = building.w, 
                 height = building.h
             };
+            Debug.Log($"Building wrote to buildingData[] : {building.index} : " +
+                $"AssetID = {building.AssetID}" +
+                $"index = {building.index}" +
+                $"gridPosition = {building.gridPosition}" +
+                $"position = {building.transform.position}" +
+                $"currentHP = {building.HP}" +
+                $"active = {building.active}" +
+                $"width = {building.w}" +
+                $"height = {building.h}");
         }
         return result;
     }
@@ -313,7 +332,7 @@ public struct BuildingSaveData
 public struct FloorCellSaveData
 {
     public int currentFloor;
-    public bool bridgeSpot;
+    public BridgeData bridgeData;
     public bool bridge;
     public bool road;
     public bool ladder;

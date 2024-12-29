@@ -11,7 +11,7 @@ public class RoadPage : MonoBehaviour {
         buttons = new List<GroundUI>();
         foreach(TileBase road in roads){
             GroundUI ui = Instantiate(prefab,transform);
-            ui.Init(buttons.Count, OnGroundChosenCallBack);
+            ui.Init(buttons.Count, OnGroundChosenCallBack,1,1);
             ui.SetTile(road);
             buttons.Add(ui);
         }

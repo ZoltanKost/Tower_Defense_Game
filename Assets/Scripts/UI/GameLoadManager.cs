@@ -38,7 +38,7 @@ public class GameLoadManager : MonoBehaviour
                 buttons.Add(Instantiate(Load_template, Parent));
             }
             string s = fileNames[i].Remove(0, Application.persistentDataPath.Length + 7);
-            s.Remove(s.Length - 5);
+            s = s.Remove(s.Length - 5);
             Debug.Log(s);
             buttons[i].Init(Load, Remove, i, s);
         }

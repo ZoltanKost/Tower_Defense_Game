@@ -12,13 +12,10 @@ public struct GroundArray{
         targetFloor = floor;
         price = 2;
         grounds = new List<Vector2Int>();
-        string s = "";
         for(int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
                     grounds.Add(new Vector2Int(x,y));
-                s += $"[{100}]";
             }
-            s += "\n";
         }
     }
 }

@@ -9,50 +9,36 @@ public class EnemyManager : MonoBehaviour, IHandler {
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy[] enemyPrefabs;
-    [SerializeField] private int enemyPoolCount;
+    [SerializeField] private float spawnRate;
     Action onEnemyFinished;
-    public List<Enemy> enemies;
+    public Enemy[] enemies;
+    Wave[] waves;
     public int lowestInactive = 0;
-    int killed = 0;
-    [SerializeField] private float timeToSpawn = 10f;
-    float time;
     bool active;
-    void Awake(){
-        enemies = new List<Enemy>();
-    }
     public void SetWinAction(Action win){
         onEnemyFinished = win;
     }
     public void Update(){
         if(!active) return;
-        time += Time.deltaTime;
-        if(time >= timeToSpawn){
-            time = 0;
-            SpawnEnemy();
-        }
-        AnimatorTick(Time.deltaTime);
+        TickSpawn(Time.deltaTime);
     }
     void FixedUpdate(){
         if(!active) return;
+        AnimatorTick(Time.fixedDeltaTime);
         Tick(Time.fixedDeltaTime);
-    }
-    private void SpawnEnemy(){
-        if(lowestInactive >= enemyPoolCount){
-            return;
+        if (lowestInactive == 0)
+        {
+            bool left = false;
+            foreach (Wave wave in waves)
+            {
+                if(wave.Count > 0)
+                {
+                    left = true;
+                }
+            }
+            if (left) return;
+            onEnemyFinished?.Invoke();
         }
-        Enemy enemy = enemies[lowestInactive];
-        enemy.gameObject.SetActive(true);
-        var path = pathfinding.GetRandomPath();
-        enemy.Init(path, path.Peek(),true, RemoveEnemy, RegisterKill, playerManager.Damage);
-        enemy.SetEnemyPool(buildingManager.bs);
-        lowestInactive++;
-    }
-    void RemoveEnemy(int index){
-        enemies[index].gameObject.SetActive(false);
-        enemies[index].active = false;
-        killed++;
-        // Debug.Log($"Removed enemy: {index}, removed total:{killed}");
-        if(killed >= enemyPoolCount) onEnemyFinished?.Invoke();
     }
     public void RegisterKill(int index){
         playerResourceManager.AddResource(Resource.Gold, enemies[index].killReward);
@@ -60,7 +46,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void Tick(float delta)
     {
-        for (int x = 0; x < enemies.Count; x++)
+        for (int x = 0; x < lowestInactive; x++)
         {
             if (!enemies[x].active) continue;
             enemies[x].Tick(delta);
@@ -74,7 +60,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
 
     public void AnimatorTick(float delta)
     {
-        for(int x = 0; x < enemies.Count; x++){
+        for(int x = 0; x < lowestInactive; x++){
             if(!enemies[x].active) continue;
             enemies[x].UpdateAnimator(delta);
         }
@@ -88,8 +74,6 @@ public class EnemyManager : MonoBehaviour, IHandler {
     public void DeactivateEntities()
     {
         lowestInactive = 0;
-        killed = 0;
-        time = 0;
         foreach(Enemy enemy in enemies){
             enemy.gameObject.SetActive(false);
         }
@@ -98,8 +82,6 @@ public class EnemyManager : MonoBehaviour, IHandler {
     public void ResetEntities()
     {
         lowestInactive = 0;
-        killed = 0;
-        time = 0;
         foreach(Enemy enemy in enemies){
             if(enemy != null){
                 enemy.active = false;
@@ -107,20 +89,12 @@ public class EnemyManager : MonoBehaviour, IHandler {
             }
         }
     }
-    public void SpawnEnemies(int complexity){
-        enemyPoolCount = complexity * 5;
-        foreach(var col in pathfinding.vectors){
-            enemyPoolCount += col.Count;
-        }
-        killed = 0;
-        lowestInactive = 0;
-        time = 0;
-        enemies.Clear();
-        for(int i = 0; i < enemyPoolCount; i++){
-            int x = UnityEngine.Random.Range(0, enemyPrefabs.Length);
-            Enemy enemy = Instantiate(enemyPrefabs[x], transform);
-            enemy.index = i; 
-            enemies.Add(enemy);
+    public void SpawnEnemies(int wave) {
+        GenerateWave(wave + 1);
+        enemies = new Enemy[32];
+        for (int i = 0; i < 32; i++)
+        {
+            enemies[i] = Instantiate(enemyPrefabs[0], transform);
         }
     }
 
@@ -162,5 +136,83 @@ public class EnemyManager : MonoBehaviour, IHandler {
             return true;
         }
         return false;
+    }
+    public void GenerateWave(int wave)
+    {
+        List<Queue<Vector3>> paths = pathfinding.vectors;
+        waves = new Wave[paths.Count];
+        for (int i = 0; i < paths.Count; i++)
+        {
+            Debug.Log($"Generating Wave; wave*path.Count:{wave * paths.Count}");
+            waves[i] = new Wave(i,
+                    wave * paths.Count,
+                    enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
+                    paths[i], spawnRate);
+        }
+    }
+    public void TickSpawn(float delta)
+    {
+        for(int i = 0; i < waves.Length; i++)
+        {
+            if (waves[i].Count <= 0) continue;
+            waves[i].time += delta;
+            if (waves[i].time >= waves[i].spawnRate )
+            {
+                SpawnEnemy(i);
+                waves[i].time = 0;
+            }
+        }
+    }
+    public void SpawnEnemy(int ID)
+    {
+        Debug.Log("EnemySpawned");
+        Enemy enemy = enemies[lowestInactive++];
+        enemy.Init(waves[ID].Prefab, ID, lowestInactive - 1, waves[ID].Path, waves[ID].Path.Peek(),true, RemoveEnemy, RegisterKill, playerManager.Damage, buildingManager.bs);
+        waves[ID].Count--;
+        enemy.gameObject.SetActive(true);
+        if (lowestInactive >= enemies.Length)
+        {
+            Resize();
+        }
+    }
+    public void Resize()
+    {
+        int count = enemies.Length;
+        Array.Resize(ref enemies, enemies.Length * 2);
+        for (int i = count; i < enemies.Length; i++) 
+        {
+            enemies[i] = Instantiate(enemyPrefabs[0], transform);
+        }
+    }
+    public void RemoveEnemy(int ID, int WaveID)
+    {
+        Enemy temp = enemies[ID];
+        enemies[ID] = enemies[--lowestInactive];
+        enemies[ID].index = ID;
+        enemies[lowestInactive] = temp;
+        temp.active = false;
+        temp.gameObject.SetActive(false);
+        Debug.Log("EnemyRemoved");
+    }
+}
+[Serializable]
+public struct Wave
+{
+    public int ID;
+    public Enemy Prefab;
+    public int Count;
+    public int Spawned;
+    public Queue<Vector3> Path;
+    public float time;
+    public float spawnRate;
+    public Wave(int id, int count, Enemy prefab, Queue<Vector3> path, float _spawnRate)
+    {
+        Spawned = 0;
+        Prefab = prefab;
+        Count = count;
+        ID = id;
+        Path = path;
+        time = 0;
+        spawnRate = _spawnRate;
     }
 }

@@ -32,13 +32,13 @@ public class UIFloor: MonoBehaviour
         {
         }
     }
-    public void Init(int cellsize)
+    public void Init(int cellsize, int width, int height)
     {
-        renderers[SHADOWLAYER].Init(3, 3, cellsize, StaticTiles.GetTile(TileID.Shadow));
-        renderers[GROUNDLAYER].Init(3, 4, cellsize, StaticTiles.GetTile(TileID.Ground), Vector3Int.down);
-        renderers[GRASSLAYER].Init(3, 3, cellsize, StaticTiles.GetTile(TileID.Grass));
-        renderers[SANDLAYER].Init(3, 3, cellsize, StaticTiles.GetTile(TileID.Sand));
-        renderers[BRIDGELAYER].Init(3, 3, cellsize, StaticTiles.GetTile(TileID.Bridge));
+        renderers[SHADOWLAYER].Init(width, height, cellsize, StaticTiles.GetTile(TileID.Shadow));
+        renderers[GROUNDLAYER].Init(width, height + 1, cellsize, StaticTiles.GetTile(TileID.Ground), Vector3Int.down);
+        renderers[GRASSLAYER].Init(width, height, cellsize, StaticTiles.GetTile(TileID.Grass));
+        renderers[SANDLAYER].Init(width, height, cellsize, StaticTiles.GetTile(TileID.Sand));
+        renderers[BRIDGELAYER].Init(width, height, cellsize, StaticTiles.GetTile(TileID.Bridge));
     }
     public void ClearAllTiles()
     {

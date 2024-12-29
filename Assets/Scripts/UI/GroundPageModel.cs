@@ -12,7 +12,8 @@ public class GroundPageModel : MonoBehaviour {
         maxGrounds = groundsCount;
         groundPage = GetComponent<GroundPage>();
         _groundArrays = new GroundArray[maxGrounds];
-        groundPage.Init(groundArrays,groundsCount,OnGroundChosenCallBack);
+        int dims = Mathf.ClosestPowerOfTwo(groundArrayGenerator.maxDimensions) + 1;
+        groundPage.Init(groundArrays,groundsCount,OnGroundChosenCallBack, dims, dims);
         ResetGroundArrays();
     }
     void CreateGroundArray(int ID){

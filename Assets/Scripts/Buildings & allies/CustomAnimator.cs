@@ -15,6 +15,15 @@ public class CustomAnimator : MonoBehaviour{
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         PlayAnimation(0);
     }
+    public void InitFromPrefab(CustomAnimator animator)
+    {
+        animations = animator.animations;
+        directionAnimations = animator.directionAnimations;
+        currentAnimation = 0;
+        currentDirAnimation = 0;
+        currentFrame = 0;
+        time = 0;
+    }
     public void PlayAnimation(int id){
         currentAnimation = id;
         time = 0;
@@ -58,7 +67,9 @@ public class CustomAnimator : MonoBehaviour{
         }
         for (int i = 0; i < events.Length; i++)
         {
-            if (events[i].frame == currentFrame) actions[events[i].acitonID]?.Invoke();
+            if (events[i].frame == currentFrame) { 
+                actions[events[i].acitonID]?.Invoke();
+            }
         }
     }
     public void SetAnimation(int animation){
@@ -67,6 +78,7 @@ public class CustomAnimator : MonoBehaviour{
     }
     public void SetDirectionAnimation(int dirID, Vector2 directionNormalized)
     {
+        if (dirID >= directionAnimations.Length) Debug.Log("dirID is outside of array");
         DirectionAnimation temp = directionAnimations[dirID];
         float degree = Vector2.SignedAngle(Vector2.right, directionNormalized);
         degree += temp.offset;

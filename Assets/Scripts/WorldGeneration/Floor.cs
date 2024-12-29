@@ -38,7 +38,8 @@ public class Floor : MonoBehaviour{
     // Checks if there's a ground or a road on the floor.
     public bool HasTile(Vector3Int start){
         start.z = 0;
-        return visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(ground) 
+        return visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(ground)
+            || visuals[GROUNDLAYER].GetTile(start) == StaticTiles.GetTile(TileID.Ladder)
             || visuals[SANDLAYER].HasTile(start);
     }
     // Spawns one cell on the floor

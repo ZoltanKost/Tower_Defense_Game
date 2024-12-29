@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundArrayGenerator : MonoBehaviour {
-    [SerializeField] private int maxDimensions, maxValue, random, trueCondition;
+    public int maxDimensions, maxValue, random, trueCondition;
     [SerializeField] private float randomMultiplier;
     public GroundArray GenerateGA(){
         int _maxDimensions = maxDimensions, _maxValue = maxValue,_random = random,_trueCondition = trueCondition;
@@ -89,8 +89,8 @@ public class GroundArrayGenerator : MonoBehaviour {
             }
             // s += "\n";
         }
-        
+
         // Debug.Log(s);
-        return new GroundArray{width = width,height = height, grounds = grounds, targetFloor = targetFloor, price = grounds.Count - targetFloor};
+        return new GroundArray { width = width, height = height, grounds = grounds, targetFloor = targetFloor, price = (targetFloor == 0 ? grounds.Count / 2 : grounds.Count) / Mathf.FloorToInt(Mathf.Sqrt(width - 1))};
     }
 }

@@ -3,13 +3,13 @@ using System;
 [Serializable]
 public struct FloorCell{
     public int currentFloor;
-    public bool bridgeSpot;
+    public BridgeData bridgeData;
     public bool bridge;
     public bool road;
     public bool ladder;
     public bool building => GetBuildingIDCallback != null;
     public Func<int> GetBuildingIDCallback;
-    public bool occupied => road || building || bridgeSpot || bridge;
+    public bool occupied => road || building || bridge;
     public readonly int gridX;
 	public readonly int gridY;
 
@@ -17,7 +17,7 @@ public struct FloorCell{
         gridX = x;
         gridY = y;
         currentFloor = lastFloor;
-        bridgeSpot = false;
+        bridgeData = default;
         bridge = false;
         road = false;
         ladder = false;
@@ -26,7 +26,7 @@ public struct FloorCell{
     public FloorCell(
         int x, int y, 
         int currentFloor,
-        bool bridgeSpot,
+        BridgeData bridgeData,
         bool bridge,
         bool road,
         bool ladder)
@@ -34,15 +34,31 @@ public struct FloorCell{
         gridX = x;
         gridY = y;
         this.currentFloor = currentFloor;
-        this.bridgeSpot = false;
-        this.bridge = false;
-        this.road = false;
-        this.ladder = false;
+        this.bridgeData = bridgeData;
+        this.bridge = bridge;
+        this.road = road;
+        this.ladder = ladder;
         GetBuildingIDCallback = null;
     }
     public void Reset()
     {
+        bridgeData = default;
+        bridge = false;
         road = false;
         ladder = false;
     }
+}
+[Serializable]
+public struct BridgeData
+{
+    public BridgeDirection bridgeDirection;
+    public bool start;
+    public int floor;
+}
+[Serializable]
+public enum BridgeDirection
+{
+    None,
+    Horizontal,
+    Vertical
 }

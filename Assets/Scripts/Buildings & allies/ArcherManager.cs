@@ -52,7 +52,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
             archersList[i].shooting = false;
             archersList[i].target = null;
             float attackRange = archersList[i].attackRange;
-            List<Enemy> enemyList = enemyManager.enemies;
+            Enemy[] enemyList = enemyManager.enemies;
             for (int k = 0; k < enemyManager.lowestInactive; k++)
             {
                 if (!enemyList[k].alive) continue;

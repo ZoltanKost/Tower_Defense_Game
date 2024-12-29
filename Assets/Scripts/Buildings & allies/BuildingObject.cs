@@ -54,6 +54,27 @@ public class BuildingObject : MonoBehaviour, IDamagable{
         active = true;
         Animate();
     }
+    public void Init(int sortingOrder, int sortingLayer, int animationToPlay, BuildingSaveData data, Building b, OnKillEvent OnKill)
+    {
+        currentHP = data.currentHP;
+        if (index != 0 && hpBar != null)
+        {
+            hpBar.gameObject.SetActive(true);
+            hpBar.Set(currentHP);
+        }
+        Activate();
+        index = data.index;
+        w = b.width;
+        h = b.height;
+        spriteRenderer.sprite = b.sprite;
+        gridPosition = new Vector2Int(data.gridPosition.x, data.gridPosition.y);
+        animator.animations[0].sprites[0] = b.sprite;
+        animator.PlayAnimation(animationToPlay);
+        animator.SetSortingParams(sortingOrder + 1000 / gridPosition.y, sortingLayer);
+        onKillEvent = OnKill;
+        active = true;
+        Animate();
+    }
     public void Activate(){
         gameObject.SetActive(true);
         foreach(Archer a in archers){
@@ -78,15 +99,13 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public void Kill()
     {
         hpBar?.gameObject.SetActive(false);
-        foreach(Archer a in archers){
-            a.Deactivate();
-        }
         animator.PlayAnimation(1);
     }
     public void Deactivate(){
         gameObject.SetActive(false);
     }
     public void OnKillCallBack(){
+        Debug.Log("Killed Building");
         _active = false;
         onKillEvent?.Invoke(index);
     }

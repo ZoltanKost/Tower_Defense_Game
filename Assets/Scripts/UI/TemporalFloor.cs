@@ -20,7 +20,11 @@ public class TemporalFloor : Floor
     bool activated;
     bool snap;
     Tween tween;
-    void Start(){
+    Vector3 startPosition;
+    Vector3 endPosition;
+    bool floodBuild;
+    void Start()
+    {
         cellSize = Mathf.FloorToInt(visuals[0].cellSize.x);
         currentColor = canPlace;
         foreach(Tilemap tilemap in visuals){
@@ -39,15 +43,17 @@ public class TemporalFloor : Floor
         }
     }
     public void MoveTempFloor(Vector3 position, bool canBuild) {
+        if (!activated)
+        {
+            position.z = 0;
+            transform.position = position;
+            return;
+        }
+        if (floodBuild) MoveFloodBuild(position);
         targetPosition = position / cellSize;
         targetPosition.z = 0;
         currentColor = canBuild ? Color.white : blockPlace;
         UpdateColors();
-        if (!activated)
-        {
-            transform.position = new Vector2 { x = position.x, y = position.y };
-            return;
-        }
         if (!snap)
         {
             //targetPosition = new Vector2 { x = position.x, y = position.y };
@@ -68,6 +74,11 @@ public class TemporalFloor : Floor
             tween = transform.DOMove(targetPosition, (targetPosition - currentCursorPosition).magnitude * tweenSpeed * (FixedDelta ? Time.fixedDeltaTime : Time.deltaTime)).SetEase(moveEase, amplitude_overshoot);
             currentCursorPosition = targetPosition;
         }
+    }
+    public void MoveFloodBuild(Vector3 position)
+    {
+        endPosition = position;
+
     }
     public void SetGroundArray(GroundArray array){
         ClearAllTiles();
@@ -185,5 +196,10 @@ public class TemporalFloor : Floor
         arrows[1].localPosition = Vector3Int.right * rectSize.x * cellSize;
         arrows[2].localPosition = Vector3Int.up * rectSize.y * cellSize;
         arrows[3].localPosition = rectSize * cellSize;
+    }
+    public void StartFlood(Vector3 start)
+    {
+        startPosition = start;
+        
     }
 }

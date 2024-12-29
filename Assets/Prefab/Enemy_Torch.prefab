@@ -101,22 +101,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileFlag: 0
   ProjectileData:
+    targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
     animations: []
     damage: 0
     behaviour: 0
+    ballistic: 0
+    flightTime: 0
   _attackType: 0
   projectilePrefab: {fileID: 0}
   hpBar: {fileID: 2216191493300241889}
   projectileSpeed: 0
   damage: 15
+  animator: {fileID: 9071115895459296981}
   index: 0
   speed: 1
   attackrange: 2
   MaxHP: 100
   attackPeriod: 1.5
   _killReward: 5
+  destination: {x: 0, y: 0, z: 0}
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0

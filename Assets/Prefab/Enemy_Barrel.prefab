@@ -101,22 +101,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileFlag: 0
   ProjectileData:
+    targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
     animations: []
     damage: 0
     behaviour: 0
+    ballistic: 0
+    flightTime: 0
   _attackType: 0
   projectilePrefab: {fileID: 0}
   hpBar: {fileID: 3715045914147068556}
   projectileSpeed: 0
   damage: 15
+  animator: {fileID: 9071115895459296981}
   index: 0
   speed: 0.7
   attackrange: 0
   MaxHP: 100
   attackPeriod: 5
   _killReward: 5
+  destination: {x: 0, y: 0, z: 0}
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 1325746399686741614}
   animations:
   - events:
     - acitonID: 0
@@ -186,12 +191,56 @@ MonoBehaviour:
       duration: 0.5
       flipX: 1
     offset: 45
+  - animations:
+    - events: []
+      sprites:
+      - {fileID: 1010987149, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      - {fileID: 204592680, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      - {fileID: -1745301059, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      duration: 0.5
+      flipX: 0
+    - events: []
+      sprites:
+      - {fileID: 1010987149, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      - {fileID: 204592680, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      - {fileID: -1745301059, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
+      duration: 0.5
+      flipX: 1
+    offset: 45
   actions:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7266588368055346098}
         m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
         m_MethodName: RemoveInvoke
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7266588368055346098}
+        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+        m_MethodName: ResetState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

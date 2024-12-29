@@ -45,13 +45,26 @@ public class BuildingManager : MonoBehaviour, IHandler {
     public void Build(BuildingSaveData data, out Func<int> getID)
     {
         BuildingObject buildingObject = bs[Count];
-
         buildingObject.AssetID = data.AssetID;
-        InitArchers(buildingObject.GetArchers());
-            buildingObject.Init(6, 
+        if (data.currentHP <= 0)
+        {
+            buildingObject.Init(6,
                 floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
-                Count, data.gridPosition.x, data.gridPosition.y,
+                1,data,
                 buildingData[data.AssetID], KillBuilding);
+            foreach (Archer archer in buildingObject.GetArchers())
+            {
+                archer.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            InitArchers(buildingObject.GetArchers());
+            buildingObject.Init(6,
+                floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
+                0,data,
+                buildingData[data.AssetID], KillBuilding);
+        }
         buildingObject.transform.position = data.position;
         buildingObject.gameObject.SetActive(true);
         getID = bs[Count].GetIndex;
@@ -65,9 +78,10 @@ public class BuildingManager : MonoBehaviour, IHandler {
     void Resize()
     {
         Array.Resize(ref bs, Count * 2);
-        for(int i = 0;i < Count; i++)
+        for(int i = Count; i < bs.Length; i++)
         {
             bs[i] = Instantiate(prefab,transform);
+            bs[i].gameObject.SetActive(false);
         }
         Debug.Log($"Array resized. new Length is {bs.Length}");
     }
@@ -95,6 +109,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
         bs[index] = bs[--Count];
         bs[index].index = index;
         bs[Count] = b;
+        b.active = false;
         w = b.w;
         h = b.h;
         gridX = b.gridPosition.x;

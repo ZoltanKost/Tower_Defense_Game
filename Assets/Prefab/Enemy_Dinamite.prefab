@@ -139,6 +139,7 @@ MonoBehaviour:
   hpBar: {fileID: 5620564550756596175}
   projectileSpeed: 5
   damage: 10
+  animator: {fileID: 9071115895459296981}
   index: 0
   speed: 0.75
   attackrange: 3
@@ -161,7 +162,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   animations:
   - events:
-    - acitonID: 1
+    - acitonID: 0
       frame: 13
     sprites:
     - {fileID: 523670682, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
@@ -205,7 +206,7 @@ MonoBehaviour:
     offset: 90
   - animations:
     - events:
-      - acitonID: 0
+      - acitonID: 1
         frame: 2
       - acitonID: 2
         frame: 6
@@ -220,7 +221,7 @@ MonoBehaviour:
       duration: 1
       flipX: 0
     - events:
-      - acitonID: 0
+      - acitonID: 1
         frame: 2
       - acitonID: 2
         frame: 6
@@ -240,7 +241,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7266588368055346098}
         m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-        m_MethodName: Attack
+        m_MethodName: RemoveInvoke
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -254,7 +255,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7266588368055346098}
         m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
-        m_MethodName: RemoveInvoke
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

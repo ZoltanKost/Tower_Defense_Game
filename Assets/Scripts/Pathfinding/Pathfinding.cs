@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
 	[SerializeField] private int maxPaths = 200;
-	List<FloorCell> castlePositions;
+	public List<FloorCell> castlePositions;
 	// List<List<FloorCell>> paths = new();
 	public List<Queue<Vector3>> vectors{get;private set;}
 	int offsetX, offsetY;
@@ -11,10 +12,10 @@ public class Pathfinding : MonoBehaviour{
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
 		if(castlePositions == null)castlePositions = new List<FloorCell>();
 		gridX += width/2;
+		Debug.Log(message: $"Castle: {gridX},{gridY}");
 		floor.floorCells[gridX, gridY].road = true;
         FloorCell pos = floor.floorCells[gridX,gridY];
 		castlePositions.Add(pos);
-		// Debug.Log(message: $"Castle: {gridX},{gridY}");
 	}
 	public void ClearCastlePoint(){
 		castlePositions.Clear();
@@ -37,18 +38,27 @@ public class Pathfinding : MonoBehaviour{
 	}
 	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
 		if(result.Count > maxPaths) return;
-		if(!(current.road || current.bridge || current.bridgeSpot)) return;
+		if(!(current.road || current.bridge)) return;
 		if(closedSet.Count != 0)
 		{
 			FloorCell prev = closedSet.Peek();
 			if((prev.ladder || current.ladder) && prev.gridY == current.gridY) return;
-			if(prev.bridge && !(current.bridge || current.bridgeSpot)) return;
-			if(current.bridge && !(prev.bridge || prev.bridgeSpot)) return;
-			if(current.currentFloor == prev.currentFloor - 1){
-				if(!(current.gridY == prev.gridY - 1))return; 
-			}else if(current.currentFloor == prev.currentFloor + 1){
-				if(!(current.gridY == prev.gridY + 1))return;
+			if (current.bridge)
+			{
+				if ((prev.bridge && (prev.bridgeData.bridgeDirection != current.bridgeData.bridgeDirection || prev.bridgeData.floor != current.bridgeData.floor)) || (!prev.bridge && !current.bridgeData.start)) return;
 			}
+			else if (prev.bridge && !prev.bridgeData.start) return;
+			else
+			{
+                if (current.currentFloor == prev.currentFloor - 1)
+                {
+                    if (!(current.gridY == prev.gridY - 1)) return;
+                }
+                else if (current.currentFloor == prev.currentFloor + 1)
+                {
+                    if (!(current.gridY == prev.gridY + 1)) return;
+                }
+            }
 		}
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;

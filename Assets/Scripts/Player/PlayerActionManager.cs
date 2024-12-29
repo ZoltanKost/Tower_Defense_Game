@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerActionManager : MonoBehaviour{
     const byte BUILDING_STATE = 0;
     const byte MAGIC_STATE = 2;
-    [SerializeField] private FloorManager floor;
+    [SerializeField] private FloorManager floorManager;
     [SerializeField] private TemporalFloor temporalFloor;
     [SerializeField] private SpellManager spellManager;
     [SerializeField] private EntitiyHighlighter highlighter;
@@ -17,8 +17,9 @@ public class PlayerActionManager : MonoBehaviour{
     GroundArray chosenGround;
     Building chosenBuilding;
     SpellData chosenSpell;
-    ActionMode mode;
+    [SerializeField] ActionMode mode;
     byte gameState_int;
+    Vector3 startPosition;
     public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         actionFailedCallback = buildingFailedCb;
         temporalFloor = tp;
@@ -41,7 +42,7 @@ public class PlayerActionManager : MonoBehaviour{
                 if(canBuyCallBack(Resource.Gold,chosenGround.price))
                 {
                     mode = 0;
-                    floor.CreateGroundArray_DontCheck(position,chosenGround);
+                    floorManager.CreateGroundArray_DontCheck(position,chosenGround);
                     buyCallback?.Invoke(Resource.Gold,chosenGround.price);
                     FinishBuildingAction();
                 }
@@ -57,7 +58,7 @@ public class PlayerActionManager : MonoBehaviour{
                 FinishBuildingAction();
                 break;
             case ActionMode.Road:
-                if(!floor.PlaceRoad(position))
+                if(!floorManager.PlaceRoad(position))
                 {
                     actionFailedCallback?.Invoke();
                 }
@@ -66,7 +67,7 @@ public class PlayerActionManager : MonoBehaviour{
                 if(canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
                 {
                     buyCallback(Resource.Gold,chosenBuilding.price);
-                    floor.PlaceBuilding_DontCheck(position,chosenBuilding);
+                    floorManager.PlaceBuilding_DontCheck(position,chosenBuilding);
                 }
                 else
                 {
@@ -74,13 +75,13 @@ public class PlayerActionManager : MonoBehaviour{
                 }
             break;
             case ActionMode.Bridge:
-                if(!floor.PlaceBridge(position))
+                if(!floorManager.PlaceBridge(position))
                 {
                     actionFailedCallback?.Invoke();
                 }
             break;
             case ActionMode.BridgeSpot:
-                if(!floor.PlaceBridgeSpot(position))
+                if(!floorManager.PlaceBridgeSpot(position))
                 {
                     actionFailedCallback?.Invoke();
                 }
@@ -88,31 +89,42 @@ public class PlayerActionManager : MonoBehaviour{
             case ActionMode.None:
                 highlighter.TryHighlight(position);
             break;
-            case ActionMode.DestroyBuilding:
-                if(floor.HasBuilding(position, out int ID)) destroyBuildingCallback?.Invoke(ID);
-            break;
             case ActionMode.DestroyGround:
-                floor.DestroyGround(position);
+                startPosition = position;
+                //floorManager.DestroyGround(position);
+                break;
+            case ActionMode.DestroyBuilding:
+                if(floorManager.HasBuilding(position, out int ID)) destroyBuildingCallback?.Invoke(ID);
             break;
             case ActionMode.DestroyRoad:
-                if(floor.HasRoad(position,out Vector3Int pos)) floor.DestroyRoad(pos);
+                if(floorManager.HasRoad(position,out Vector3Int pos)) floorManager.DestroyRoad(pos);
             break;
+            case ActionMode.MassGround:
+                startPosition = position;
+                temporalFloor.StartFlood(position);
+                break;
         }
     }
     public void HoldBuild(Vector3 position){
         switch(mode){
             case ActionMode.Road:
-                floor.PlaceRoad(position);
+                floorManager.PlaceRoad(position);
                 break;
             case ActionMode.Bridge:
-                floor.PlaceBridge(position);
+                floorManager.PlaceBridge(position);
                 break;
             case ActionMode.BridgeSpot:
-                floor.PlaceBridgeSpot(position);
+                floorManager.PlaceBridgeSpot(position);
+                break;
+            case ActionMode.DestroyGround:
+                //floorManager.DestroyGround(position);
                 break;
             case ActionMode.DestroyRoad:
-                if(floor.HasRoad(position,out Vector3Int pos)) floor.DestroyRoad(pos);
+                if(floorManager.HasRoad(position,out Vector3Int pos)) floorManager.DestroyRoad(pos);
             break;
+            case ActionMode.MassGround:
+                // mass building
+                break;
         }
     }
     public void CancelBuildingAction(){
@@ -156,6 +168,11 @@ public class PlayerActionManager : MonoBehaviour{
         mode = ActionMode.DestroyGround;
         temporalFloor.ActivateFloor(ActionMode.DestroyBuilding);
     }
+    public void ChooseMassGroundMode()
+    {
+        mode = ActionMode.MassGround;
+        temporalFloor.ActivateFloor(ActionMode.DestroyBuilding);
+    }
     public void ChooseDestroyRoadMode(){
         mode = ActionMode.DestroyRoad;
         temporalFloor.ActivateFloor(ActionMode.DestroyBuilding);
@@ -173,26 +190,43 @@ public class PlayerActionManager : MonoBehaviour{
     public void SetPlaceCallback(Action callback){
         placeCallback = callback;
     }
+    public void UpBuild(Vector3 position)
+    {
+        switch (mode)
+        {
+            case ActionMode.MassGround:
+                floorManager.FloodFloor(startPosition,position);
+                break;
+            case ActionMode.DestroyGround:
+                Debug.Log("destroyGround");
+                floorManager.MassDestroyGround(startPosition, position);
+                break;
+        }
+    }
     public bool CanBuild(Vector3 position){
         if (gameState_int % 2 != 0 || gameState_int == 4) return false;
         switch(mode){
             case ActionMode.Ground:
-                return gameState_int == BUILDING_STATE && floor.CheckGA(position, chosenGround);
+                return gameState_int == BUILDING_STATE && floorManager.CheckGA(position, chosenGround);
             case ActionMode.CastSpell:
                 // mana Check
                 return gameState_int == MAGIC_STATE;
             case ActionMode.Road:
-                return gameState_int == BUILDING_STATE && floor.CheckRoad(position);
+                return gameState_int == BUILDING_STATE && floorManager.CheckRoad(position);
             case ActionMode.Building:
-                return gameState_int == BUILDING_STATE && floor.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
+                return gameState_int == BUILDING_STATE && floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
             case ActionMode.Bridge:
-                return gameState_int == BUILDING_STATE && floor.CheckBridge(position);
+                return gameState_int == BUILDING_STATE && floorManager.CheckBridge(position);
             case ActionMode.BridgeSpot:
-                return gameState_int == BUILDING_STATE && floor.CheckBridgeSpot(position);
+                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeSpot(position);
+            case ActionMode.MassGround:
+                // mass building
+                break;
         }
         return true;
     }
 }
+[Serializable]
 public enum ActionMode{
     None,
     Road,
@@ -203,6 +237,7 @@ public enum ActionMode{
     DestroyBuilding,
     DestroyRoad,
     DestroyGround,
+    MassGround,
     CastSpell,
     Command
 }

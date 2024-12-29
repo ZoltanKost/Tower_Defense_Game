@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
-
+using TMPro;
 public class ProjectileManager : MonoBehaviour {
     [SerializeField] private Projectile projectilePrefab;
     Projectile[] projectiles;
     [SerializeField] private float FreeFallAccelleration;
+    [SerializeField] private TMP_InputField text;
     int Count;
     bool active = false;
     public void Init()
@@ -110,6 +111,10 @@ public class ProjectileManager : MonoBehaviour {
                 Destroy(projectiles[i].gameObject);
             }
         }
+    }
+    public void ReadGValue()
+    {
+        FreeFallAccelleration = Single.Parse(text.text);
     }
 }
 [Serializable]

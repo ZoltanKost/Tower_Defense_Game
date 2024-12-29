@@ -7,8 +7,8 @@ using System;
 public class Enemy : MonoBehaviour, IDamagable, IAttacking
 {
     Action<int> damageCastleEvent;
-    OnKillEvent onKillEvent;
-    OnKillEvent onRemoveEvent;
+    Action<int> onKillEvent;
+    Action<int,int> onRemoveEvent;
     public bool ProjectileFlag;
     public ProjectileData ProjectileData;
     public int HP
@@ -41,8 +41,16 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
 
     [SerializeField] private int damage;
     IDamagable[] targets;
-    IDamagable currentTarget;
-    private CustomAnimator animator;
+    IDamagable _currentTarget;
+    IDamagable currentTarget {
+        get {
+            //Debug.Log("Getting current target: " + (_currentTarget == null ? "null" : _currentTarget.position));
+            return _currentTarget; } 
+        set { _currentTarget = value; 
+            //Debug.Log($"set currentTarget, {_currentTarget.position}"); 
+        } 
+    }
+    [SerializeField] private CustomAnimator animator;
     public Queue<Vector3> currentPath;
     public int index;
     private bool _active;
@@ -55,9 +63,10 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     float time;
     int currentHP;
     public Vector3 destination;
+    int waveIndex;
     void Awake()
     {
-        animator = GetComponent<CustomAnimator>();
+        if(animator == null) animator = GetComponent<CustomAnimator>();
         animator.Init();
     }
     public void Damage(int damage)
@@ -80,26 +89,39 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     }
     public void RemoveInvoke()
     {
-        onRemoveEvent?.Invoke(index);
+        onRemoveEvent?.Invoke(index,waveIndex);
     }
-    public void Init(Queue<Vector3> path, Vector3 position, bool active, OnKillEvent onRemoveEvent, OnKillEvent onKillEvent, Action<int> damageCastleEvent)
+    public void Init(Enemy prefab, int waveIndex, int index, Queue<Vector3> path, Vector3 position, bool active, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent, IDamagable[] damagables)
     {
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;
+        this.waveIndex = waveIndex;
+        this.index = index;
         Pathfinding_SetPath(path);
         transform.position = position;
         destination = position;
         _active = active;
         state = EnemyState.run;
-        currentHP = MaxHP;
+        currentHP = prefab.MaxHP;
+        speed = prefab.speed;
+        damage = prefab.damage;
+        attackrange = prefab.attackrange;
+        attackPeriod = prefab.attackPeriod;
+        _killReward = prefab.killReward;
+        projectileSpeed = prefab.projectileSpeed;
+        _attackType = prefab.attackType;
+        ProjectileData = prefab.ProjectileData;
+        currentTarget = null;
+        animator.InitFromPrefab(prefab.animator);
         hpBar.gameObject.SetActive(true);
         hpBar.Set(1);
         animator.SetDirectionAnimation(0, (destination - position).normalized);
+        targets = damagables;
     }
     public void Pathfinding_SetPath(Queue<Vector3> path)
     {
-        currentPath = path;
+        currentPath = new Queue<Vector3>(path);
     }
     public void Tick(float delta)
     {
@@ -139,26 +161,19 @@ public class Enemy : MonoBehaviour, IDamagable, IAttacking
     public void DamageCastle()
     {
         damageCastleEvent?.Invoke(damage);
-        onRemoveEvent?.Invoke(index);
+        onRemoveEvent?.Invoke(index, waveIndex);
     }
-
-    public void SetEnemyPool(IDamagable[] enemies)
-    {
-        targets = enemies;
-        // Debug.Log($"Targets != null : {targets!=null}; enemies != null {enemies != null};");
-    }
-
     public void Detect()
     {
         for (int i = 0; i < targets.Length; i++)
         {
             if (targets[i] == null || !targets[i].active || !targets[i].alive) continue;
             IDamagable t = targets[i];
-            float distance = (t.position - position).magnitude;
+            float distance = (t.position - transform.position).magnitude;
             if (distance > attackrange) continue;
             float minDistance;
             if (currentTarget == null || !currentTarget.active || !currentTarget.alive) minDistance = attackrange;
-            else minDistance = (currentTarget.position - position).magnitude;
+            else minDistance = (currentTarget.position - transform.position).magnitude;
             // Debug.Log($"Min: {minDistance}, distance: {distance};");
             if (distance >= minDistance) continue;
             currentTarget = t;

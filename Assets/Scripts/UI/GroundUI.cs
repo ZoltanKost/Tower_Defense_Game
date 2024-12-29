@@ -9,8 +9,8 @@ public class GroundUI : MonoBehaviour{
     [SerializeField] private TMP_Text text;
     [SerializeField] private int pixelPerUnit = 32;
     public int uiID{get;private set;}
-    public void Init(int ID,Action<int> onClick){
-        _floor.Init(pixelPerUnit);
+    public void Init(int ID,Action<int> onClick, int width, int height){
+        _floor.Init(pixelPerUnit, width, height);
         uiID = ID;
         this.onClick = onClick;
     }
@@ -20,8 +20,9 @@ public class GroundUI : MonoBehaviour{
         foreach(Vector3Int v in ga.grounds){
             _floor.CreateGround(v);
         }
-        Vector3 pos = new Vector3{x = -ga.width/2f, y = -ga.height / 2f + ga.targetFloor, z = 0} * pixelPerUnit;
+        Vector3 pos = new Vector3{x = -ga.width/2f, y = -ga.height / 2f + ga.targetFloor, z = 0} * pixelPerUnit * 3f/ga.width;
         _floor.transform.localPosition = pos;
+        _floor.transform.localScale = new Vector3(Mathf.Min(1,3f/ga.width), Mathf.Min(1, 3f / ga.width), 1);
         text.text = ga.price.ToString();
     }
     public void SetTile(TileBase tile){

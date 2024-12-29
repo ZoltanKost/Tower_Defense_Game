@@ -29,7 +29,7 @@ public class TestScript : MonoBehaviour
         StaticTiles.Bind(LADDER, TileID.Ladder);
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
-        groundUI.Init(0, Regenerate);
+        groundUI.Init(0, Regenerate,3,3);
         floor.Init(0,$"GroundUI");
     }
 
