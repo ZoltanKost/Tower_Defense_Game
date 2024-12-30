@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using Unity.VisualScripting;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class FloorManager : MonoBehaviour{
     [SerializeField] private BuildingManager bm;
@@ -92,12 +93,30 @@ public class FloorManager : MonoBehaviour{
         pos.z = 0;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
-        int currentFloor = -2;
-        foreach(Vector3Int g in groundArray.grounds){
-            if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor + 1;
-            floors[currentFloor].CreateGround(pos + g);
-            floorCells[posX + g.x, posY + g.y].currentFloor = currentFloor;
-            floorCells[posX + g.x, posY + g.y].Reset();
+        int currentFloor = floorCells[posX + groundArray.grounds[0].x, posY + groundArray.grounds[0].y].currentFloor + 1;
+        if (currentFloor < 1) currentFloor = 1;
+        if (groundArray.targetFloor == 0) currentFloor = 0;
+        foreach (Vector3Int g in groundArray.grounds) {
+            int x = posX + g.x;
+            int y = posY + g.y;
+            Vector3Int vec = pos + g;
+            if (currentFloor > 0) { 
+                if (floorCells[x, y].currentFloor == -1) floors[++floorCells[x, y].currentFloor].CreateGround(vec);
+                if (floorCells[x + 1, y].currentFloor == -1) floors[++floorCells[x + 1, y].currentFloor].CreateGround(vec + Vector3Int.right);
+                if (floorCells[x + 1, y - 1].currentFloor == -1) floors[++floorCells[x + 1, y - 1].currentFloor].CreateGround(vec + Vector3Int.right + Vector3Int.down);
+                if (floorCells[x + 1, y - 2].currentFloor == -1) floors[++floorCells[x + 1, y - 2].currentFloor].CreateGround(vec + Vector3Int.right + Vector3Int.down * 2);
+                if (floorCells[x, y - 1].currentFloor == -1) floors[++floorCells[x, y - 1].currentFloor].CreateGround(vec + Vector3Int.down);
+                if (floorCells[x, y - 2].currentFloor == -1) floors[++floorCells[x, y - 2].currentFloor].CreateGround(vec + Vector3Int.down * 2);
+                if (floorCells[x - 1, y - 1].currentFloor == -1) floors[++floorCells[x - 1, y - 1].currentFloor].CreateGround(vec + Vector3Int.left + Vector3Int.down);
+                if (floorCells[x - 1, y - 2].currentFloor == -1) floors[++floorCells[x - 1, y - 2].currentFloor].CreateGround(vec + Vector3Int.left + Vector3Int.down * 2);
+                if (floorCells[x - 1, y].currentFloor == -1) floors[++floorCells[x - 1, y].currentFloor].CreateGround(vec + Vector3Int.left);
+            }
+            floors[currentFloor].CreateGround(vec);
+            floorCells[x, y].currentFloor = currentFloor;
+            floorCells[x, y].bridgeData = default;
+            floorCells[x, y].bridge = false;
+            floorCells[x, y].road = false;
+            floorCells[x, y].ladder = false;
         }
         floors[currentFloor].Animate();
     }
@@ -324,9 +343,9 @@ public class FloorManager : MonoBehaviour{
         if(pos.x < - offset.x || pos.x >= offset.x || pos.y < 1 - offset.y || pos.y >= offset.y) return false;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
-        int currentFloor = -2;
+        int currentFloor = floorCells[posX + groundArray.grounds[0].x, posY + groundArray.grounds[0].y].currentFloor;
+        if(currentFloor >= floors.Count - 1) return false;
         foreach(Vector3Int g in groundArray.grounds){
-            if(currentFloor == -2) currentFloor = floorCells[posX + g.x, posY + g.y].currentFloor; 
             if(!CheckCell(posX + g.x, posY + g.y,currentFloor,groundArray.targetFloor)) return false;
         }
         return true;
@@ -401,19 +420,25 @@ public class FloorManager : MonoBehaviour{
     }
     public bool CheckCell(int x, int y, int placingFloor, int groundTargetFloor){
         FloorCell cell = floorCells[x,y];
-        if(
-            Mathf.Clamp(placingFloor + 1,0,1) != groundTargetFloor ||
-            cell.currentFloor >= floors.Count -1 || // floor is higher then maximum floors
-            cell.currentFloor != placingFloor || // floor isn't the same at every cell
-            cell.building || // cell has a building
-            cell.bridge || // cell has a bridge
-            (cell.road && !(floorCells[x, y + 1].currentFloor == cell.currentFloor + 1)) || // cell is a road and not a ladder
-            cell.currentFloor > floorCells[x, y - 1].currentFloor || // the next cell is under the floor
-            (floorCells[x, y - 1].occupied && floorCells[x,y-1].currentFloor < placingFloor))
+        if (groundTargetFloor == 0) 
+        {
+            if (
+                placingFloor >= 0 ||
+                cell.currentFloor != placingFloor) // floor isn't the same at every cell
             {
-                return false; 
+                return false;
             }
-            
+        }
+        else if(((placingFloor >= 1 || cell.currentFloor >= 1)) && 
+                    (cell.currentFloor != placingFloor 
+                    || cell.currentFloor > floorCells[x, y - 1].currentFloor) || // floor isn't the same at every cell and it's 
+                cell.building || // cell has a building
+                cell.bridge || // cell has a bridge
+                (cell.road && !(cell.ladder)) // cell is a road and not a ladder
+                || (floorCells[x, y - 1].occupied && floorCells[x,y-1].currentFloor < placingFloor))
+                {
+                    return false;
+                }
         return true;
     }
     public bool HasBuilding(Vector3 input, out int ID)

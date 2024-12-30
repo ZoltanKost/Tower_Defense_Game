@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.iOS;
 
 public delegate void ID_Count_Callback(int id, int count);
 public class PlayerResourceManager : MonoBehaviour {
@@ -44,6 +45,10 @@ public class PlayerResourceManager : MonoBehaviour {
     {
         storage[res] = count;
         updateUICallback?.Invoke((int)res, storage[res]);
+    }
+    public void AddGold(int number)
+    {
+        AddResource(Resource.Gold, number);
     }
 }
 public enum Resource{

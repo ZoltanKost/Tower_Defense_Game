@@ -114,7 +114,7 @@ public class ProjectileManager : MonoBehaviour {
     }
     public void ReadGValue()
     {
-        FreeFallAccelleration = Single.Parse(text.text);
+        FreeFallAccelleration = float.Parse(text.text);
     }
 }
 [Serializable]

@@ -5,6 +5,13 @@ public class GroundPage : MonoBehaviour {
     private GroundUI[] buttons;
     [SerializeField] private GroundUI prefab;
     public void Init(GroundArray[] grounds, int capacity, Action<int> buttonOnClickCallback, int width, int height){
+        if (buttons != null)
+        {
+            foreach(GroundUI g in buttons)
+            {
+                Destroy(g.gameObject);
+            }
+        }
         buttons = new GroundUI[capacity];
         for(int i = 0; i < capacity; i++){
             buttons[i] = Instantiate(prefab, transform);
