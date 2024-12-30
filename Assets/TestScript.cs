@@ -39,9 +39,9 @@ public class TestScript : MonoBehaviour
         groundUI.SetGroundArray(ga);
         groundUI.ActivateVisuals();
         floor.ClearAllTiles();
-        foreach (Vector3Int v in ga.grounds)
+        foreach (GACell v in ga.grounds)
         {
-            floor.CreateGround(v);
+            floor.CreateGround(v.position);
         }
     }
 }

@@ -20,10 +20,10 @@ public class ProceduralGenerationSetup : MonoBehaviour {
     public void GenerateGA(){
         // ga = new GroundArray(maxDimensions,maxValue,random,randomMultiplier,trueCondition);
     }
-    public void DrawGA(){
-        foreach(Vector3Int g in ga.grounds){
+    /*public void DrawGA(){
+        foreach(GACell g in ga.grounds){
             visuals[1].CreateGround(g);
             visuals[0].CreateGround(g);
         }
-    }
+    }*/
 }

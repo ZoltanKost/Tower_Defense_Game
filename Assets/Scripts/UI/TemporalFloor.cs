@@ -38,8 +38,8 @@ public class TemporalFloor : Floor
         arrows[1].localPosition = pos + Vector3Int.right * ga.width * cellSize;
         arrows[2].localPosition = pos + Vector3Int.up * ga.height * cellSize;
         arrows[3].localPosition = pos + new Vector3Int(ga.width, ga.height) * cellSize;
-        foreach(Vector3Int g in ga.grounds){
-            CreateGround(pos + g);
+        foreach(GACell g in ga.grounds){
+            CreateGround(pos + g.position);
         }
     }
     public void MoveTempFloor(Vector3 position, bool canBuild) {

@@ -1,22 +1,28 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GroundArrayGenerator : MonoBehaviour {
-    public int maxDimensions, maxValue, random, trueCondition;
+    [SerializeField] private TMP_InputField tMaxDimensions, tMaxValue, tRandom, tTrueCondition, tFloorCondition, tRandomMultiplier;
+    [SerializeField] private TMP_Text tFirstFloorOnly;
+    public int maxDimensions, maxValue, random, groundCondition, floorCondition;
+    public bool firstFloorOnly;
     [SerializeField] private float randomMultiplier;
     public GroundArray GenerateGA(){
-        int _maxDimensions = maxDimensions, _maxValue = maxValue,_random = random,_trueCondition = trueCondition;
+        int _maxDimensions = maxDimensions, _maxValue = maxValue, _random = random;
+        int _groundCondition = groundCondition;
+        int _floorCondition = floorCondition;
         float _randomMultiplier = randomMultiplier;
         int width,height, targetFloor;
-        List<Vector2Int> grounds;
+        List<GACell> grounds;
         // string s = "";
         int d = Mathf.ClosestPowerOfTwo(Random.Range(1,_maxDimensions + 1)) + 1;
         width = d;
         height = d;
         d--;
-        grounds = new List<Vector2Int>();
+        grounds = new List<GACell>();
         int[,] ints = new int[width,height];
-        targetFloor = Random.Range(0,2);
+        targetFloor = firstFloorOnly?1:Random.Range(0,2);
         Vector2Int start = Vector2Int.zero;
         List<Vector2Int> starts = new(){
             start
@@ -76,14 +82,21 @@ public class GroundArrayGenerator : MonoBehaviour {
                 }
             }
         }
-        _trueCondition = Random.Range(0, _trueCondition + 1);
-        float rel = (float)_trueCondition / _maxValue;
-        int tCon = Mathf.RoundToInt(small + (big - small) * rel);
-        // Debug.Log($"Max: {_maxValue}, True: {_trueCondition}, Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
-        for(int y = height - 1; y >= 0; y--){
+        //_trueCondition = Random.Range(0, _trueCondition + 1);
+        /*float rel = (float)groundCondition/ _maxValue;
+        int tCon = Mathf.RoundToInt(small + (big - small) * rel);*/
+        _groundCondition = Mathf.RoundToInt(small + (big - small) * (float)groundCondition / _maxValue);
+        _floorCondition = Mathf.RoundToInt(small + (big - small) * (float)floorCondition / _maxValue);
+
+        //Debug.Log($"Max: {_maxValue}, Ground: {_groundCondition}, Sand:{_floorCondition} Small: {small}, Big: {big}, Rel: {rel}, tCon: {tCon}");
+        for (int y = height - 1; y >= 0; y--){
             for(int x = 0; x < width; x++){
-                if(ints[x,y] > tCon){
-                    grounds.Add(new Vector2Int(x,y));
+                if(ints[x,y] > _groundCondition)
+                {
+                    grounds.Add(new GACell { position = new Vector3Int(x, y), floor = 1 });
+                }else if (ints[x, y] > _floorCondition)
+                {
+                    grounds.Add(new GACell { position = new Vector3Int(x, y), floor = 0 });
                 }
                 // s += $"[{ints[x,y]}]";
             }
@@ -93,4 +106,40 @@ public class GroundArrayGenerator : MonoBehaviour {
         // Debug.Log(s);
         return new GroundArray { width = width, height = height, grounds = grounds, targetFloor = targetFloor, price = (targetFloor == 0 ? grounds.Count / 2 : grounds.Count) / Mathf.FloorToInt(Mathf.Sqrt(width - 1))};
     }
+    public void ReadMaxDimensionsValue()
+    {
+        maxDimensions = int.Parse(tMaxDimensions.text);
+    }
+    public void ReadMaxValue()
+    {
+        maxValue = int.Parse(tMaxValue.text);
+        Debug.Log(maxValue);
+    }
+    public void ReadRandom()
+    {
+        random = int.Parse(tRandom.text);
+    }
+    public void ReadTrueCondition()
+    {
+        groundCondition = int.Parse(tTrueCondition.text);
+        Debug.Log(groundCondition);
+    }
+    public void ReadRandomMultiplier()
+    {
+        randomMultiplier = float.Parse(tRandomMultiplier.text);
+    }
+    public void ReadFloorCondition()
+    {
+        floorCondition = int.Parse(tFloorCondition.text);
+    }
+    public void SwitchFirstFloorOnly()
+    {
+        firstFloorOnly = !firstFloorOnly;
+        tFirstFloorOnly.text = firstFloorOnly ? "Yes" : "No";
+    }
+}
+public struct GACell
+{
+    public Vector3Int position;
+    public int floor;
 }

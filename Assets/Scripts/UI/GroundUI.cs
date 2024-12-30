@@ -17,8 +17,8 @@ public class GroundUI : MonoBehaviour{
     public void SetGroundArray(GroundArray ga){
         _floor.ClearAllTiles();
         _floor.floor = ga.targetFloor;
-        foreach(Vector3Int v in ga.grounds){
-            _floor.CreateGround(v);
+        foreach(GACell v in ga.grounds){
+            _floor.CreateGround(v.position);
         }
         Vector3 pos = new Vector3{x = -ga.width/2f, y = -ga.height / 2f + ga.targetFloor, z = 0} * pixelPerUnit * 3f/ga.width;
         _floor.transform.localPosition = pos;

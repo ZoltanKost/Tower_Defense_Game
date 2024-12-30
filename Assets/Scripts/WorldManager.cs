@@ -115,12 +115,10 @@ public class WorldManager : MonoBehaviour {
         buildingManager.Init();
         projectileManager.Init();
         Vector3 input = Camera.main.transform.position;
-        GroundArray ga = new GroundArray(new Vector2Int(10,10),0);
         input -= new Vector3(10,10)*.5f;
-        floorManager.CreateGroundArray_DontCheck(input, ga);
-        GroundArray ga1 = new GroundArray(new Vector2Int(5,2),1);
-        Vector3 mid = input + Vector3.up * 5 + Vector3.right * 2.5f;
-        floorManager.CreateGroundArray_DontCheck(mid, ga1);
+        floorManager.FloodFloor(input, input + new Vector3Int(8,4));
+        Vector3 mid = input + Vector3.up * 2 + Vector3.right * 4;
+        floorManager.FloodFloor(mid, mid + new Vector3Int(4,2));
         floorManager.CreateCastle(mid,castle);
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
