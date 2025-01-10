@@ -72,5 +72,4 @@ MonoBehaviour:
     m_NeighborPositions:
     - {x: 0, y: 1, z: 0}
     m_RuleTransform: 0
-  RoadTile: {fileID: 11400000, guid: 349c05ee57215964ea809cb430e63dbb, type: 2}
   BridgeTile: {fileID: 11400000, guid: b39ac9dc8c480a044b9097de15e3b643, type: 2}

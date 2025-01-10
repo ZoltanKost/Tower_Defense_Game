@@ -7,11 +7,9 @@ public class BridgeNeighbour : RuleTile.TilingRule.Neighbor{
 }
 [CreateAssetMenu]
 public class BridgeOnGround : RuleTile<BridgeNeighbour> {
-    [SerializeField] private TileBase RoadTile;
     [SerializeField] private TileBase BridgeTile;
     public override bool RuleMatch(int neighbor, TileBase tile) {
         switch (neighbor) {
-            case BridgeNeighbour.RoadCollision: return tile == RoadTile;
             case BridgeNeighbour.BridgeCollision: return tile == BridgeTile;
         }
         return base.RuleMatch(neighbor, tile);

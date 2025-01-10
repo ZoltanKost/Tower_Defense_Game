@@ -199,9 +199,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[posX, posY].bridge = true;
             floorCells[posX, posY].bridgeData = new BridgeData {bridgeDirection = (BridgeDirection)(horizontal ? 1:2), floor = floor};
             floors[floor].PlaceBridge(pos);
-            int diff = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
-            int bridgeDifference = floorCells[posX, posY].bridgeData.floor - diff;
-            floors[floor-1].PlaceBridgeShadow(pos + Vector3Int.down );
+            floors[floorCells[posX, posY].currentFloor].PlaceBridgeShadow(pos + Vector3Int.down );
             return true;
         }
         return false;
