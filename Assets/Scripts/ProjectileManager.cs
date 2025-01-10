@@ -65,7 +65,7 @@ public class ProjectileManager : MonoBehaviour {
                 projectile.active = false;
                 projectile.enable = false;
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.StayIfMissed) != 0
-                    && !projectile.target.alive)
+                    && !(projectile.target.HP > 0))
                 {
                     projectile.enable = true;
                     projectile.animator.SetAnimation(1);

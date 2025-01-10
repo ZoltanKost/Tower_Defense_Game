@@ -50,35 +50,51 @@ public class Pathfinding : MonoBehaviour{
 			else if (prev.bridge && !prev.bridgeData.start) return;
 			else
 			{
-                if (current.currentFloor == prev.currentFloor - 1)
-                {
-                    if (!(current.gridY == prev.gridY - 1)) return;
+				if (current.currentFloor == prev.currentFloor - 1)
+				{
+					Debug.Log($"Current is under: current: {current.gridX}:{current.gridY};{current.currentFloor}; prev: {prev.gridX}:{prev.gridY};{prev.currentFloor}");
+					if ((current.gridY != prev.gridY - 1)) {
+						Debug.Log("current is not up of previous cell");
+						return;
+					}
+					else
+					{
+                        Debug.Log("current is up of previous cell");
+                    }
                 }
-                else if (current.currentFloor == prev.currentFloor + 1)
-                {
-                    if (!(current.gridY == prev.gridY + 1)) return;
+				else if (current.currentFloor == prev.currentFloor + 1)
+				{
+					Debug.Log($"Current is upon: current: {current.gridX}:{current.gridY};{current.currentFloor}; prev: {prev.gridX}:{prev.gridY};{prev.currentFloor}");
+					if ((current.gridY != prev.gridY + 1))
+                    {
+                        Debug.Log("current is not up of previous cell");
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Log("current is up of previous cell");
+                    }
                 }
-            }
-		}
+			}
+        }
 		if(floor.IsStarting(current.gridX, current.gridY)){
 			if(closedSet.Count == 0) return;
-			// string s =
-			// $"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
+			string s =
+			$"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
 			closedSet.Push(current);
 			Queue<Vector3> res = new Queue<Vector3>();
-			foreach(FloorCell cell in closedSet){
-				Vector3 pos = new(){
-					x = cell.gridX - offsetX + cellSize/2,
+            s += "Path contains following:\n";
+            foreach (FloorCell cell in closedSet){
+			 	s += $"Cell: {cell.gridX}:{cell.gridY};{cell.currentFloor};\n";
+				Vector3 pos = new()
+                {
+                    x = cell.gridX - offsetX + cellSize/2,
 					y = cell.gridY - offsetY + cellSize/2
 				};
 				res.Enqueue(pos);
 			}
 			closedSet.Pop();
-			// s += "Path contains following:\n";
-			// foreach(Vector3 cell in res){
-			// 	// s += $"Cell: {cell}\n";
-			// }
-			// Debug.Log(s);
+			Debug.Log(s);
 			result.Add(res);
 			return;
 		}

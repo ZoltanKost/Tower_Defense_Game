@@ -5,82 +5,113 @@ public class ArcherManager : MonoBehaviour, IHandler {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private Transform archer;
+    [SerializeField] private BuildingManager buildingManager;
+    [SerializeField] private FloorManager floorManager;
     public List<Archer> archersList = new List<Archer>();
     bool active;
     bool animate;
+    float cellSize;
     public void SpawnArcher()
     {
-        Archer _archer = Instantiate(archer,transform).GetComponentInChildren<Archer>();
+        Archer _archer = Instantiate(archer, transform).GetComponentInChildren<Archer>();
         if (_archer == null) { return; }
         Vector3 temp = Camera.main.transform.position;
         temp.z = 0;
         _archer.transform.position = temp;
-        AddArcher(_archer);
+        //AddArcher(_archer);
     }
-    public void AddArcher(Archer archer){
+    public void AddArcher(Archer archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    {
+        cellSize = floorManager.CellToWorld(Vector3.one).x;
         archersList.Add(archer);
-        archer.Init();
+        archer.Init(gridPosition, buildingWidth, buildingHeight, buildingID);
     }
-    public void RemoveArchers(Archer[] archer){
-        foreach(Archer a in archer){
+    public void RemoveArchers(Archer[] archer) {
+        foreach (Archer a in archer) {
             archersList.Remove(a);
             a.Deactivate();
         }
     }
-    void Update(){
+    void Update() {
         float delta = Time.deltaTime;
         Tick(delta);
-        AnimatorTick(delta);
+    }
+    void FixedUpdate()
+    {
+        TickDetection();
+        TickState();
+        AnimatorTick(Time.fixedDeltaTime);
     }
     public void Tick(float delta)
     {
-        //if(!active) return;
-        TickDetection();
-        for (int i = 0; i < archersList.Count; i++){
-            archersList[i].TickState(delta);
-            if (archersList[i].ProjectileFlag)
-            {
-                projectileManager.SendProjectile(archersList[i].projectileData);
-                archersList[i].ProjectileFlag = false;
-            }
-        }
+        if(!active) return;
     }
     public void TickDetection()
     {
-        for (int i = 0; i < archersList.Count; i++)
+        Enemy[] enemyList = enemyManager.enemies;
+        float cellSize = floorManager.CellToWorld(Vector3.one).x;
+        Vector3 offset = floorManager.offset;
+        int count = archersList.Count;
+        for (int i = 0; i < count; i++)
         {
             archersList[i].shooting = false;
             archersList[i].target = null;
-            float attackRange = archersList[i].attackRange;
-            Enemy[] enemyList = enemyManager.enemies;
-            for (int k = 0; k < enemyManager.lowestInactive; k++)
+            int lowestInactive = enemyManager.lowestInactive;
+            float minDistance = archersList[i].attackRange;
+            for (int k = 0; k < lowestInactive; k++)
             {
-                if (!enemyList[k].alive) continue;
-                Vector3 vector = archersList[i].transform.position - enemyList[k].position;
-                vector.z = 0;
-                float distance = vector.magnitude;
-                if (distance > attackRange) continue;
-                float minDistance;
-                if (archersList[i].target == null || !archersList[i].target.active || !archersList[i].target.alive) minDistance = attackRange;
-                else
+                if (!(enemyList[k].HP > 0)) continue;
+                Vector3Int enemyGridPosition = new Vector3Int { 
+                    x = Mathf.FloorToInt((enemyList[k].transform.position.x + offset.x )/ cellSize), 
+                    y = Mathf.FloorToInt((enemyList[k].transform.position.y + offset.y) / cellSize) 
+                };
+                Vector3 cellCenter = archersList[i].gridPosition + new Vector2(archersList[i].buildingSize.x / 2f, archersList[i].buildingSize.y / 2f);
+                Vector3 diff = enemyGridPosition - cellCenter;
+                float CellDistance = Mathf.Abs(diff.x) + Mathf.Abs(diff.y);
+                if(i == 1)Debug.Log($"CellDistance: {CellDistance}, diff: {diff}, cellCenter: {cellCenter}, enemy: {enemyGridPosition}");
+                if (CellDistance > archersList[i].attackRange) continue;
+                if (CellDistance <= minDistance)
                 {
-                    vector = archersList[i].transform.position - archersList[i].target.position;
-                    vector.z = 0;
-                    minDistance = vector.magnitude;
-                }
-                if (distance < minDistance)
-                {
+                    minDistance = CellDistance;
                     archersList[i].target = enemyList[k];
                 }
             }
             if (archersList[i].target == null) archersList[i].state = ArcherState.Idle;
         }
     }
+    public void TickState()
+    {
+        int count = archersList.Count;
+        int lowestInactive = enemyManager.lowestInactive;
+        for (int i = 0; i < count; i++)
+        {
+            switch (archersList[i].state)
+            {
+                case ArcherState.Idle:
+                    archersList[i].animator.SetAnimation(0);
+                    if (archersList[i].target != null && archersList[i].target.index < lowestInactive && archersList[i].target.HP > 0)
+                    {
+                        archersList[i].state = ArcherState.Shooting;
+                    }
+                    break;
+                case ArcherState.Shooting:
+                    Vector2 direction = (archersList[i].target.transform.position - transform.position).normalized;
+                    archersList[i].animator.SetDirectionAnimation(0, direction);
+                    break;
+            }
+        }
+    }
     public void AnimatorTick(float delta)
     {
         if(!animate) return;
-        for(int i = 0; i < archersList.Count; i++){
+        int count = archersList.Count;
+        for (int i = 0; i < count; i++){
             archersList[i].TickAnimator(delta);
+            if (archersList[i].ProjectileFlag)
+            {
+                projectileManager.SendProjectile(archersList[i].projectileData);
+                archersList[i].ProjectileFlag = false;
+            }
         }
     }
     public void SwitchAnimation(bool animate){
@@ -112,7 +143,8 @@ public class ArcherManager : MonoBehaviour, IHandler {
     public bool TryHighlightEntity(Vector3 position, out Archer archer, float radius)
     {
         archer = null;
-        for (int i = 0; i < archersList.Count; i++)
+        int count = archersList.Count;
+        for (int i = 0; i < count; i++)
         {
             var temp = archersList[i];
             Vector3 pos = temp.position - position;

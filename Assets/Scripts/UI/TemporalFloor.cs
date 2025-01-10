@@ -23,6 +23,7 @@ public class TemporalFloor : Floor
     Vector3 startPosition;
     Vector3 endPosition;
     bool floodBuild;
+    ActionMode mode;
     void Start()
     {
         cellSize = Mathf.FloorToInt(visuals[0].cellSize.x);
@@ -43,13 +44,14 @@ public class TemporalFloor : Floor
         }
     }
     public void MoveTempFloor(Vector3 position, bool canBuild) {
-        if (!activated)
+        if (mode == ActionMode.Command) return;
+        if (mode == ActionMode.None)
         {
             position.z = 0;
             transform.position = position;
             return;
         }
-        if (floodBuild) MoveFloodBuild(position);
+        if (mode == ActionMode.MassGround) MoveFloodBuild(position);
         targetPosition = position / cellSize;
         targetPosition.z = 0;
         currentColor = canBuild ? Color.white : blockPlace;
@@ -113,7 +115,7 @@ public class TemporalFloor : Floor
         arrows[3].localPosition = Vector3Int.one * cellSize;
     }
     public void ActivateFloor(GroundArray ga){
-        activated = true;
+        mode = ActionMode.Building;
         snap = true;
         SetGroundArray(ga);
         foreach(var ar in arrows){
@@ -121,7 +123,7 @@ public class TemporalFloor : Floor
         }
     }
     public void ActivateFloor(Building b){
-        activated = true;
+        mode = ActionMode.Building;
         snap = true;
         ClearAllTiles();
         foreach(var ar in arrows){
@@ -131,7 +133,7 @@ public class TemporalFloor : Floor
         visual.gameObject.SetActive(true);
     }
     public void ActivateFloor(ActionMode m){
-        activated = true;
+        mode = ActionMode.Building;
         snap = true;
         ClearAllTiles();
         visual.gameObject.SetActive(false);
@@ -142,7 +144,7 @@ public class TemporalFloor : Floor
     }
     public void ActivateFloor(SpellData data)
     {
-        activated = true;
+        mode = ActionMode.CastSpell;
         snap = false;
         ClearAllTiles();
         Debug.Log("Activated, spell");
@@ -159,7 +161,16 @@ public class TemporalFloor : Floor
         foreach(var ar in arrows){
             ar.gameObject.SetActive(false);
         }
-        activated = false;
+        mode = ActionMode.None;
+    }
+    public void SetMode(ActionMode _mode)
+    {
+        mode = _mode;
+        visual.gameObject.SetActive(true);
+        foreach (var ar in arrows)
+        {
+            ar.gameObject.SetActive(true);
+        }
     }
     public override void Animate(){
         tweenAnimator.ErrorAnimation();
@@ -190,7 +201,7 @@ public class TemporalFloor : Floor
         {
             ar.gameObject.SetActive(true);
         }
-        Vector3 position = new Vector3(gridPosition.x, gridPosition.y) * cellSize;
+        Vector3 position = new Vector3(gridPosition.x, gridPosition.y) * cellSize - new Vector3(1,1) * 50;
         transform.position = position;
         arrows[0].localPosition = Vector3.zero * cellSize;
         arrows[1].localPosition = Vector3Int.right * rectSize.x * cellSize;
@@ -200,6 +211,21 @@ public class TemporalFloor : Floor
     public void StartFlood(Vector3 start)
     {
         startPosition = start;
-        
+    }
+    public void SetHighlightedCharacter(Vector2Int gridPosition, Vector2Int buildingSize, int attackRange)
+    {
+        foreach (Tilemap map in visuals)
+        {
+            map.transform.localPosition = new Vector2(buildingSize.x / 2, buildingSize.y / 2);
+        }
+        for (int y = - attackRange + 1; y < attackRange; y++)
+        {
+            for(int x = - attackRange + 1; x < attackRange; x++)
+            {
+                if (Mathf.Abs(x) + Mathf.Abs(y) > attackRange) continue;
+                SetTile(new Vector3Int(x, y), 1, TileID.Shadow);
+            }
+        }
+        transform.position = gridPosition - Vector2.one * 50;
     }
 }

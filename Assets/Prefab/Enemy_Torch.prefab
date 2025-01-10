@@ -113,15 +113,19 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   hpBar: {fileID: 2216191493300241889}
   projectileSpeed: 0
+  state: 0
   damage: 15
+  currentTarget: {fileID: 0}
   animator: {fileID: 9071115895459296981}
   index: 0
   speed: 1
-  attackrange: 2
+  attackRange: 1
   MaxHP: 100
   attackPeriod: 1.5
   _killReward: 5
+  time: 0
   destination: {x: 0, y: 0, z: 0}
+  detectFlag: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0

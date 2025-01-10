@@ -3,8 +3,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
 using System.Collections.Generic;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using UnityEditor;
 
 public class WorldManager : MonoBehaviour {
     [Header("Dimensions")]
@@ -23,6 +21,7 @@ public class WorldManager : MonoBehaviour {
     public TileBase SAND;
     public TileBase BRIDGE;
     public TileBase BRIDGE_ON_GROUND;
+    public TileBase BRIDGE_SHADOW;
     [Header("Managers")]
     [SerializeField] private FloorManager floorManager;
     // [SerializeField] private Floor nextTile;
@@ -46,6 +45,8 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private PlayerShopUIManager playerShopUIManager;
     [SerializeField] private GameLoadManager gameLoadManager;
+    [SerializeField] private GroundArrayGenerator groundGenerator;
+    [SerializeField] private GameSaveManager gameSaveManager;
     private GameState gameState;
     int wave;
     
@@ -61,6 +62,7 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(LADDER, TileID.Ladder);
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
+        StaticTiles.Bind(BRIDGE_SHADOW, TileID.BridgeShadow);
         temporalFloor.Init(0,"TempFloor");
         /*bool fullscreen = true;
         #if UNITY_WEBGL
@@ -99,7 +101,13 @@ public class WorldManager : MonoBehaviour {
         );
         PauseButton.Init(Pause);
         gameLoadManager.Init(Load);
-        menuUIManager.Init(new Action[]{Unpause,Restart,Application.Quit,null, ResetWave, () => { gameLoadManager.ReadSaveData(); menuUIManager.gameObject.SetActive(false); }, Save});
+        menuUIManager.Init(
+            new Action[]
+            {
+                Unpause,Restart,Application.Quit,null, ResetWave, 
+                () => { gameLoadManager.ReadSaveData(); menuUIManager.gameObject.SetActive(false); },
+                ()=>{menuUIManager.gameObject.SetActive(false); gameSaveManager.gameObject.SetActive(true); }
+            });
         defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
         Action playerDefeat = () => {
             Defeat();
@@ -117,8 +125,8 @@ public class WorldManager : MonoBehaviour {
         Vector3 input = Camera.main.transform.position;
         input -= new Vector3(10,10)*.5f;
         floorManager.FloodFloor(input, input + new Vector3Int(8,4));
-        Vector3 mid = input + Vector3.up * 2 + Vector3.right * 4;
-        floorManager.FloodFloor(mid, mid + new Vector3Int(4,2));
+        Vector3 mid = input + Vector3.up * 2 + Vector3.right * 3;
+        floorManager.FloodFloor(mid, mid + new Vector3Int(3,2));
         floorManager.CreateCastle(mid,castle);
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
@@ -214,7 +222,8 @@ public class WorldManager : MonoBehaviour {
     public void Load(LevelData data)
     {
         ResetWave();
-        floorManager.LoadFloorCells(data.floorCells, data.offset);
+        floorManager.LoadFloorCells(data.floorCells, data.offset, data.roads, data.ladders, data.bridgeStarts, data.bridges);
+        groundGenerator.LoadParameters(data.RandomParameters);
         buildingManager.ResetEntities();
         foreach (var b in data.buildings)
         {
@@ -226,11 +235,19 @@ public class WorldManager : MonoBehaviour {
         playerResourceManager.SetResource(Resource.Gold, data.goldCount);
         //pathfinding.SetCastlePoint(,);
     }
-    public void Save()
+    public void Save(string name)
     {
         LevelData levelData = new LevelData
         {
-            floorCells = FloorCellToSaveData().ToArray(),
+            floorCells = FloorCellToSaveData(out List<Vector3Int> roads,
+                                            out List<Vector3Int> ladders,
+                                            out List<BridgeSaveData> bridgeStarts,
+                                            out List<BridgeSaveData> bridges).ToArray(),
+            roads = roads.ToArray(),
+            ladders = ladders.ToArray(),
+            bridgeStarts = bridgeStarts.ToArray(),
+            bridges = bridges.ToArray(),
+            RandomParameters = SaveRandomParameters(),
             castlePositions = new Vector3Int[1],
             offset = floorManager.offset,
             buildings = BuildingToSaveData(),
@@ -244,34 +261,69 @@ public class WorldManager : MonoBehaviour {
         {
             Directory.CreateDirectory(dir);
         }
-        File.WriteAllText(dir + $"\\save{Directory.GetFiles(dir).Length}.json", save);
+        var fileNames = Directory.GetFiles(Application.persistentDataPath + "/saves");
+        name = dir + $"\\{name}.json";
+        File.WriteAllText(name, save);
     }
-    public List<FloorCellSaveData> FloorCellToSaveData()
+public RandomParameters SaveRandomParameters()
+{
+        return new RandomParameters
+        {
+            maxDimensions = groundGenerator.maxDimensions, 
+            maxValue = groundGenerator.maxValue, 
+            random = groundGenerator.random, 
+            groundCondition = groundGenerator.groundCondition, 
+            floorCondition = groundGenerator.floorCondition,
+            randomMultiplier = groundGenerator.randomMultiplier,
+            firstFloorOnly = groundGenerator.firstFloorOnly
+        };
+}
+    public List<FloorCellSaveData> FloorCellToSaveData(out List<Vector3Int> roads,
+                                                       out List<Vector3Int> ladders,
+                                                       out List<BridgeSaveData> bridgeStarts,
+                                                       out List<BridgeSaveData> bridges)     
     {
         List<FloorCellSaveData> result = new();// FloorCellSaveData[width * floorManager.floorCells.GetLength(1)];
+        roads = new();
+        ladders = new();
+        bridgeStarts = new();
+        bridges = new();
         foreach (FloorCell cell in floorManager.floorCells)
         {
+            if (cell.bridge)
+            {
+                if (cell.bridgeData.start)
+                    bridgeStarts.Add(new BridgeSaveData
+                    {
+                        gridX = cell.gridX,
+                        gridY = cell.gridY,
+                        floor = cell.bridgeData.floor,
+                        direction = (int)cell.bridgeData.bridgeDirection
+                    });
+                else bridges.Add(new BridgeSaveData
+                {
+                    gridX = cell.gridX,
+                    gridY = cell.gridY,
+                    floor = cell.bridgeData.floor,
+                    direction = (int)cell.bridgeData.bridgeDirection
+                });
+            }
             if (cell.currentFloor < 0) continue;
             result.Add(new FloorCellSaveData
             {
                 currentFloor = cell.currentFloor,
-                bridgeData = cell.bridgeData, 
-                bridge = cell.bridge,
-                road = cell.road,
-                ladder = cell.ladder,
                 gridX = cell.gridX,
                 gridY = cell.gridY,
             });
-            if(cell.bridge && cell.bridgeData.start)
-            {
-                Debug.Log($"Cell wrote to CellData : {cell.gridX}, {cell.gridY}: " +
-                $"currentFloor = {cell.currentFloor} " +
-                $"bridgeData = {cell.bridgeData.floor}, {cell.bridgeData.bridgeDirection}, " +
-                $"bridge = {cell.bridge} " +
-                $"road = {cell.road} " +
-                $"ladder = {cell.ladder} ");
-            }
             
+            if (cell.road)
+            {
+                roads.Add(new Vector3Int(cell.gridX, cell.gridY));
+            }
+            if (cell.ladder)
+            {
+                ladders.Add(new Vector3Int(cell.gridX, cell.gridY));
+            }
         }
         return result;
     }
@@ -310,10 +362,28 @@ public class LevelData
 {
     public FloorCellSaveData[] floorCells;
     public Vector3Int[] castlePositions;
-    public Vector3Int offset;
+    public Vector3Int[] roads;
+    public Vector3Int[] ladders; 
+    public BridgeSaveData[] bridgeStarts;
+    public BridgeSaveData[] bridges;
     public BuildingSaveData[] buildings;
+    public RandomParameters RandomParameters;
+    public Vector3Int offset;
     public int goldCount;
     public int playerHP;
+}
+[Serializable] public struct BridgeSaveData
+{
+    public int gridX, gridY;
+    public int floor;
+    public int direction;
+}
+[Serializable]
+public struct RandomParameters
+{
+    public int maxDimensions, maxValue, random, groundCondition, floorCondition;
+    public float randomMultiplier;
+    public bool firstFloorOnly;
 }
 [Serializable]
 public struct BuildingSaveData
@@ -330,10 +400,7 @@ public struct BuildingSaveData
 public struct FloorCellSaveData
 {
     public int currentFloor;
-    public BridgeData bridgeData;
-    public bool bridge;
-    public bool road;
-    public bool ladder;
+
     public int gridX;
     public int gridY;
 }

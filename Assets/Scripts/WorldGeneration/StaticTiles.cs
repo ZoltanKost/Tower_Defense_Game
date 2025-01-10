@@ -37,5 +37,6 @@ public enum TileID{
     Sand,
     SandPieces,
     Bridge,
+    BridgeShadow,
     BridgeOnGround
 }

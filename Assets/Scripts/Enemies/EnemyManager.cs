@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
-public class EnemyManager : MonoBehaviour, IHandler {
+public class EnemyManager : MonoBehaviour {
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private BuildingManager buildingManager;
+    [SerializeField] private FloorManager floorManager;
     [SerializeField] private PlayerManager playerManager;
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
@@ -15,17 +17,23 @@ public class EnemyManager : MonoBehaviour, IHandler {
     Wave[] waves;
     public int lowestInactive = 0;
     bool active;
+    float cellSize;
+    Vector3 offset;
     public void SetWinAction(Action win){
         onEnemyFinished = win;
     }
     public void Update(){
         if(!active) return;
-        TickSpawn(Time.deltaTime);
+        float delta = Time.deltaTime;
+        TickSpawn(delta);
     }
     void FixedUpdate(){
         if(!active) return;
+        float delta = Time.fixedDeltaTime;
+        TickState(delta);
+        TickMovement(delta);
+        TickDetection();
         AnimatorTick(Time.fixedDeltaTime);
-        Tick(Time.fixedDeltaTime);
         if (lowestInactive == 0)
         {
             bool left = false;
@@ -43,26 +51,92 @@ public class EnemyManager : MonoBehaviour, IHandler {
     public void RegisterKill(int index){
         playerResourceManager.AddResource(Resource.Gold, enemies[index].killReward);
     }
-
-    public void Tick(float delta)
+    public void TickState(float delta)
     {
-        for (int x = 0; x < lowestInactive; x++)
+        for(int i = 0; i < lowestInactive; i++)
         {
-            if (!enemies[x].active) continue;
-            enemies[x].Tick(delta);
-            if (enemies[x].ProjectileFlag)
+            switch (enemies[i].state)
             {
-                projectileManager.SendProjectile(enemies[x].ProjectileData);
-                enemies[x].ProjectileFlag = false;
+                case EnemyState.dead:
+                    break;
+                case EnemyState.run:
+                    enemies[i].animator.SetDirectionAnimation(0, (enemies[i].destination - enemies[i].transform.position).normalized);
+                    enemies[i].time += delta;
+                    enemies[i].detectFlag = enemies[i].time > enemies[i].attackPeriod;
+                    break;
+                case EnemyState.attack:
+                    enemies[i].time = 0;
+                    enemies[i].animator.SetDirectionAnimation(1, (enemies[i].currentTarget.position - enemies[i].transform.position).normalized);
+                    break;
+                default:
+                    enemies[i].state = EnemyState.run;
+                    break;
             }
         }
+        
+    }
+    public void TickDetection()
+    {
+        BuildingObject[] buildings = buildingManager.bs;
+        int length = buildingManager.Count;
+        for (int i = 0; i < lowestInactive; i++)
+        {
+            if (enemies[i].HP <= 0 || !enemies[i].detectFlag) continue;
+            float minDistance = enemies[i].attackRange * cellSize;
+            for (int k = 1; k < length; k++)
+            {
+                if (buildings[k] == null || !(buildings[k].HP > 0)) continue;
+                Vector2Int enemyGridPosition = new Vector2Int
+                {
+                    x = Mathf.FloorToInt((enemies[i].transform.position.x + offset.x) / cellSize),
+                    y = Mathf.FloorToInt((enemies[i].transform.position.y + offset.y) / cellSize)
+                };
+                Vector2Int buildingPosition = buildings[k].gridPosition;
+                Vector2Int diff = enemyGridPosition - buildingPosition;
+                Vector2Int bDims = new Vector2Int
+                {
+                    x = Mathf.Clamp(diff.x,0, buildings[k].w - 1),
+                    y = Mathf.Clamp(diff.y, 0, buildings[k].h - 1)
+                };
+                Vector2Int pos = diff - bDims;
+                float distance = (new Vector3(pos.x * cellSize, pos.y * cellSize)).magnitude;
+                //if(i == 0 && k == 1)Debug.Log($"pos: {pos}, distance: {distance}, bDimensions: {bDims}, diff: {diff}");
+                if (distance > minDistance) continue;
+                minDistance = distance;
+                enemies[i].currentTarget = buildings[k];
+            }
+            if(enemies[i].currentTarget != null && enemies[i].currentTarget.HP > 0)
+            {
+                enemies[i].detectFlag = false;
+                enemies[i].state = EnemyState.attack;
+            }
+        }
+        
+    }
+    public void TickMovement(float delta)
+    {
+        for (int i = 0; i < lowestInactive; i++)
+        {
+            if (!(enemies[i].state == EnemyState.run) || enemies[i].HP <= 0) continue;
+            enemies[i].transform.position += (enemies[i].destination - enemies[i].transform.position).normalized * delta * enemies[i].speed;
+            if ((enemies[i].destination - enemies[i].transform.position).magnitude <= .1f)
+            {
+                if (enemies[i].currentPath.Count > 0) enemies[i].destination = enemies[i].currentPath.Dequeue();
+                else enemies[i].DamageCastle();
+            }
+        }
+        
     }
 
     public void AnimatorTick(float delta)
     {
         for(int x = 0; x < lowestInactive; x++){
-            if(!enemies[x].active) continue;
             enemies[x].UpdateAnimator(delta);
+            if (enemies[x].ProjectileFlag)
+            {
+                projectileManager.SendProjectile(enemies[x].ProjectileData);
+                enemies[x].ProjectileFlag = false;
+            }
         }
     }
 
@@ -84,12 +158,13 @@ public class EnemyManager : MonoBehaviour, IHandler {
         lowestInactive = 0;
         foreach(Enemy enemy in enemies){
             if(enemy != null){
-                enemy.active = false;
                 enemy.gameObject.SetActive(false);
             }
         }
     }
     public void SpawnEnemies(int wave) {
+        cellSize = floorManager.CellToWorld(Vector3.one).x;
+        offset = floorManager.offset;
         GenerateWave(wave + 1);
         enemies = new Enemy[32];
         for (int i = 0; i < 32; i++)
@@ -111,10 +186,10 @@ public class EnemyManager : MonoBehaviour, IHandler {
         string s = "Area spell Cast...";
         for (int i = 0; i < lowestInactive; i++)
         {
-            if (!enemies[i].active) continue;
+            if (enemies[i].state == EnemyState.dead) continue;
             //float distance = Vector3.Distance(, position);
-            float dX = Mathf.Abs(enemies[i].position.x - position.x);
-            float dY = Mathf.Abs(enemies[i].position.y - position.y);
+            float dX = Mathf.Abs(enemies[i].transform.position.x - position.x);
+            float dY = Mathf.Abs(enemies[i].transform.position.y - position.y);
 
             if (dX > spell.radius || dY > spell.radius) continue;
             enemies[i].Damage(spell.damage);
@@ -129,7 +204,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
         for (int i = 0; i < lowestInactive; i++)
         {
             var temp = enemies[i];
-            Vector3 pos = temp.position - position;
+            Vector3 pos = temp.transform.position - position;
             pos.z = 0;
             if (pos.magnitude > radius) continue;
             archer = temp;
@@ -167,7 +242,7 @@ public class EnemyManager : MonoBehaviour, IHandler {
     {
         Debug.Log("EnemySpawned");
         Enemy enemy = enemies[lowestInactive++];
-        enemy.Init(waves[ID].Prefab, ID, lowestInactive - 1, waves[ID].Path, waves[ID].Path.Peek(),true, RemoveEnemy, RegisterKill, playerManager.Damage, buildingManager.bs);
+        enemy.Init(waves[ID].Prefab, ID, lowestInactive - 1, waves[ID].Path, waves[ID].Path.Peek(), RemoveEnemy, RegisterKill, playerManager.Damage);
         waves[ID].Count--;
         enemy.gameObject.SetActive(true);
         if (lowestInactive >= enemies.Length)
@@ -190,7 +265,6 @@ public class EnemyManager : MonoBehaviour, IHandler {
         enemies[ID] = enemies[--lowestInactive];
         enemies[ID].index = ID;
         enemies[lowestInactive] = temp;
-        temp.active = false;
         temp.gameObject.SetActive(false);
         Debug.Log("EnemyRemoved");
     }

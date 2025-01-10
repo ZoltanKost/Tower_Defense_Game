@@ -17,7 +17,10 @@ public class EntitiyHighlighter : MonoBehaviour
         {
             BuildingObject b = buildingManager.bs[ID];
             ui.SetEntity(b.spriteRenderer.sprite,b.HP,15,0);
-            //tempFloor.SetArrows(b.gridPosition,new Vector3Int(b.w,b.h));
+            tempFloor.SetMode(ActionMode.Command);
+            tempFloor.SetArrows(b.gridPosition,new Vector3Int(b.w,b.h));
+            var archer = b.GetArchers()[0];
+            tempFloor.SetHighlightedCharacter(archer.gridPosition, archer.buildingSize, archer.attackRange);
             entity = HighlightedEntity.Building;
         }
         else if (archerManager.TryHighlightEntity(position,out archer,1f))
@@ -53,7 +56,7 @@ public class EntitiyHighlighter : MonoBehaviour
                     ui.SetEntity(enemy.GetSprite(), 100, enemy.ProjectileData.damage, 0);
                     entity = HighlightedEntity.Enemy;
                 }
-                archer.SetMovement(pathfinding.DijkstraSearch(archer.position, position));
+                //archer.SetMovement(pathfinding.DijkstraSearch(archer.position, position));
                 break;
             default: break;
         }

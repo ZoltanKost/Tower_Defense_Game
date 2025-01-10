@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &647510513473006261
 Transform:
   m_ObjectHideFlags: 0
@@ -61,15 +61,19 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   hpBar: {fileID: 3715045914147068556}
   projectileSpeed: 0
+  state: 0
   damage: 15
+  currentTarget: {fileID: 0}
   animator: {fileID: 9071115895459296981}
   index: 0
   speed: 0.7
-  attackrange: 0
+  attackRange: 0
   MaxHP: 100
   attackPeriod: 5
   _killReward: 5
+  time: 0
   destination: {x: 0, y: 0, z: 0}
+  detectFlag: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,11 +304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8025845382012159825, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8025845382012159825, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9114102308851037881, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
       propertyPath: m_Pivot.x

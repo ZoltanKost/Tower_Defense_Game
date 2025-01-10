@@ -1,20 +1,21 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Archer : MonoBehaviour{
-    [SerializeField] private CustomAnimator animator;
+    [SerializeField] public CustomAnimator animator;
     [SerializeField] private Sprite arrow;
     [SerializeField] public ProjectileData projectileData;
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] private float ProjectileFlightTime;
-    [SerializeField] private float moveSpeed = 5f;
+    //[SerializeField] private float moveSpeed = 5f;
     public Enemy target;
     [SerializeField] private int damage;
+    public Vector2Int buildingSize;
+    public Vector2Int gridPosition;
+    public int buildingID;
     public bool _active;
     public bool ProjectileFlag;
-    public float attackRange;
+    public int attackRange;
     public int floor;
-    public bool building;
     public Vector3 position
     {
         get{return transform.position;}
@@ -25,16 +26,15 @@ public class Archer : MonoBehaviour{
     }
     public bool shooting;
     public Vector3[] movement;
-    Vector3 moveTarget;
-    int currentMovementIndex;
     public ArcherState state;
-    //List<Enemy> enemyList;
-    public void Init(){
+    public void Init(Vector2Int _gridPosition, int buildingWidth, int buildingHeight, int buildingID){
+        this.buildingID = buildingID;
+        buildingSize = new(buildingWidth,buildingHeight);
+        gridPosition = _gridPosition;
         animator.Init();
         //enemyList = enemies;
         _active = true;
         projectileData.startPosition = transform.position;
-        projectileData.target = target;
         projectileData.speed = projectileSpeed;
         projectileData.damage = damage;
         projectileData.behaviour = OnProjectileMeetTargetBehaviour.Damage | OnProjectileMeetTargetBehaviour.StayIfMissed;
@@ -42,49 +42,6 @@ public class Archer : MonoBehaviour{
     public void TickAnimator(float delta){
         if (!_active) return;
         animator.UpdateAnimator(delta);
-    }
-    public void TickState(float delta){
-        switch (state)
-        {
-            case ArcherState.Idle:
-                animator.SetAnimation(0);
-                if (target != null && target.active && target.alive)
-                {
-                    state = ArcherState.Shooting;
-                }
-                break;
-            case ArcherState.Dead:
-                break;
-            case ArcherState.Shooting:
-                Vector2 direction = (target.position - transform.position).normalized;
-                animator.SetDirectionAnimation(0, direction);
-                break;
-            case ArcherState.Moving:
-                
-                Vector3 dir = moveTarget - transform.position;
-                Debug.Log(dir);
-                if (dir.magnitude <= 0.3f)
-                {
-                    currentMovementIndex++;
-                    if (currentMovementIndex >= movement.Length) {state = ArcherState.Idle; break; }
-                    moveTarget = movement[currentMovementIndex];
-                }
-                else
-                {
-                    Debug.Log(delta);
-                    transform.position += dir.normalized * moveSpeed * delta;
-                }
-                //animator.SetAnimation(2);
-                break;
-        }
-    }
-    public void SetMovement(Vector3[] movement)
-    {
-        this.movement = movement;
-        currentMovementIndex = 0;
-        moveTarget = movement[0];
-        state = ArcherState.Moving;
-        Debug.Log($"movement Set!{state}");
     }
     public void ResetAnimation(){
         animator.SetAnimation(0);
@@ -97,9 +54,9 @@ public class Archer : MonoBehaviour{
         projectileData.damage = damage;
         projectileData.flightTime = projectileData.ballistic?
             ProjectileFlightTime:
-            (target.position - transform.position).magnitude / projectileData.speed;
+            (target.transform.position - transform.position).magnitude / projectileData.speed;
         float enemyTimeToDest = 
-            (target.destination - target.position).magnitude 
+            (target.destination - target.transform.position).magnitude 
             / target.speed;
         float time; Vector3 direction; Vector3 start;
         if (enemyTimeToDest < projectileData.flightTime && target.currentPath.TryPeek(out Vector3 nextDest))
@@ -110,8 +67,8 @@ public class Archer : MonoBehaviour{
         }
         else
         {
-            start = target.position;
-            direction = target.destination - target.position;
+            start = target.transform.position;
+            direction = target.destination - target.transform.position;
             time = projectileData.flightTime;
         }
         projectileData.targetPosition =

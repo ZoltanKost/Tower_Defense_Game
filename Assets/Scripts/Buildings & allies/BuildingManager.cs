@@ -30,9 +30,8 @@ public class BuildingManager : MonoBehaviour, IHandler {
         {
             if (building == buildingData[i]) buildingObject.AssetID = i;
         }
-
-        InitArchers(buildingObject.GetArchers());
-        buildingObject.Init(6,floor,Count, gridX, gridY, building, KillBuilding);
+        buildingObject.Init(6, floor, Count, gridX, gridY, building, KillBuilding);
+        InitArchers(buildingObject.GetArchers(), buildingObject.gridPosition, buildingObject.w, buildingObject.h, buildingObject.index);
         buildingObject.transform.position = worldPosition + WidthAlignmentOffset;
         buildingObject.gameObject.SetActive(true);
         getID = bs[Count].GetIndex;
@@ -59,7 +58,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
         }
         else
         {
-            InitArchers(buildingObject.GetArchers());
+            InitArchers(buildingObject.GetArchers(), data.gridPosition, buildingData[data.AssetID].width, buildingData[data.AssetID].height, data.index);
             buildingObject.Init(6,
                 floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
                 0,data,
@@ -85,14 +84,15 @@ public class BuildingManager : MonoBehaviour, IHandler {
         }
         Debug.Log($"Array resized. new Length is {bs.Length}");
     }
-    public void InitArchers(Archer[] archers){
+    public void InitArchers(Archer[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    {
         foreach(Archer a in archers){
-            archerManager.AddArcher(a);
+            archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID);
         }
     }
-    void Update(){
+    void FixedUpdate(){
         if(!active) return;
-        AnimatorTick(Time.deltaTime);
+        AnimatorTick(Time.fixedDeltaTime);
     }
     void KillBuilding(int index)
     {
@@ -108,6 +108,10 @@ public class BuildingManager : MonoBehaviour, IHandler {
         BuildingObject b = bs[index];
         bs[index] = bs[--Count];
         bs[index].index = index;
+        foreach(Archer a in bs[index].GetArchers())
+        {
+            a.buildingID = index;
+        }
         bs[Count] = b;
         b.active = false;
         w = b.w;

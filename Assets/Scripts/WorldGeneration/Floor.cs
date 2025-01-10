@@ -102,6 +102,11 @@ public class Floor : MonoBehaviour{
         pos.z = 0;
         SetTile(pos,BRIDGELAYER, TileID.Bridge);
     }
+    public void PlaceBridgeShadow(Vector3Int pos)
+    {
+        pos.z = 0;
+        SetTile(pos, BRIDGELAYER, TileID.BridgeShadow);
+    }
     public void RemoveBridge(Vector3Int pos)
     {
         pos.z = 0;
@@ -125,7 +130,7 @@ public class Floor : MonoBehaviour{
             }
         }
     }
-    void SetTile(Vector3Int pos, int LAYER, TileID ID){
+    public void SetTile(Vector3Int pos, int LAYER, TileID ID){
         visuals[LAYER].SetTile(pos,StaticTiles.GetTile(ID));
     }
     public Vector3Int WorldToCell(Vector3 input){

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class BuildingObject : MonoBehaviour, IDamagable{
+public class BuildingObject : MonoBehaviour, IDamagable
+{
     OnKillEvent onKillEvent;
     [SerializeField] private HealthBar hpBar;
     [SerializeField] private TweenAnimator tweenAnimator;
@@ -25,9 +26,6 @@ public class BuildingObject : MonoBehaviour, IDamagable{
     public bool active{
         get{return _active;}
         set{_active = value;}
-    }
-    public bool alive{
-        get{return HP > 0;}
     }
     void Awake(){
         archers = GetComponentsInChildren<Archer>();

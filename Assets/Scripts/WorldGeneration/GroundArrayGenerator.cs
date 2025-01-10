@@ -7,7 +7,7 @@ public class GroundArrayGenerator : MonoBehaviour {
     [SerializeField] private TMP_Text tFirstFloorOnly;
     public int maxDimensions, maxValue, random, groundCondition, floorCondition;
     public bool firstFloorOnly;
-    [SerializeField] private float randomMultiplier;
+    [SerializeField] public float randomMultiplier;
     public GroundArray GenerateGA(){
         int _maxDimensions = maxDimensions, _maxValue = maxValue, _random = random;
         int _groundCondition = groundCondition;
@@ -136,6 +136,22 @@ public class GroundArrayGenerator : MonoBehaviour {
     {
         firstFloorOnly = !firstFloorOnly;
         tFirstFloorOnly.text = firstFloorOnly ? "Yes" : "No";
+    }
+    public void LoadParameters(RandomParameters parameters)
+    {
+        maxDimensions = parameters.maxDimensions;
+        maxValue = parameters.maxValue;
+        random = parameters.random;
+        groundCondition = parameters.groundCondition; 
+        floorCondition = parameters.floorCondition;
+        firstFloorOnly = parameters.firstFloorOnly;
+        randomMultiplier = parameters.randomMultiplier;
+        tMaxDimensions.text = maxDimensions.ToString();
+        tMaxValue.text = maxValue.ToString();
+        tRandom.text = random.ToString();
+        tTrueCondition.text = groundCondition.ToString();
+        tFloorCondition.text = floorCondition.ToString();
+        tRandomMultiplier.text = randomMultiplier.ToString();
     }
 }
 public struct GACell
