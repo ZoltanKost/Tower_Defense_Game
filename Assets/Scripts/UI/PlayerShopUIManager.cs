@@ -24,6 +24,19 @@ public class PlayerShopUIManager : MonoBehaviour {
         shopUI.Init();
         inventoryUI.Init();
     }
+    public void StartLevel()
+    {
+        shopButtonHideShow.HideUI();
+        startButtonHideShow.HideUI();
+        CloseShop();
+        CloseInventory();
+    }
+    public void FinishLevel()
+    {
+        CloseInventory();
+        shopButtonHideShow.ShowUI();
+        startButtonHideShow.ShowUI();
+    }
     public void CloseAll()
     {
         ShowButtons();

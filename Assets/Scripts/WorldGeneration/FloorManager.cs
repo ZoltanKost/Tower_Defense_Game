@@ -155,42 +155,58 @@ public class FloorManager : MonoBehaviour{
         if (floorCells[posX, posY].building || floorCells[posX, posY].bridge) return false;
         bool hasBridgeNeighbour = false;
         bool horizontal = false;
+        bool vertical = false;
         FloorCell left = floorCells[posX - 1, posY];
         FloorCell right = floorCells[posX + 1, posY];
         FloorCell bot = floorCells[posX, posY - 1];
         FloorCell top = floorCells[posX, posY + 1];
         int floor = -1;
-        if (left.bridge && (left.bridgeData.start && left.bridgeData.bridgeDirection == 0 || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)/* && !(floorCells[posX,posY].road && floorCells[posX, posY].currentFloor >= left.bridgeData.floor)*/)
+        if (left.bridge /* && !(floorCells[posX,posY].road && floorCells[posX, posY].currentFloor >= left.bridgeData.floor)*/)
         {
             hasBridgeNeighbour = true;
-            horizontal = true;
-            left.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
-            floor = left.bridgeData.floor;
+            if ((left.bridgeData.start && left.bridgeData.bridgeDirection == 0 || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal))
+            {
+                horizontal = true;
+                left.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
+                floor = left.bridgeData.floor;
+            }
         }
-        if (right.bridge && (right.bridgeData.start && right.bridgeData.bridgeDirection == 0 || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal))
+        if (right.bridge)
         {
+            if (hasBridgeNeighbour && !horizontal) return false;
             hasBridgeNeighbour = true;
-            horizontal = true;
-            right.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
-            floor = right.bridgeData.floor;
-            if (floor != -1 && floor != right.bridgeData.floor) return false;
+            if ((right.bridgeData.start && right.bridgeData.bridgeDirection == 0 || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal))
+            {
+                horizontal = true;
+                right.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
+                floor = right.bridgeData.floor;
+                if (floor != -1 && floor != right.bridgeData.floor) return false;
+            }
         }
-        if (bot.bridge && (bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0 || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+        if (bot.bridge)
         {
-            if (horizontal) return false;
-            bot.bridgeData.bridgeDirection = BridgeDirection.Vertical;
-            hasBridgeNeighbour = true;
-            floor = bot.bridgeData.floor;
+            if (horizontal || hasBridgeNeighbour) return false;
+            if ((bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0 || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                vertical = true;
+                bot.bridgeData.bridgeDirection = BridgeDirection.Vertical;
+                hasBridgeNeighbour = true;
+                floor = bot.bridgeData.floor;
+            }
         }
-        if (top.bridge && (top.bridgeData.start && top.bridgeData.bridgeDirection == 0 || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+        if (top.bridge)
         {
-            if (horizontal) return false;
-            top.bridgeData.bridgeDirection = BridgeDirection.Vertical;
-            hasBridgeNeighbour = true;
-            floor = top.bridgeData.floor;
-            if (floor != -1 && floor != top.bridgeData.floor) return false;
+            if (horizontal || hasBridgeNeighbour && !vertical) return false;
+            if ((top.bridgeData.start && top.bridgeData.bridgeDirection == 0 || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                top.bridgeData.bridgeDirection = BridgeDirection.Vertical;
+                hasBridgeNeighbour = true;
+                floor = top.bridgeData.floor;
+                if (floor != -1 && floor != top.bridgeData.floor) return false;
+            }
         }
-        if (hasBridgeNeighbour)
+        if (floor == floorCells[posX, posY].currentFloor) return false;
+        if (hasBridgeNeighbour && floor >= 0)
         {
             floorCells[left.gridX, left.gridY] = left;
             floorCells[right.gridX, right.gridY] = right;
@@ -199,7 +215,9 @@ public class FloorManager : MonoBehaviour{
             floorCells[posX, posY].bridge = true;
             floorCells[posX, posY].bridgeData = new BridgeData {bridgeDirection = (BridgeDirection)(horizontal ? 1:2), floor = floor};
             floors[floor].PlaceBridge(pos);
-            floors[floorCells[posX, posY].currentFloor].PlaceBridgeShadow(pos + Vector3Int.down );
+            Vector3Int offset = horizontal ? Vector3Int.down : default;
+            int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
+            floors[placeFloor].PlaceBridgeShadow(pos + offset);
             return true;
         }
         return false;
@@ -366,30 +384,45 @@ public class FloorManager : MonoBehaviour{
         if (floor < 0 || floor > floors.Count || floorCells[posX, posY].bridge) return false;
         bool hasBridgeNeighbour = false;
         bool horizontal = false;
+        bool vertical = false;
         // Debug.Log($"Checking bridge's {posX},{posY} neighbours...");
         FloorCell left = floorCells[posX - 1, posY];
         FloorCell right = floorCells[posX + 1, posY];
         FloorCell bot = floorCells[posX, posY - 1];
         FloorCell top = floorCells[posX, posY + 1];
-        if (left.bridge && ((left.bridgeData.start && left.bridgeData.bridgeDirection == 0) || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)) 
+        if (left.bridge) 
         { 
+            if((left.bridgeData.start && left.bridgeData.bridgeDirection == 0) || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+            {
+                horizontal = true;
+            }
             hasBridgeNeighbour = true;
-            horizontal = true;
         }
-        if (right.bridge && ((right.bridgeData.start && right.bridgeData.bridgeDirection == 0) || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal)) 
-        { 
-            hasBridgeNeighbour = true;
-            horizontal = true;
-        }
-        if (bot.bridge && ((bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0) || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical)) 
+        if (right.bridge) 
         {
-            if (horizontal) return false;
+            if (hasBridgeNeighbour && !horizontal) return false;
+            if((right.bridgeData.start && right.bridgeData.bridgeDirection == 0) || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+            {
+                horizontal = true;
+            }
             hasBridgeNeighbour = true;
         }
-        if (top.bridge && ((top.bridgeData.start && top.bridgeData.bridgeDirection == 0) || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+        if (bot.bridge ) 
         {
-            if (horizontal) return false;
-            hasBridgeNeighbour = true;
+            if (horizontal || hasBridgeNeighbour) return false;
+            if(((bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0) || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                hasBridgeNeighbour = true;
+                vertical = true;
+            }
+        }
+        if (top.bridge )
+        {
+            if (horizontal || hasBridgeNeighbour && !vertical) return false;
+            if(((top.bridgeData.start && top.bridgeData.bridgeDirection == 0) || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                hasBridgeNeighbour = true;
+            }
         }
         return hasBridgeNeighbour;
     }
@@ -404,10 +437,10 @@ public class FloorManager : MonoBehaviour{
         int floor = target.currentFloor;
         List<FloorCell> temp = GetNeighbours4(posX,posY);
         foreach(FloorCell c in temp){
-            if(c.currentFloor == floor - 1) edge = true;
-            if(c.currentFloor == floor && c.bridgeData.start) return false;
+            if(c.currentFloor < floor) edge = true;
+            if(c.bridgeData.floor == floor && c.bridge) return false;
         }
-        if(!edge) return false;
+        if (!edge) return false;
         return true;
     }
     public bool CheckRoad(Vector3 input){
@@ -427,7 +460,7 @@ public class FloorManager : MonoBehaviour{
     }
     public bool CheckCell(int x, int y, int placingFloor, int groundTargetFloor){
         FloorCell cell = floorCells[x,y];
-        if (groundTargetFloor == 0) 
+        /*if (groundTargetFloor == 0) 
         {
             if (
                 placingFloor >= 0 ||
@@ -436,13 +469,13 @@ public class FloorManager : MonoBehaviour{
                 return false;
             }
         }
-        else if(((placingFloor >= 1 || cell.currentFloor >= 1)) && 
+        else */if(((placingFloor >= 1 || cell.currentFloor >= 1)) && 
                     (cell.currentFloor != placingFloor 
                     || cell.currentFloor > floorCells[x, y - 1].currentFloor) || // floor isn't the same at every cell and it's 
                 cell.building || // cell has a building
-                cell.bridge || // cell has a bridge
+                cell.bridge && (cell.bridgeData.floor <= 1 || cell.bridgeData.floor <= placingFloor + 1) || // cell has a bridge
                 (cell.road && !(cell.ladder)) // cell is a road and not a ladder
-                || ((floorCells[x, y - 1].road || floorCells[x, y - 1].building || floorCells[x, y - 1].bridge) && floorCells[x,y-1].currentFloor == placingFloor))
+                || ((floorCells[x, y - 1].road || floorCells[x, y - 1].building) && floorCells[x,y-1].currentFloor == placingFloor))
                 {
                     return false;
                 }
@@ -488,6 +521,9 @@ public class FloorManager : MonoBehaviour{
         {
             BridgeData data = floorCells[gridX, gridY].bridgeData;
             floors[data.floor].RemoveBridgeSpot(pos);
+            int shadowFloor = floorCells[gridX, gridY].currentFloor >= 0 ? floorCells[gridX, gridY].currentFloor : 0;
+            Vector3Int offset = floorCells[gridX, gridY].bridgeData.bridgeDirection == BridgeDirection.Horizontal ? Vector3Int.down : default;
+            floors[shadowFloor].RemoveBridgeSpot(pos + offset);
             if (data.bridgeDirection == BridgeDirection.Horizontal)
             {
                 if (floorCells[gridX - 1, gridY].bridge && floorCells[gridX - 1, gridY].bridgeData.start)

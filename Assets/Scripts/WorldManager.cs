@@ -69,6 +69,7 @@ public class WorldManager : MonoBehaviour {
             fullscreen = false;
         #endif
         Screen.SetResolution(1366,768, fullscreen);*/
+        playerHealthBar.gameObject.SetActive(true);
         playerResourceManager.Init();
         playerShopUIManager.Init(StartLevel);
         Action actionFailedCallback = () => 
@@ -115,8 +116,8 @@ public class WorldManager : MonoBehaviour {
         };
         playerManager.Init(playerDefeat,playerHealthBar.Set);
         winScreen.Init(new Action[]{Restart,Application.Quit});
-        playerHealthBar.gameObject.SetActive(false);
-        enemyManager.SetWinAction(Win);
+        //playerHealthBar.gameObject.SetActive(false);
+        enemyManager.SetWinAction(FinishWave);
         shop.Init(6);
     }
     void Start(){
@@ -132,10 +133,11 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
     }
-    public void Win(){
+    public void FinishWave(){
         ResetWave();
+        playerShopUIManager.FinishLevel();
         // winScreen.gameObject.SetActive(true);
-        playerHealthBar.gameObject.SetActive(false);
+        //playerHealthBar.gameObject.SetActive(false);
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
@@ -147,9 +149,8 @@ public class WorldManager : MonoBehaviour {
         projectileManager.Switch(true);
         gameState = GameState.Wave;
         playerActionManager.Switch(gameState);
-        playerHealthBar.gameObject.SetActive(true);
         // playerHealthBar.Reset();
-        playerShopUIManager.CloseAll();
+        playerShopUIManager.StartLevel();
     }
     public void StopLevel(){
         enemyManager.Switch(false);
@@ -166,7 +167,7 @@ public class WorldManager : MonoBehaviour {
         archerManager.SwitchAnimation(true);
         shop.ResetGroundArrays();
         menuUIManager.gameObject.SetActive(false);
-        playerHealthBar.gameObject.SetActive(false);
+        //playerHealthBar.gameObject.SetActive(false);
         gameLoadManager.CloseWindow();
         shop.Hide();
         playerShopUIManager.CloseAll();
@@ -183,7 +184,7 @@ public class WorldManager : MonoBehaviour {
         enemyManager.ClearEntities();
         shop.ResetGroundArrays();
         playerResourceManager.Reset();
-        playerHealthBar.gameObject.SetActive(false);
+        //playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
         StopLevel();

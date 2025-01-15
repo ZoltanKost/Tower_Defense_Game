@@ -2,7 +2,6 @@
 using UnityEngine;
 using System;
 using System.IO;
-using TMPro;
 
 public class GameLoadManager : MonoBehaviour
 {
