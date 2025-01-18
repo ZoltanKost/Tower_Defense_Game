@@ -61,18 +61,25 @@ public class ArcherManager : MonoBehaviour, IHandler {
             for (int k = 0; k < lowestInactive; k++)
             {
                 if (!(enemyList[k].HP > 0)) continue;
-                Vector3Int enemyGridPosition = new Vector3Int { 
-                    x = Mathf.FloorToInt((enemyList[k].transform.position.x + offset.x )/ cellSize), 
-                    y = Mathf.FloorToInt((enemyList[k].transform.position.y + offset.y) / cellSize) 
-                };
-                Vector3 cellCenter = archersList[i].gridPosition + new Vector2(archersList[i].buildingSize.x / 2f, archersList[i].buildingSize.y / 2f);
-                Vector3 diff = enemyGridPosition - cellCenter;
-                float CellDistance = Mathf.Abs(diff.x) + Mathf.Abs(diff.y);
-                if(i == 1)Debug.Log($"CellDistance: {CellDistance}, diff: {diff}, cellCenter: {cellCenter}, enemy: {enemyGridPosition}");
-                if (CellDistance > archersList[i].attackRange) continue;
-                if (CellDistance <= minDistance)
+                Vector2Int enemyGridPosition = new Vector2Int
                 {
-                    minDistance = CellDistance;
+                    x = Mathf.FloorToInt((enemyList[k].transform.position.x + offset.x) / cellSize),
+                    y = Mathf.FloorToInt((enemyList[k].transform.position.y + offset.y) / cellSize)
+                };
+                Vector2Int buildingPosition = archersList[i].gridPosition;
+                Vector2Int diff = enemyGridPosition - buildingPosition;
+                Vector2Int bDims = new Vector2Int
+                {
+                    x = Mathf.Clamp(diff.x, 0, archersList[i].buildingSize.x - 1),
+                    y = Mathf.Clamp(diff.y, 0, archersList[i].buildingSize.y - 1)
+                };
+                Vector2Int pos = diff - bDims;
+                //float distance = (new Vector3(pos.x * cellSize, pos.y * cellSize)).magnitude;
+                float distance = Mathf.Abs(pos.x) + Mathf.Abs(pos.y);
+                //Debug.Log($"distance: {distance}, diff: {diff}, dBims: {bDims}, buildins: {buildingPosition}, enemy: {enemyGridPosition}");
+                if (distance <= minDistance)
+                {
+                    minDistance = distance;
                     archersList[i].target = enemyList[k];
                 }
             }
@@ -95,7 +102,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     }
                     break;
                 case ArcherState.Shooting:
-                    Vector2 direction = (archersList[i].target.transform.position - transform.position).normalized;
+                    Vector2 direction = (archersList[i].target.transform.position - archersList[i].transform.position).normalized;
                     archersList[i].animator.SetDirectionAnimation(0, direction);
                     break;
             }
