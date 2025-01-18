@@ -5,10 +5,6 @@ using System.IO;
 using System.Collections.Generic;
 
 public class WorldManager : MonoBehaviour {
-    [Header("Dimensions")]
-    [SerializeField] private int halfWidth;
-    [SerializeField] private int halfHeight;
-    [SerializeField] private int maxDimensions,maxSeedValue,maxValue,random,randomReduce,trueCondition;
 
     [Header("Tiles")]
     public TileBase FOAM;
@@ -22,6 +18,7 @@ public class WorldManager : MonoBehaviour {
     public TileBase BRIDGE;
     public TileBase BRIDGE_ON_GROUND;
     public TileBase BRIDGE_SHADOW;
+    public TileBase ATTACKRANGE_SHADOW;
     [Header("Managers")]
     [SerializeField] private FloorManager floorManager;
     // [SerializeField] private Floor nextTile;
@@ -63,6 +60,7 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE, TileID.Bridge);
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         StaticTiles.Bind(BRIDGE_SHADOW, TileID.BridgeShadow);
+        StaticTiles.Bind(ATTACKRANGE_SHADOW, TileID.AttackRangeShadow);
         temporalFloor.Init(0,"TempFloor");
         /*bool fullscreen = true;
         #if UNITY_WEBGL
@@ -117,7 +115,7 @@ public class WorldManager : MonoBehaviour {
         playerManager.Init(playerDefeat,playerHealthBar.Set);
         winScreen.Init(new Action[]{Restart,Application.Quit});
         //playerHealthBar.gameObject.SetActive(false);
-        enemyManager.SetWinAction(FinishWave);
+        enemyManager.Init(FinishWave);
         shop.Init(6);
     }
     void Start(){

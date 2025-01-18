@@ -125,8 +125,8 @@ public class TemporalFloor : Floor
     public void ActivateFloor(Building b){
         mode = ActionMode.Building;
         snap = true;
-        ClearAllTiles();
-        foreach(var ar in arrows){
+        SetHighlightedCharacter(default, new Vector2Int(b.width, b.height),b.attackRange);
+        foreach (var ar in arrows){
             ar.gameObject.SetActive(true);
         }
         SetBuilding(b);
@@ -216,16 +216,24 @@ public class TemporalFloor : Floor
     {
         foreach (Tilemap map in visuals)
         {
-            map.transform.localPosition = new Vector2(buildingSize.x / 2, buildingSize.y / 2);
+            map.ClearAllTiles();
         }
-        for (int y = - attackRange + 1; y < attackRange; y++)
+        visual.gameObject.SetActive(false);
+        for (int y = - attackRange; y < attackRange + buildingSize.y; y++)
         {
-            for(int x = - attackRange + 1; x < attackRange; x++)
+            for(int x = - attackRange; x < attackRange + buildingSize.x; x++)
             {
-                if (Mathf.Abs(x) + Mathf.Abs(y) > attackRange) continue;
-                SetTile(new Vector3Int(x, y), 1, TileID.Shadow);
+                Vector2Int offset = new Vector2Int 
+                {
+                    x = Mathf.Clamp(x, 0, buildingSize.x - 1),
+                    y = Mathf.Clamp(y, 0, buildingSize.y - 1)
+                };
+                int posX = x - offset.x;
+                int posY = y - offset.y;
+                if (Mathf.Abs(posX) + Mathf.Abs(posY) > attackRange) continue;
+                SetTile(new Vector3Int(x, y), 1, TileID.AttackRangeShadow);
             }
         }
-        transform.position = gridPosition - Vector2.one * 50;
+        if(gridPosition != default) transform.position = gridPosition - Vector2.one * 50;
     }
 }
