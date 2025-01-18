@@ -16,3 +16,7 @@ MonoBehaviour:
   height: 2
   prefab: {fileID: 7139778199253539895, guid: a00236f66b1fe864593318fc78a20c19, type: 3}
   sprite: {fileID: 21300000, guid: ef41a8603c7bd0c4ab568da8c0d3ef12, type: 3}
+  resource: 0
+  price: 2
+  attackRange: 3
+  animations: []

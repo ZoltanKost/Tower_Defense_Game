@@ -1089,7 +1089,7 @@ MonoBehaviour:
   period: 0
   duration: 1
   horizontalMove: 0
-  xMove: 192
+  xMove: 256
 --- !u!114 &121933953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11340,7 +11340,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleSpells:
   - {fileID: 11400000, guid: cbab5d4757d4ce14a9dd48b39a5fb183, type: 2}
-  - {fileID: 11400000, guid: c13a67db31760b84b93a412894d6b7fb, type: 2}
   playerActionManager: {fileID: 1018600448}
   magicPage: {fileID: 0}
   inventoryModel: {fileID: 139541024}
@@ -20468,6 +20467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 9056685445852350121, guid: 2e5e25d57ebeafa4ab29ee511afbf3f8, type: 3}
   enemyManager: {fileID: 1830662301}
+  spells: []
 --- !u!4 &2016557580
 Transform:
   m_ObjectHideFlags: 0
@@ -21526,14 +21526,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396117b745432604d95aea320b87dab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfWidth: 100
-  halfHeight: 100
-  maxDimensions: 5
-  maxSeedValue: 4
-  maxValue: 100
-  random: 10
-  randomReduce: 1
-  trueCondition: 50
   FOAM: {fileID: 11400000, guid: 68eb2d5a3c693d44e86905a6e35e6629, type: 2}
   GROUND: {fileID: 11400000, guid: 8078799262c240b4d91d505a7f9c14ed, type: 2}
   ROCK: {fileID: 11400000, guid: 8475ec6b99681c94c96fba7e64cb5383, type: 2}
@@ -21545,6 +21537,7 @@ MonoBehaviour:
   BRIDGE: {fileID: 11400000, guid: b39ac9dc8c480a044b9097de15e3b643, type: 2}
   BRIDGE_ON_GROUND: {fileID: 11400000, guid: 4c588a1e5064a7c4d8a1cae9a3918127, type: 2}
   BRIDGE_SHADOW: {fileID: 11400000, guid: 41ecb1173de14f442b9c81969b7d5c72, type: 2}
+  ATTACKRANGE_SHADOW: {fileID: 11400000, guid: b0e3d024c319f4740bdc37292e80fd1c, type: 2}
   floorManager: {fileID: 2051073313}
   castle: {fileID: 11400000, guid: 51858dd5fce5bc341b0560ebbd28b7b0, type: 2}
   temporalFloor: {fileID: 393348947}
