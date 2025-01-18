@@ -140,7 +140,7 @@ MonoBehaviour:
     - {fileID: -1407827486, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: 85997867, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
     - {fileID: -307928747, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-    duration: 1
+    duration: 0.6
     flipX: 0
   - events:
     - acitonID: 2
@@ -160,7 +160,7 @@ MonoBehaviour:
     - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
-    duration: 1
+    duration: 1.4
     flipX: 0
   directionAnimations:
   - animations:
@@ -168,20 +168,6 @@ MonoBehaviour:
       - acitonID: 0
         frame: 6
       sprites:
-      - {fileID: 1292448663, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: -1452993177, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: 1689711876, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: 1879399076, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: 619597304, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: -865249479, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: 1978467794, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      duration: 0.8
-      flipX: 0
-    - events:
-      - acitonID: 0
-        frame: 6
-      sprites:
       - {fileID: -1721738573, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: -6581287, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: -234226614, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
@@ -220,7 +206,21 @@ MonoBehaviour:
       - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       duration: 0.8
       flipX: 1
-    offset: 90
+    - events:
+      - acitonID: 0
+        frame: 6
+      sprites:
+      - {fileID: 1292448663, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: -1452993177, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: 1689711876, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: 1879399076, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: 619597304, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: -865249479, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: 1978467794, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
+      duration: 0.8
+      flipX: 0
+    offset: 0
   actions:
   - m_PersistentCalls:
       m_Calls:
@@ -294,20 +294,14 @@ MonoBehaviour:
     flightTime: 1
   projectileSpeed: 8
   ProjectileFlightTime: 0.75
-  moveSpeed: 5
   target: {fileID: 0}
   damage: 15
-  AttackRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  buildingSize: {x: 0, y: 0, z: 0}
+  buildingSize: {x: 0, y: 0}
+  gridPosition: {x: 0, y: 0}
   buildingID: 0
   _active: 0
   ProjectileFlag: 0
-  attackRange: 5
+  attackRange: 3
   floor: 0
   _attackType: 1
   shooting: 0

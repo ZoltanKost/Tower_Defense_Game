@@ -158,7 +158,7 @@ MonoBehaviour:
     - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
-    duration: 1.5
+    duration: 1.4
     flipX: 0
   directionAnimations:
   - animations:
@@ -170,7 +170,7 @@ MonoBehaviour:
       - {fileID: 1885176748, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 0.75
+      duration: 0.6
       flipX: 0
     - events: []
       sprites:
@@ -180,7 +180,7 @@ MonoBehaviour:
       - {fileID: 1885176748, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 0.75
+      duration: 0.6
       flipX: 1
     offset: 90
   - animations:
@@ -196,7 +196,7 @@ MonoBehaviour:
       - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 189845494, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 1
+      duration: 0.6
       flipX: 0
     - events:
       - acitonID: 1
@@ -210,7 +210,7 @@ MonoBehaviour:
       - {fileID: 1066114803, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 2014099927, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 285126935, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 1
+      duration: 0.6
       flipX: 0
     - events:
       - acitonID: 1
@@ -224,7 +224,7 @@ MonoBehaviour:
       - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 189845494, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 1
+      duration: 0.6
       flipX: 1
     - events:
       - acitonID: 1
@@ -238,7 +238,7 @@ MonoBehaviour:
       - {fileID: 2061682139, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -2005242855, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 667034768, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 1
+      duration: 0.6
       flipX: 0
     offset: 0
   actions:

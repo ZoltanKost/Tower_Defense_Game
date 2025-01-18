@@ -106,7 +106,7 @@ MonoBehaviour:
     - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
-    duration: 1.5
+    duration: 1.3
     flipX: 0
   directionAnimations:
   - animations:
@@ -116,7 +116,7 @@ MonoBehaviour:
       - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1773167663, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.4
       flipX: 0
     - events: []
       sprites:
@@ -124,7 +124,7 @@ MonoBehaviour:
       - {fileID: -383493676, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1858225117, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 1700940551, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.4
       flipX: 0
     - events: []
       sprites:
@@ -132,7 +132,7 @@ MonoBehaviour:
       - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1773167663, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 99936138, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.4
       flipX: 1
     - events: []
       sprites:
@@ -140,7 +140,7 @@ MonoBehaviour:
       - {fileID: -383493676, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1858225117, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 1700940551, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.4
       flipX: 1
     offset: 45
   - animations:
@@ -149,14 +149,14 @@ MonoBehaviour:
       - {fileID: 1010987149, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 204592680, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1745301059, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.3
       flipX: 0
     - events: []
       sprites:
       - {fileID: 1010987149, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 204592680, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -1745301059, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
-      duration: 0.5
+      duration: 0.3
       flipX: 1
     offset: 45
   actions:

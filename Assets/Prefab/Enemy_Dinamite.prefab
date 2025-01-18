@@ -86,15 +86,19 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5307833470203409925, guid: e096b61fff25bfe4e98f368d68c8b458, type: 3}
   hpBar: {fileID: 5620564550756596175}
   projectileSpeed: 5
+  state: 0
   damage: 10
+  currentTarget: {fileID: 0}
   animator: {fileID: 9071115895459296981}
   index: 0
   speed: 0.75
-  attackrange: 3
+  attackRange: 3
   MaxHP: 100
   attackPeriod: 2
   _killReward: 5
+  time: 0
   destination: {x: 0, y: 0, z: 0}
+  detectFlag: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +131,7 @@ MonoBehaviour:
     - {fileID: -2099637563, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: -854369376, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
     - {fileID: 1429998363, guid: d3cc544c9c6ab51499ec17f45a206147, type: 3}
-    duration: 1.5
+    duration: 1.4
     flipX: 0
   directionAnimations:
   - animations:
@@ -139,7 +143,7 @@ MonoBehaviour:
       - {fileID: 1148547095, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -222410437, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -826793336, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
-      duration: 0.75
+      duration: 0.6
       flipX: 0
     - events: []
       sprites:
@@ -149,7 +153,7 @@ MonoBehaviour:
       - {fileID: 1148547095, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -222410437, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -826793336, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
-      duration: 0.75
+      duration: 0.6
       flipX: 1
     offset: 90
   - animations:
@@ -166,7 +170,7 @@ MonoBehaviour:
       - {fileID: -355317576, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1464688720, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2107198726, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
-      duration: 1
+      duration: 0.7
       flipX: 0
     - events:
       - acitonID: 1
@@ -181,7 +185,7 @@ MonoBehaviour:
       - {fileID: -355317576, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1464688720, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2107198726, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
-      duration: 1
+      duration: 0.7
       flipX: 1
     offset: 90
   actions:
