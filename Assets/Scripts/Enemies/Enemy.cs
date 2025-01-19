@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] private int damage;
     public BuildingObject currentTarget;
     [SerializeField] public CustomAnimator animator;
-    public Queue<Vector3> currentPath;
+    public Queue<PathCell> currentPath;
     public int index;
     [SerializeField] public float speed;
     [SerializeField] public int attackRange = 3;
@@ -70,16 +70,17 @@ public class Enemy : MonoBehaviour, IDamagable
     {
         onRemoveEvent?.Invoke(index,waveIndex);
     }
-    public void Init(Enemy prefab, int waveIndex, int index, Queue<Vector3> path, Vector3 position, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent)
+    public void Init(Enemy prefab, int waveIndex, int index, Queue<PathCell> path, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent)
     {
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;
         this.waveIndex = waveIndex;
         this.index = index;
-        Pathfinding_SetPath(path);
-        transform.position = position;
-        destination = position;
+        currentPath = new Queue<PathCell>(path);
+        PathCell start = path.Peek();
+        transform.position = start.pos;
+        destination = start.pos;
         state = EnemyState.run;
         currentHP = prefab.MaxHP;
         speed = prefab.speed;
@@ -92,13 +93,10 @@ public class Enemy : MonoBehaviour, IDamagable
         ProjectileData = prefab.ProjectileData;
         currentTarget = null;
         animator.InitFromPrefab(prefab.animator);
+        animator.SetSortingParams(6 + 1000 / start.gridY,start.floor);
         hpBar.gameObject.SetActive(true);
         hpBar.Set(1);
-        animator.SetDirectionAnimation(0, (destination - position).normalized);
-    }
-    public void Pathfinding_SetPath(Queue<Vector3> path)
-    {
-        currentPath = new Queue<Vector3>(path);
+        animator.SetDirectionAnimation(0, (destination - start.pos).normalized);
     }
     
     public void UpdateAnimator(float delta)

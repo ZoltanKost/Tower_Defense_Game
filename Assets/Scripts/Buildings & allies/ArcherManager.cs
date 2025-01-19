@@ -11,6 +11,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     bool active;
     bool animate;
     float cellSize;
+    Vector3 offset;
     public void SpawnArcher()
     {
         Archer _archer = Instantiate(archer, transform).GetComponentInChildren<Archer>();
@@ -22,6 +23,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     }
     public void AddArcher(Archer archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
     {
+        offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
         archersList.Add(archer);
         archer.Init(gridPosition, buildingWidth, buildingHeight, buildingID);
@@ -50,7 +52,6 @@ public class ArcherManager : MonoBehaviour, IHandler {
     {
         Enemy[] enemyList = enemyManager.enemies;
         float cellSize = floorManager.CellToWorld(Vector3.one).x;
-        Vector3 offset = floorManager.offset;
         int count = archersList.Count;
         for (int i = 0; i < count; i++)
         {
@@ -102,7 +103,13 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     }
                     break;
                 case ArcherState.Shooting:
-                    Vector2 direction = (archersList[i].target.transform.position - archersList[i].transform.position).normalized;
+                    Vector2Int enemyGridPosition = new Vector2Int
+                    {
+                        x = Mathf.FloorToInt((archersList[i].target.transform.position.x + offset.x) / cellSize),
+                        y = Mathf.FloorToInt((archersList[i].target.transform.position.y + offset.y) / cellSize)
+                    };
+                    Vector2 direction = (enemyGridPosition - (archersList[i].gridPosition + archersList[i].buildingSize/2));
+                    
                     archersList[i].animator.SetDirectionAnimation(0, direction);
                     break;
             }

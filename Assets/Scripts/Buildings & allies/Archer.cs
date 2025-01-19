@@ -59,10 +59,10 @@ public class Archer : MonoBehaviour{
             (target.destination - target.transform.position).magnitude 
             / target.speed;
         float time; Vector3 direction; Vector3 start;
-        if (enemyTimeToDest < projectileData.flightTime && target.currentPath.TryPeek(out Vector3 nextDest))
+        if (enemyTimeToDest < projectileData.flightTime && target.currentPath.TryPeek(out PathCell nextDest))
         {
             start = target.destination;
-            direction = nextDest - target.destination;
+            direction = nextDest.pos - target.destination;
             time = projectileData.flightTime - enemyTimeToDest;
         }
         else

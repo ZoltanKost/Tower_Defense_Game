@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.iOS;
 
 public delegate void ID_Count_Callback(int id, int count);
 public class PlayerResourceManager : MonoBehaviour {

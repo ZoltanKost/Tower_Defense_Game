@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
 	[SerializeField] private int maxPaths = 200;
 	public List<FloorCell> castlePositions;
 	// List<List<FloorCell>> paths = new();
-	public List<Queue<Vector3>> vectors{get;private set;}
+	public List<Queue<PathCell>> vectors{get;private set;}
 	int offsetX, offsetY;
 	float cellSize;
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
@@ -21,7 +20,7 @@ public class Pathfinding : MonoBehaviour{
 		castlePositions.Clear();
 	}
 	public void Awake(){
-		vectors = new List<Queue<Vector3>>();
+		vectors = new List<Queue<PathCell>>();
 	}
 	public bool FindPathToCastle(){
 		offsetX = floor.offset.x;
@@ -36,7 +35,7 @@ public class Pathfinding : MonoBehaviour{
 		// Debug.Log(vectors.Count);
 		return vectors.Count > 0;
 	}
-	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<Vector3>> result){
+	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<PathCell>> result){
 		if(result.Count > maxPaths) return;
 		if(!(current.road || current.bridge)) return;
 		if(closedSet.Count != 0)
@@ -82,16 +81,21 @@ public class Pathfinding : MonoBehaviour{
 			string s =
 			$"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
 			closedSet.Push(current);
-			Queue<Vector3> res = new Queue<Vector3>();
+			Queue<PathCell> res = new Queue<PathCell>();
             s += "Path contains following:\n";
             foreach (FloorCell cell in closedSet){
 			 	s += $"Cell: {cell.gridX}:{cell.gridY};{cell.currentFloor};\n";
-				Vector3 pos = new()
-                {
-                    x = cell.gridX - offsetX + cellSize/2,
-					y = cell.gridY - offsetY + cellSize/2
+                PathCell pathCell = new PathCell 
+				{
+                    pos = new Vector3()
+                    {
+                        x = cell.gridX - offsetX + cellSize / 2,
+                        y = cell.gridY - offsetY + cellSize / 2
+                    },
+					floor = cell.bridge && !cell.bridgeData.start ? cell.bridgeData.floor : cell.currentFloor,
+					gridY = cell.gridY
 				};
-				res.Enqueue(pos);
+				res.Enqueue(pathCell);
 			}
 			closedSet.Pop();
 			Debug.Log(s);
@@ -109,31 +113,11 @@ public class Pathfinding : MonoBehaviour{
 		closedSet.Pop();
 		return;
 	}
-	public Queue<Vector3> GetRandomPath(){
-		int r = Random.Range(0, vectors.Count);
-		return new Queue<Vector3>(vectors[r]);
-	}
+}
 
-	public Vector3[] DijkstraSearch(Vector3 start, Vector3 end)
-	{
-		FloorCell[,] floorCells = floor.floorCells;
-		/*Vector3Int gridStart = floor.WorldToCell(start);
-        Vector3Int gridEnd = floor.WorldToCell(end);*/
-		return new Vector3[] { start, end };
-		/*List<FloorCell> openList = new()
-        {
-            floorCells[gridStart.x, gridStart.y]
-        };
-		HashSet<FloorCell> closedSet = new();
-		while ()
-		{
-
-		}*/
-
-        /*Vector3 pos = new()
-        {
-            x = cell.gridX - offsetX + cellSize / 2,
-            y = cell.gridY - offsetY + cellSize / 2
-        };*/
-    }
+public struct PathCell 
+{
+	public Vector3 pos;
+    public int gridY;
+    public int floor;
 }

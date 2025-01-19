@@ -100,7 +100,6 @@ public class CustomAnimator : MonoBehaviour{
         currentDirAnimation = dirID ;
     }
     public void SetSortingParams(int order, int layer){
-        currentAnimation = 0;
         spriteRenderer.sortingOrder = order;
         spriteRenderer.sortingLayerName = $"{layer}";
     }
