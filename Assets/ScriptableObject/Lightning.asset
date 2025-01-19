@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
-  m_Name: SpellSO 1
+  m_Name: Lightning
   m_EditorClassIdentifier: 
   spellData:
     manaCost: 0
     goldCost: 25
-    radius: 3
+    radius: 1
     damage: 50
     spellType: 1
-    animation:
-      events:
+    animations:
+    - events:
       - acitonID: 0
         frame: 5
       - acitonID: 1
@@ -37,5 +37,8 @@ MonoBehaviour:
       - {fileID: 1201027298, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
       - {fileID: 1037483818, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
       - {fileID: -1497425469, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-      duration: 1
-    UIicon: {fileID: -1381801816, guid: fb03cb2cef7589c41904c16936fba321, type: 3}
+      duration: 0.8
+      flipX: 0
+    spellsToSpawn: []
+    deltaPosToSpawn: []
+    UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
