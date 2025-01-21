@@ -14,7 +14,7 @@ public class FloorManager : MonoBehaviour{
     public Vector3Int offset{get;private set;}
     [SerializeField] private Building castle;
      
-    void Awake(){
+    public void Init(){
         floors = new List<Floor>
         {
             Instantiate(floorPrefab, transform)
@@ -507,7 +507,7 @@ public class FloorManager : MonoBehaviour{
         int gridX = pos.x + offset.x;
         int gridY = pos.y + offset.y;
         int floor = floorCells[gridX,gridY].currentFloor;
-        if (floorCells[gridX, gridY + 1].currentFloor == floor + 1)
+        if (floorCells[gridX, gridY].ladder && floorCells[gridX, gridY + 1].currentFloor == floor + 1)
         {
             floorCells[gridX, gridY].ladder = false;
             floors[floor + 1].RemoveStairs(pos);
