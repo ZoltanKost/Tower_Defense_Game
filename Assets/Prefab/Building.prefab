@@ -136,6 +136,7 @@ MonoBehaviour:
   hpBar: {fileID: 7890556322311923965}
   tweenAnimator: {fileID: 0}
   maxHP: 100
+  AssetID: -1
   index: 0
 --- !u!114 &-4801807064181918262
 MonoBehaviour:
@@ -155,6 +156,7 @@ MonoBehaviour:
     sprites:
     - {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}
     duration: 10
+    flipX: 0
   - events:
     - acitonID: 0
       frame: 0
@@ -162,6 +164,8 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 63adccf17e98dc447b8a4f3ebe6db23a, type: 3}
     - {fileID: 21300000, guid: 63adccf17e98dc447b8a4f3ebe6db23a, type: 3}
     duration: 0.1
+    flipX: 0
+  directionAnimations: []
   actions:
   - m_PersistentCalls:
       m_Calls:
@@ -203,7 +207,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3531073932998388958, guid: d959c415609a40144996af2504547174, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5723090397976481816, guid: d959c415609a40144996af2504547174, type: 3}
       propertyPath: m_Pivot.x
@@ -291,11 +295,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6806852727289618928, guid: d959c415609a40144996af2504547174, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6806852727289618928, guid: d959c415609a40144996af2504547174, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8491894652274665830, guid: d959c415609a40144996af2504547174, type: 3}
       propertyPath: m_Name

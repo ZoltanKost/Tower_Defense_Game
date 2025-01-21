@@ -137,22 +137,22 @@ MonoBehaviour:
   - animations:
     - events: []
       sprites:
-      - {fileID: -1118122514, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 1825626835, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2093155534, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 1148547095, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -222410437, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -826793336, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
+      - {fileID: 1625108643, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       duration: 0.6
       flipX: 0
     - events: []
       sprites:
-      - {fileID: -1118122514, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 1825626835, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2093155534, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 1148547095, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -222410437, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -826793336, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
+      - {fileID: 1625108643, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       duration: 0.6
       flipX: 1
     offset: 90
@@ -163,13 +163,13 @@ MonoBehaviour:
       - acitonID: 2
         frame: 6
       sprites:
-      - {fileID: 1625108643, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1770765844, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 352040071, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1502505405, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -355317576, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1464688720, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2107198726, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
+      - {fileID: -1539478944, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       duration: 0.7
       flipX: 0
     - events:
@@ -178,13 +178,13 @@ MonoBehaviour:
       - acitonID: 2
         frame: 6
       sprites:
-      - {fileID: 1625108643, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1770765844, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: 352040071, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1502505405, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -355317576, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -1464688720, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       - {fileID: -2107198726, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
+      - {fileID: -1539478944, guid: 632dde652e8321a46ab6337e426dd2c9, type: 3}
       duration: 0.7
       flipX: 1
     offset: 90

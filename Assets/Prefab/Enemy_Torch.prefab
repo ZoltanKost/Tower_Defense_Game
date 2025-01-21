@@ -164,22 +164,22 @@ MonoBehaviour:
   - animations:
     - events: []
       sprites:
-      - {fileID: -1278766764, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 2030248817, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1188127737, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1885176748, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1822073971, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1875292206, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 2061682139, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       duration: 0.6
       flipX: 0
     - events: []
       sprites:
-      - {fileID: -1278766764, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 2030248817, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1188127737, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1885176748, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 835415085, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: -1821521774, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1822073971, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1875292206, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 2061682139, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       duration: 0.6
       flipX: 1
     offset: 90
@@ -190,26 +190,12 @@ MonoBehaviour:
       - acitonID: 2
         frame: 5
       sprites:
-      - {fileID: -128203984, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1822073971, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -2109284018, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 189845494, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      duration: 0.6
-      flipX: 0
-    - events:
-      - acitonID: 1
-        frame: 3
-      - acitonID: 2
-        frame: 5
-      sprites:
-      - {fileID: 1490254102, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1062159565, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -2005242855, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 393534248, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1066114803, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       - {fileID: 2014099927, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 285126935, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1981007681, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1253966975, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1420831233, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       duration: 0.6
       flipX: 0
     - events:
@@ -218,12 +204,26 @@ MonoBehaviour:
       - acitonID: 2
         frame: 5
       sprites:
-      - {fileID: -128203984, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1822073971, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -2109284018, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1810127465, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 189845494, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -320808237, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 820287600, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -236308365, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1489906945, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1808332251, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1335378925, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 155444378, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      duration: 0.6
+      flipX: 0
+    - events:
+      - acitonID: 1
+        frame: 3
+      - acitonID: 2
+        frame: 5
+      sprites:
+      - {fileID: -2005242855, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 393534248, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 2014099927, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1981007681, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 1253966975, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1420831233, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       duration: 0.6
       flipX: 1
     - events:
@@ -232,12 +232,12 @@ MonoBehaviour:
       - acitonID: 2
         frame: 5
       sprites:
-      - {fileID: -993615715, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -1875292206, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 1566564091, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 2061682139, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: -2005242855, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
-      - {fileID: 667034768, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1412460651, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1215652686, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -1878229782, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: 2098417596, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -991159530, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
+      - {fileID: -2015641301, guid: d64cf05073d6e5f479a1b925fcac56f3, type: 3}
       duration: 0.6
       flipX: 0
     offset: 0
