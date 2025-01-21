@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
+  m_Name: MultipleLightning
+  m_EditorClassIdentifier: 
+  spellData:
+    manaCost: 50
+    goldCost: 50
+    radius: 2
+    damage: 20
+    targeted: 0
+    spellAction: 2
+    UIicon: {fileID: 21300000, guid: b332b27fee152cf4a9fc11e55efc598b, type: 3}
+  animations:
+  - events:
+    - acitonID: 1
+      frame: 5
+    - acitonID: 0
+      frame: 11
+    - acitonID: 2
+      frame: 10
+    sprites:
+    - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: -533503148, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 2140119943, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 771251994, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: -448887172, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 1473750787, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: -1567760858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 1336804858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 1201027298, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: 1037483818, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    - {fileID: -1497425469, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+    duration: 0.8
+    flipX: 0
+  spawnData:
+    spell: {fileID: 11400000}
+    projectile:
+      targetPosition: {x: 0, y: 0, z: 0}
+      startPosition: {x: 0, y: 0, z: 0}
+      speed: 0
+      animations: []
+      damage: 0
+      behaviour: 0
+      ballistic: 0
+      flightTime: 0
+    deltaPosToSpawn:
+    - {x: -2, y: 0, z: 0}
+    - {x: 0, y: 2, z: 0}
+    - {x: 0, y: -2, z: 0}
+    - {x: 2, y: 0, z: 0}
+    repeat: 1
