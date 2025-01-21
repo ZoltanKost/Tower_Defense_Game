@@ -21,6 +21,8 @@ public class EnemyManager : MonoBehaviour {
     int stage;
     public void Init(Action win){
         onEnemyFinished = win;
+        offset = floorManager.offset;
+        cellSize = floorManager.CellToWorld(Vector3.one).x;
     }
     public void Update(){
         if(!active) return;
@@ -169,9 +171,7 @@ public class EnemyManager : MonoBehaviour {
     }
     public void SpawnEnemies(int wave) {
         stage = 0;
-        GenerateWave(wave + 1);
-        cellSize = floorManager.CellToWorld(Vector3.one).x;
-        offset = floorManager.offset;
+        GenerateWave(wave);
         enemies = new Enemy[32];
         for (int i = 0; i < 32; i++)
         {
@@ -224,7 +224,7 @@ public class EnemyManager : MonoBehaviour {
         int max = paths.Count>0?paths.Count:1;
         int waveCount = UnityEngine.Random.Range(1,Mathf.Min(wave + 1, max + 1));
         waves = new Wave[waveCount];
-        for (int i = 0; i < max; i++)
+        for (int i = 0; i < waveCount; i++)
         {
             Debug.Log($"Generating Wave; wave*path.Count:{wave * max}");
             waves[i] = new Wave(i,

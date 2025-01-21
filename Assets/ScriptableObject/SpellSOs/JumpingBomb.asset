@@ -17,12 +17,20 @@ MonoBehaviour:
     goldCost: 50
     radius: 0
     damage: 0
-    spellType: 1
-    animation:
-      events:
-      - acitonID: 0
-        frame: 0
-      sprites: []
-      duration: 0
-      flipX: 0
-    UIicon: {fileID: 0}
+    targeted: 0
+    spellAction: 0
+    UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}
+  animations: []
+  spawnData:
+    spell: {fileID: 0}
+    projectile:
+      targetPosition: {x: 0, y: 0, z: 0}
+      startPosition: {x: 0, y: 0, z: 0}
+      speed: 0
+      animations: []
+      damage: 0
+      behaviour: 0
+      ballistic: 0
+      flightTime: 0
+    deltaPosToSpawn: []
+    repeat: 0

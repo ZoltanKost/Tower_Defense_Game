@@ -56,7 +56,7 @@ public class TemporalFloor : Floor
         targetPosition.z = 0;
         currentColor = canBuild ? Color.white : blockPlace;
         UpdateColors();
-        if (!snap)
+        if (!snap || mode == ActionMode.CastSpell)
         {
             //targetPosition = new Vector2 { x = position.x, y = position.y };
             if((targetPosition - currentCursorPosition).magnitude > .3f)
@@ -174,6 +174,10 @@ public class TemporalFloor : Floor
     }
     public override void Animate(){
         tweenAnimator.ErrorAnimation();
+    }
+    public void JellyAnimation()
+    {
+        tweenAnimator.JellyAnimation();
     }
     public override Tween GetAnimationTween(){
         return tweenAnimator.ErrorAnimation();

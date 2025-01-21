@@ -28,12 +28,12 @@ public class PlayerShopUIManager : MonoBehaviour {
     {
         shopButtonHideShow.HideUI();
         startButtonHideShow.HideUI();
-        CloseShop();
-        CloseInventory();
+/*        CloseShop();
+        CloseInventory();*/
     }
     public void FinishLevel()
     {
-        CloseInventory();
+        //CloseInventory();
         shopButtonHideShow.ShowUI();
         startButtonHideShow.ShowUI();
     }
@@ -46,7 +46,7 @@ public class PlayerShopUIManager : MonoBehaviour {
     void OpenShop()
     {
         if(shopOpen) return;
-        HideButtons();
+        //HideButtons();
         shopUI.ShowUI();
         shopOpen = true;
     }
@@ -60,7 +60,7 @@ public class PlayerShopUIManager : MonoBehaviour {
     void OpenInventory()
     {
         if(inventoryOpen) return;
-        HideButtons();
+        //HideButtons();
         inventoryUI.ShowUI();
         inventoryOpen = true;
     }
@@ -79,12 +79,12 @@ public class PlayerShopUIManager : MonoBehaviour {
         inventoryButtonHideShow.ShowUI();
         buttonsOpen = true;
     }
-    void HideButtons()
+    /*void HideButtons()
     {
         if (!buttonsOpen) return;
         shopButtonHideShow.HideUI();
         startButtonHideShow.HideUI();
         inventoryButtonHideShow.HideUI();
         buttonsOpen = false;
-    }
+    }*/
 }

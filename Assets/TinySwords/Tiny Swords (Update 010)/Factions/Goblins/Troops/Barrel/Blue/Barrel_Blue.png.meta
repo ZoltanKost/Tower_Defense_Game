@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -44,7 +45,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -123,6 +129,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -132,10 +152,10 @@ TextureImporter:
       name: Barrel_Blue_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 640
-        width: 128
-        height: 128
+        x: 39
+        y: 669
+        width: 50
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,10 +173,10 @@ TextureImporter:
       name: Barrel_Blue_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 512
-        width: 128
-        height: 128
+        x: 35
+        y: 541
+        width: 58
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,13 +191,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_2
+      name: Barrel_Blue_10
       rect:
         serializedVersion: 2
-        x: 128
-        y: 512
-        width: 128
-        height: 128
+        x: 299
+        y: 281
+        width: 42
+        height: 95
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,13 +212,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_3
+      name: Barrel_Blue_11
       rect:
         serializedVersion: 2
-        x: 256
-        y: 512
-        width: 128
-        height: 128
+        x: 419
+        y: 285
+        width: 58
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,13 +233,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_4
+      name: Barrel_Blue_12
       rect:
         serializedVersion: 2
-        x: 384
-        y: 512
-        width: 128
-        height: 128
+        x: 553
+        y: 285
+        width: 45
+        height: 76
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,13 +254,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_5
+      name: Barrel_Blue_13
       rect:
         serializedVersion: 2
-        x: 512
-        y: 512
-        width: 128
-        height: 128
+        x: 679
+        y: 285
+        width: 50
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,34 +275,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_6
+      name: Barrel_Blue_15
       rect:
         serializedVersion: 2
-        x: 640
-        y: 512
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9804b6428ead20348805a0fe77f81737
-      internalID: -1699392054
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_7
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 384
-        width: 128
-        height: 128
+        x: 37
+        y: 154
+        width: 54
+        height: 67
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,13 +296,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_8
+      name: Barrel_Blue_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 256
-        width: 128
-        height: 128
+        x: 167
+        y: 153
+        width: 50
+        height: 84
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,13 +317,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_9
+      name: Barrel_Blue_17
       rect:
         serializedVersion: 2
-        x: 128
-        y: 256
-        width: 128
-        height: 128
+        x: 296
+        y: 153
+        width: 48
+        height: 86
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,34 +338,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_10
+      name: Barrel_Blue_19
       rect:
         serializedVersion: 2
-        x: 256
-        y: 256
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c2edce1119b4a684c8268dbd5269cedf
-      internalID: -1313724764
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Barrel_Blue_11
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 256
-        width: 128
-        height: 128
+        x: 295
+        y: 29
+        width: 50
+        height: 79
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -381,13 +359,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_12
+      name: Barrel_Blue_2
       rect:
         serializedVersion: 2
-        x: 512
-        y: 256
-        width: 128
-        height: 128
+        x: 171
+        y: 537
+        width: 42
+        height: 84
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -402,13 +380,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_13
+      name: Barrel_Blue_3
       rect:
         serializedVersion: 2
-        x: 640
-        y: 256
-        width: 128
-        height: 128
+        x: 295
+        y: 537
+        width: 50
+        height: 93
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -423,13 +401,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_14
+      name: Barrel_Blue_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 128
-        width: 128
-        height: 128
+        x: 421
+        y: 538
+        width: 54
+        height: 67
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -444,13 +422,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_15
+      name: Barrel_Blue_5
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
-        width: 128
-        height: 128
+        x: 551
+        y: 538
+        width: 50
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -465,13 +443,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_16
+      name: Barrel_Blue_6
       rect:
         serializedVersion: 2
-        x: 256
-        y: 128
-        width: 128
-        height: 128
+        x: 679
+        y: 538
+        width: 50
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -486,13 +464,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_17
+      name: Barrel_Blue_7
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 128
-        height: 128
+        x: 39
+        y: 410
+        width: 50
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -507,13 +485,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_18
+      name: Barrel_Blue_8
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 128
-        height: 128
+        x: 37
+        y: 282
+        width: 54
+        height: 67
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -528,13 +506,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Barrel_Blue_19
+      name: Barrel_Blue_9
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
-        width: 128
-        height: 128
+        x: 167
+        y: 281
+        width: 50
+        height: 89
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -544,6 +522,48 @@ TextureImporter:
       bones: []
       spriteID: ae2d8377bf9fea649a96f3571c46292c
       internalID: -1745301059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_Blue_22
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 29
+        width: 46
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c354b9421236e145930826199b9ec1b
+      internalID: 2115341923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_Blue_24
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 29
+        width: 57
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3061038c7b0c1e4f9fa332771122322
+      internalID: 470340815
       vertices: []
       indices: 
       edges: []
@@ -561,27 +581,32 @@ TextureImporter:
     nameFileIdTable:
       Barrel_Blue_0: 1700940551
       Barrel_Blue_1: -383493676
-      Barrel_Blue_10: -1313724764
-      Barrel_Blue_11: -1368637974
-      Barrel_Blue_12: -1694299241
-      Barrel_Blue_13: -89816849
-      Barrel_Blue_14: 1906061183
-      Barrel_Blue_15: 99936138
-      Barrel_Blue_16: -1773167663
-      Barrel_Blue_17: 1010987149
-      Barrel_Blue_18: 204592680
-      Barrel_Blue_19: -1745301059
-      Barrel_Blue_2: -1858225117
-      Barrel_Blue_3: 416823048
-      Barrel_Blue_4: -393373696
-      Barrel_Blue_5: -75805139
-      Barrel_Blue_6: -1699392054
-      Barrel_Blue_7: 1029585560
-      Barrel_Blue_8: -580767837
-      Barrel_Blue_9: 1109160980
-  spritePackingTag: 
+      Barrel_Blue_10: -1858225117
+      Barrel_Blue_11: 416823048
+      Barrel_Blue_12: -393373696
+      Barrel_Blue_13: -75805139
+      Barrel_Blue_14: -1699392054
+      Barrel_Blue_15: 1029585560
+      Barrel_Blue_16: -580767837
+      Barrel_Blue_17: 1109160980
+      Barrel_Blue_18: -1313724764
+      Barrel_Blue_19: -1368637974
+      Barrel_Blue_2: -1694299241
+      Barrel_Blue_20: 458038906
+      Barrel_Blue_21: -431708622
+      Barrel_Blue_22: 2115341923
+      Barrel_Blue_23: 637099058
+      Barrel_Blue_24: 470340815
+      Barrel_Blue_25: -136865954
+      Barrel_Blue_3: -89816849
+      Barrel_Blue_4: 1906061183
+      Barrel_Blue_5: 99936138
+      Barrel_Blue_6: -1773167663
+      Barrel_Blue_7: 1010987149
+      Barrel_Blue_8: 204592680
+      Barrel_Blue_9: -1745301059
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

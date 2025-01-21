@@ -115,17 +115,23 @@ public class WorldManager : MonoBehaviour {
         playerManager.Init(playerDefeat,playerHealthBar.Set);
         winScreen.Init(new Action[]{Restart,Application.Quit});
         //playerHealthBar.gameObject.SetActive(false);
+        floorManager.Init();
         enemyManager.Init(FinishWave);
         shop.Init(6);
     }
     void Start(){
+        wave = 1;
         buildingManager.Init();
         projectileManager.Init();
-        Vector3 input = Camera.main.transform.position;
-        input -= new Vector3(10,10)*.5f;
+        Camera.main.transform.position = new Vector3(0,0,-100);
+        Vector3 input = default;
+        input -= new Vector3(5,5);
         floorManager.FloodFloor(input, input + new Vector3Int(8,4));
-        Vector3 mid = input + Vector3.up * 2 + Vector3.right * 3;
+        Vector3 mid = input + Vector3.up * 3 + Vector3.right * 3;
         floorManager.FloodFloor(mid, mid + new Vector3Int(3,2));
+        floorManager.FloodFloor(mid + new Vector3(0,-3), mid + new Vector3Int(3,0));
+        floorManager.FloodFloor(mid + new Vector3(1,-1), mid + new Vector3Int(2,0));
+        floorManager.PlaceRoad(mid + new Vector3(1.5f, -1));
         floorManager.CreateCastle(mid,castle);
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
@@ -133,9 +139,9 @@ public class WorldManager : MonoBehaviour {
     }
     public void FinishWave(){
         ResetWave();
-        playerShopUIManager.FinishLevel();
-        // winScreen.gameObject.SetActive(true);
-        //playerHealthBar.gameObject.SetActive(false);
+        //playerShopUIManager.FinishLevel();
+        /*winScreen.gameObject.SetActive(true);
+        playerHealthBar.gameObject.SetActive(false);*/
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
@@ -158,6 +164,10 @@ public class WorldManager : MonoBehaviour {
         projectileManager.Switch(false);
     }
     public void ResetWave(){
+        if ((int)gameState >= 2)
+        {
+            playerShopUIManager.FinishLevel();
+        }
         enemyManager.Switch(false);
         projectileManager.ResetEntities();
         enemyManager.ResetEntities();
@@ -168,11 +178,14 @@ public class WorldManager : MonoBehaviour {
         //playerHealthBar.gameObject.SetActive(false);
         gameLoadManager.CloseWindow();
         shop.Hide();
-        playerShopUIManager.CloseAll();
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
     }
     public void ResetLevel(){
+        if ((int)gameState >= 2)
+        {
+            playerShopUIManager.FinishLevel();
+        }
         shop.Hide();
         playerShopUIManager.CloseAll();
         archerManager.ClearEntities();

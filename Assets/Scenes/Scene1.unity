@@ -2175,9 +2175,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 528130308}
-  - {fileID: 2018720535}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3227,7 +3225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 7778037953086895800, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
-  FreeFallAccelleration: 30
+  FreeFallAccelleration: 40
   text: {fileID: 722254464}
 --- !u!1 &381219799
 GameObject:
@@ -5171,7 +5169,7 @@ RectTransform:
   m_Children:
   - {fileID: 1038006}
   - {fileID: 25414955}
-  m_Father: {fileID: 214666396}
+  m_Father: {fileID: 1556021795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -6943,7 +6941,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 30
+  m_Text: 40
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -10257,7 +10255,7 @@ MonoBehaviour:
   MinZoom: 7.5
   MaxZoom: 15
   ZoomSpeed: 0.5
-  ZoomValuePerInput: 50
+  ZoomValuePerInput: 25
 --- !u!114 &1018600451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11340,6 +11338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleSpells:
   - {fileID: 11400000, guid: cbab5d4757d4ce14a9dd48b39a5fb183, type: 2}
+  - {fileID: 11400000, guid: 88cfb8404c352e743a1e776699fb8f07, type: 2}
   playerActionManager: {fileID: 1018600448}
   magicPage: {fileID: 0}
   inventoryModel: {fileID: 139541024}
@@ -11789,7 +11788,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "30\u200B"
+  m_text: "40\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 35fa55cada4bbd14da340b0185bb8f0b, type: 2}
   m_sharedMaterial: {fileID: -5941199400353437005, guid: 35fa55cada4bbd14da340b0185bb8f0b, type: 2}
@@ -15908,9 +15907,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1955536663}
-  - {fileID: 1212740703}
   - {fileID: 121933951}
+  - {fileID: 1212740703}
+  - {fileID: 2018720535}
+  - {fileID: 1955536663}
+  - {fileID: 528130308}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -20465,9 +20466,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd05b0d3a24e624baacfbbbfd63fa35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 9056685445852350121, guid: 2e5e25d57ebeafa4ab29ee511afbf3f8, type: 3}
+  prefab: {fileID: -7230456454974647073, guid: 2e5e25d57ebeafa4ab29ee511afbf3f8, type: 3}
   enemyManager: {fileID: 1830662301}
-  spells: []
+  spellAnimators: []
+  spellDatas: []
+  spawnDatas: []
 --- !u!4 &2016557580
 Transform:
   m_ObjectHideFlags: 0
@@ -20608,7 +20611,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 601056658}
-  m_Father: {fileID: 214666396}
+  m_Father: {fileID: 1556021795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
