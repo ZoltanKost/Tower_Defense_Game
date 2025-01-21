@@ -6,19 +6,19 @@ public class PlayerInventoryModel : MonoBehaviour
 {
     [SerializeField] private DynamicItemPageUI inventoryUIView;
     [SerializeField] private PlayerActionManager playerActionManager;
-    private List<SpellData> spells;
+    private List<SpellSO> spells;
 
     public void Init()
     {
         inventoryUIView = GetComponent<DynamicItemPageUI>();
-        spells = new List<SpellData>();
+        spells = new List<SpellSO>();
         inventoryUIView.Init(SetPlayerAction);
     }
 
-    public void AddSpell(SpellData data)
+    public void AddSpell(SpellSO data)
     {
         spells.Add(data);
-        inventoryUIView.AddItem(data);
+        inventoryUIView.AddItem(data.spellData);
     }
     public void RemoveSpell(int id)
     {

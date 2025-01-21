@@ -1,55 +1,177 @@
-using System.Collections.Generic;
+using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SpellManager : MonoBehaviour {
-    public const int CALLBACK_REMOVE = 1;
-    public const int CALLBACK_CASTAREASPELL = 0;
-    public const int AnimationEvent = CALLBACK_REMOVE + CALLBACK_CASTAREASPELL;
-    [SerializeField] private CustomAnimator prefab;
+    public const int CALLBACK_REMOVE = 0;
+    public const int CALLBACK_DAMAGE_AREA= 1;
+    public const int CALLBACK_SPAWN_SPELL = 2;
+    public const int CALLBACK_DAMAGE_TARGET= 3;
+    public const int CALLBACK_SPAWN_PPROJECTILE= 4;
+    [SerializeField] private SpellObject prefab;
     [SerializeField] private EnemyManager enemyManager;
     //[SerializeField] private AnimationManager animationManager;
-    List<CustomAnimator> spells = new List<CustomAnimator>();
-    public void CastSpell(SpellData spell, Vector3 position)
+    //List<CustomAnimator> spells = new List<CustomAnimator>();
+    public SpellObject[] spellAnimators;
+    public SpellData[] spellDatas;
+    public SpellSpawnData[] spawnDatas;
+    int spawnDataCount = 0;
+    int count = 0;
+    public void Awake()
     {
-        switch (spell.spellType)
+        spellAnimators = new SpellObject[8];
+        spellDatas = new SpellData[8];
+        spawnDatas = new SpellSpawnData[8];
+
+        for (int i = 0; i < 8; i++)
         {
-            case SpellTarget.Area:
-                CustomAnimator animator = Instantiate(prefab);
-                spells.Add(animator);
-                position.z = 0;
-                animator.transform.SetPositionAndRotation(position,Quaternion.identity);
-                animator.animations = new Animation[1];
-                animator.animations[0] = spell.animation;
-                animator.Init();
-                animator.actions[CALLBACK_CASTAREASPELL].AddListener(() => enemyManager.AreaSpell(spell, position));
-                animator.actions[CALLBACK_REMOVE].AddListener(() => { RemoveSpell(animator); });
-                break;
-            case SpellTarget.Projectile:
-                break;
-            case SpellTarget.Targeted:
-                break;
-            case SpellTarget.Untargeted:
-                break;
+            spellAnimators[i] = Instantiate(prefab, transform);
+            spellAnimators[i].gameObject.SetActive(false);
         }
     }
-
-    void RemoveSpell(CustomAnimator animator)
+    public void CastSpell(SpellSO spell, Vector3 position)
     {
-        spells.Remove(animator); 
-        animator.gameObject.SetActive(false);
+        SpellData data = spell.spellData;
+        switch (data.spellAction)
+        {
+            case SpellAction.Damage:
+                { 
+                    int i = count++;
+                    Debug.Log("Simple spell casting " + i);
+                    if (count >= spellAnimators.Length) Resize();
+                    position.z = 0;
+                    spellAnimators[i].Init(spell.animations, i, position, data);
+                    break;
+                }
+            case SpellAction.SpawnSpells:
+                { 
+                    int i = count++;
+                    Debug.Log("Multiple spell's Parent casting " + i);
+                    if (count >= spellAnimators.Length) Resize();
+                    position.z = 0;
+                    spellAnimators[i].Init(spell.animations, i, position,data, spell.spawnData);
+                    break;
+                }
+            /*case SpellAction.SpawnSpells:
+                {
+                    *//*int i = count++;
+                    Debug.Log(i);
+                    if (count >= spells.Length) Resize();
+                    position.z = 0;
+                    spells[i].transform.SetPositionAndRotation(position, Quaternion.identity);
+                    spells[i].gameObject.SetActive(true);
+                    spells[i].animations = spell.animations;
+                    spells[i].Init();
+                    spells[i].actions[CALLBACK_REMOVE].AddListener(() => { RemoveSpell(i); });
+                    SpellSO[] spellsToSpawn = spell.spellsToSpawn;
+                    Vector3[] positions = spell.deltaPosToSpawn;
+                    for (int l = 0; l < spellsToSpawn.Length; i++)
+                    {
+                        spells[i].actions[CALLBACK_SPAWN_SPELL].AddListener(() => { CastSpell(spellsToSpawn[i].spellData, position + positions[i]); });
+                    }*//*
+                    break;
+                }*/
+        }
+    }
+    public void CastSpell(SpellData data, SpellSpawnData spawnData, Animation[] animations, Vector3 position)
+    {
+        switch (data.spellAction)
+        {
+            case SpellAction.Damage:
+                {
+                    int i = count++;
+                    Debug.Log("Simple spell casting " + i);
+                    if (count >= spellAnimators.Length) Resize();
+                    position.z = 0;
+                    spellAnimators[i].transform.SetPositionAndRotation(position, Quaternion.identity);
+                    spellAnimators[i].gameObject.SetActive(true);
+                    spellAnimators[i].Init(animations, i, position, data);
+                    break;
+                }
+            case SpellAction.SpawnSpells:
+                {
+                    int i = count++;
+                    Debug.Log("Multiple spell's Parent casting " + i);
+                    if (count >= spellAnimators.Length) Resize();
+                    position.z = 0;
+                    spellAnimators[i].Init(animations, i, position, data, spawnData);
+                    break;
+                }
+                /*case SpellAction.SpawnSpells:
+                    {
+                        *//*int i = count++;
+                        Debug.Log(i);
+                        if (count >= spells.Length) Resize();
+                        position.z = 0;
+                        spells[i].transform.SetPositionAndRotation(position, Quaternion.identity);
+                        spells[i].gameObject.SetActive(true);
+                        spells[i].animations = spell.animations;
+                        spells[i].Init();
+                        spells[i].actions[CALLBACK_REMOVE].AddListener(() => { RemoveSpell(i); });
+                        SpellSO[] spellsToSpawn = spell.spellsToSpawn;
+                        Vector3[] positions = spell.deltaPosToSpawn;
+                        for (int l = 0; l < spellsToSpawn.Length; i++)
+                        {
+                            spells[i].actions[CALLBACK_SPAWN_SPELL].AddListener(() => { CastSpell(spellsToSpawn[i].spellData, position + positions[i]); });
+                        }*//*
+                        break;
+                    }*/
+        }
     }
     void RemoveSpell(int index)
     {
-        spells[index].gameObject.SetActive(false);
-        spells.RemoveAt(index);
+        Debug.Log("Removing spell " + index);
+        spellAnimators[index].gameObject.SetActive(false);
+        var temp = spellAnimators[index];
+        spellAnimators[index] = spellAnimators[--count];
+        spellAnimators[index].id = index;
+        spellAnimators[count] = temp;
+        temp.gameObject.SetActive(false);
     }
-
-    private void Update()
+    public void Resize()
     {
-        float dt = Time.deltaTime;
-        for (int i = 0; i < spells.Count; i++)
+        Array.Resize(ref spellAnimators, count * 2);
+        for (int i = count; i < spellAnimators.Length; i++)
         {
-            spells[i].UpdateAnimator(dt);
+            spellAnimators[i] = Instantiate(prefab, transform);
+        }
+    }
+    private void FixedUpdate()
+    {
+        float dt = Time.fixedDeltaTime;
+        for (int i = 0; i < count; i++)
+        {
+            spellAnimators[i].animator.UpdateAnimator(dt);
+        }
+        for (int i = 0; i < count; i++)
+        {
+            if (spellAnimators[i].damage)
+            {
+                spellAnimators[i].damage = false;
+                enemyManager.AreaSpell(spellAnimators[i].data, spellAnimators[i].position);
+            }
+        }
+        for (int i = 0; i < count; i++)
+        {
+            if (spellAnimators[i].spawn && spellAnimators[i].spawnData.repeat > 0)
+            {
+                Debug.Log($"SpawnFlag detected, spawning... id:{i};more times:{spellAnimators[i].spawnData.repeat > 0}");
+                spellAnimators[i].spawn = false;
+                spellAnimators[i].spawnData.repeat--;
+                int num = spellAnimators[i].spawnData.deltaPosToSpawn.Length;
+                for (int l = 0; l < num; l++)
+                {
+                    CastSpell(spellAnimators[i].data, spellAnimators[i].spawnData, spellAnimators[i].spawnData.spell.animations, spellAnimators[i].position + spellAnimators[i].spawnData.deltaPosToSpawn[l]);
+                }
+            }
+        }
+        for (int i = 0; i < count; i++)
+        {
+            if (spellAnimators[i].remove) 
+            { 
+                spellAnimators[i].remove = false;
+                RemoveSpell(i);
+            } // enemyManager.AreaSpell(spellAnimators[i].data, spellAnimators[i].position);
         }
     }
 }

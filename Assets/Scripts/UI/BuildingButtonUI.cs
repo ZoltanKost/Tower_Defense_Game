@@ -16,6 +16,7 @@ public class BuildingButtonUI : EventSubscribeButton {
     public void SetSprite(Sprite sprite)
     {
         image.sprite = sprite;
+        image.SetNativeSize();
     }
     public void ActivateVisuals()
     {

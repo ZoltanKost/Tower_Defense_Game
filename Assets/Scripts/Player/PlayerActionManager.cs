@@ -16,7 +16,7 @@ public class PlayerActionManager : MonoBehaviour{
     Action<int> destroyBuildingCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
-    SpellData chosenSpell;
+    SpellSO chosenSpell;
     [SerializeField] ActionMode mode;
     byte gameState_int;
     Vector3 startPosition;
@@ -61,7 +61,9 @@ public class PlayerActionManager : MonoBehaviour{
                 if(!floorManager.PlaceRoad(position))
                 {
                     actionFailedCallback?.Invoke();
+                    return;
                 }
+                temporalFloor.JellyAnimation();
             break;
             case ActionMode.Building:
                 if(canBuyCallBack(chosenBuilding.resource,chosenBuilding.price))
@@ -108,19 +110,32 @@ public class PlayerActionManager : MonoBehaviour{
     public void HoldBuild(Vector3 position){
         switch(mode){
             case ActionMode.Road:
-                floorManager.PlaceRoad(position);
+                if (floorManager.PlaceRoad(position))
+                {
+                    temporalFloor.JellyAnimation();
+                }
                 break;
             case ActionMode.Bridge:
-                floorManager.PlaceBridge(position);
+                if (floorManager.PlaceBridge(position))
+                {
+                    temporalFloor.JellyAnimation();
+                }
                 break;
             case ActionMode.BridgeSpot:
-                floorManager.PlaceBridgeSpot(position);
+                if (floorManager.PlaceBridgeSpot(position))
+                {
+                    temporalFloor.JellyAnimation();
+                }
                 break;
             case ActionMode.DestroyGround:
                 //floorManager.DestroyGround(position);
                 break;
             case ActionMode.DestroyRoad:
-                if(floorManager.HasRoad(position,out Vector3Int pos)) floorManager.DestroyRoad(pos);
+                if (floorManager.HasRoad(position, out Vector3Int pos)) 
+                { 
+                    floorManager.DestroyRoad(pos);
+                    temporalFloor.JellyAnimation();
+                }
             break;
             case ActionMode.MassGround:
                 // mass building
@@ -149,11 +164,11 @@ public class PlayerActionManager : MonoBehaviour{
         chosenBuilding = b;
         temporalFloor.ActivateFloor(b);
     }
-    public void ChooseSpell(SpellData b)
+    public void ChooseSpell(SpellSO b)
     {
         mode = ActionMode.CastSpell;
         chosenSpell = b;
-        temporalFloor.ActivateFloor(b);
+        temporalFloor.ActivateFloor(b.spellData);
     }
     public void ChooseGround(GroundArray g){
         mode = ActionMode.Ground;

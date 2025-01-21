@@ -8,27 +8,30 @@ public class MagicPageModel : MonoBehaviour
     [SerializeField] private PlayerInventoryModel inventoryModel;
     [SerializeField] private PlayerResourceManager playerResourceManager;
 
-private SpellData[] _spells;
-    public SpellData[] spells { get => _spells; }
+private SpellSO[] _spells;
+    public SpellSO[] spells { get => _spells; }
     int maxSpells;
     public void Init(int spellCount)
     {
         maxSpells = spellCount;
         magicPage = GetComponent<MagicPage>();
-        _spells = new SpellData[maxSpells];
+        _spells = new SpellSO[maxSpells];
+        for (int i = 0; i < _spells.Length; i++)
+        {
+            _spells[i] = possibleSpells[Random.Range(0, possibleSpells.Length)];
+        }
         magicPage.Init(spells, spellCount, OnMagicBuyCallBack);
-        ResetSpells();
     }
     void CreateSpell(int ID)
     {
-        _spells[ID] = possibleSpells[Random.Range(0,possibleSpells.Length)].spellData;
-        magicPage.UpdateVisual(ID, _spells[ID]);
+        _spells[ID] = possibleSpells[Random.Range(0,possibleSpells.Length)];
+        magicPage.UpdateVisual(ID, _spells[ID].spellData);
     }
     public void ResetSpells()
     {
         for (int i = 0; i < _spells.Length; i++)
         {
-            _spells[i] = possibleSpells[Random.Range(0, possibleSpells.Length)].spellData;
+            _spells[i] = possibleSpells[Random.Range(0, possibleSpells.Length)];
         }
         magicPage.ResetGroundArrays(_spells);
     }
@@ -36,10 +39,9 @@ private SpellData[] _spells;
     void OnMagicBuyCallBack(int uiID)
     {
         playerActionManager.CancelBuildingAction();
-        SpellData spellData = spells[uiID];
-        if (!playerResourceManager.EnoughtResource(Resource.Gold, spellData.goldCost)) return;
-        playerResourceManager.RemoveResource(Resource.Gold, spellData.goldCost);
-        inventoryModel.AddSpell(spellData);
+        if (!playerResourceManager.EnoughtResource(Resource.Gold, spells[uiID].spellData.goldCost)) return;
+        playerResourceManager.RemoveResource(Resource.Gold, spells[uiID].spellData.goldCost);
+        inventoryModel.AddSpell(spells[uiID]);
         //magicPage.DeactivateVisuals(uiID);
         CreateSpell(uiID);
         /*playerActionManager.SetPlaceCallback(() =>

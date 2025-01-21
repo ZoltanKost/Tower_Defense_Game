@@ -5,13 +5,13 @@ public class MagicPage : MonoBehaviour
 {
     [SerializeField] private BuildingButtonUI buttonPrefab;
     private BuildingButtonUI[] buttonArray;
-    public void Init(SpellData[] spells, int spellCount, Action<int> OnMagicBuyCallBack)
+    public void Init(SpellSO[] spells, int spellCount, Action<int> OnMagicBuyCallBack)
     {
         buttonArray = new BuildingButtonUI[spellCount];
         for (int i = 0; i < buttonArray.Length; i++)
         {
             buttonArray[i] = Instantiate(buttonPrefab, transform);
-            buttonArray[i].Init(OnMagicBuyCallBack, spells[i].UIicon, i);
+            buttonArray[i].Init(OnMagicBuyCallBack, spells[i].spellData.UIicon, i);
         }
     }
 
@@ -19,11 +19,11 @@ public class MagicPage : MonoBehaviour
     {
         buttonArray[ID].SetSprite(spell.UIicon);
     }
-    public void ResetGroundArrays(SpellData[] spells)
+    public void ResetGroundArrays(SpellSO[] spells)
     {
         for (int i = 0; i < buttonArray.Length; i++)
         {
-            buttonArray[i].SetSprite(spells[i].UIicon);
+            buttonArray[i].SetSprite(spells[i].spellData.UIicon);
         }
     }
     public void ActivateVisuals(int uiID)
