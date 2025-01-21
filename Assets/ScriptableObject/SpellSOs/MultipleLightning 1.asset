@@ -15,7 +15,7 @@ MonoBehaviour:
   spellData:
     manaCost: 50
     goldCost: 50
-    radius: 3
+    radius: 2
     damage: 20
     targeted: 0
     spellAction: 2

@@ -27,7 +27,7 @@ MonoBehaviour:
     - acitonID: 0
       frame: 11
     - acitonID: 2
-      frame: 5
+      frame: 3
     sprites:
     - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
     - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
@@ -55,5 +55,5 @@ MonoBehaviour:
       ballistic: 0
       flightTime: 0
     deltaPosToSpawn:
-    - {x: 0, y: 2, z: 0}
+    - {x: 0, y: 0.5, z: 0}
     repeat: 4
