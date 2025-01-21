@@ -20,9 +20,18 @@ public class CustomAnimator : MonoBehaviour{
         animations = animator.animations;
         directionAnimations = animator.directionAnimations;
         currentAnimation = 0;
-        currentDirAnimation = 0;
+        currentDirAnimation = -1;
         currentFrame = 0;
         time = 0;
+    }
+    public void InitFromAnimArray(Animation[] array)
+    {
+        animations = array;
+        currentAnimation = 0;
+        time = 0;
+        currentFrame = 0;
+        //spriteRenderer.sprite = animations[0].sprites[currentFrame];
+        currentDirAnimation = -1;
     }
     public void PlayAnimation(int id){
         currentAnimation = id;
