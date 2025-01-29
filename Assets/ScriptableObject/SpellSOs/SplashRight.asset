@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
+  m_Name: SplashRight
+  m_EditorClassIdentifier: 
+  spellData:
+    manaCost: 0
+    goldCost: 25
+    globalRadius: 1
+    radius: 1
+    damage: 10
+    targeted: 0
+    spellAction: 0
+    UIicon: {fileID: 801353645, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+  animations:
+  - events:
+    - acitonID: 1
+      frame: 7
+    - acitonID: 0
+      frame: 10
+    sprites:
+    - {fileID: 1947654878, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 1152837009, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1317448817, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1574036310, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1723394443, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 801353645, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: 214963811, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -749291233, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -2029427448, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1714290770, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    - {fileID: -1240689053, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
+    duration: 0.8
+    flipX: 0
+  spawnData:
+    spell: {fileID: 0}
+    projectile:
+      targetPosition: {x: 0, y: 0, z: 0}
+      startPosition: {x: 0, y: 0, z: 0}
+      speed: 0
+      animations: []
+      damage: 0
+      behaviour: 0
+      ballistic: 0
+      flightTime: 0
+    deltaPosToSpawn: []
+    repeat: 0

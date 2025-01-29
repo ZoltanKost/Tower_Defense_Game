@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
-  m_Name: Lightning
+  m_Name: Lightnin&Splash
   m_EditorClassIdentifier: 
   spellData:
     manaCost: 0
@@ -19,14 +19,16 @@ MonoBehaviour:
     radius: 2
     damage: 20
     targeted: 0
-    spellAction: 0
-    UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
+    spellAction: 2
+    UIicon: {fileID: 801353645, guid: 75ff3b24a024d6544b4d5648dcc0b57a, type: 3}
   animations:
   - events:
     - acitonID: 1
       frame: 5
     - acitonID: 0
       frame: 10
+    - acitonID: 2
+      frame: 8
     sprites:
     - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
     - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
@@ -43,7 +45,7 @@ MonoBehaviour:
     duration: 0.8
     flipX: 0
   spawnData:
-    spell: {fileID: 0}
+    spell: {fileID: 11400000, guid: a4274ac766b5dbf408189b766d6b0374, type: 2}
     projectile:
       targetPosition: {x: 0, y: 0, z: 0}
       startPosition: {x: 0, y: 0, z: 0}
@@ -53,5 +55,9 @@ MonoBehaviour:
       behaviour: 0
       ballistic: 0
       flightTime: 0
-    deltaPosToSpawn: []
-    repeat: 0
+    deltaPosToSpawn:
+    - {x: 2, y: 0, z: 0}
+    - {x: 0, y: 2, z: 0}
+    - {x: -2, y: 0, z: 0}
+    - {x: 0, y: -2, z: 0}
+    repeat: 1

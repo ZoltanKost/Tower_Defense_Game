@@ -13,6 +13,7 @@ public struct SpellData
 {
     public int manaCost;
     public int goldCost;
+    public int globalRadius;
     public int radius;
     public int damage;
     public bool targeted;

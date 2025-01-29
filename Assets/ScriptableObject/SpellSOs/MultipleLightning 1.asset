@@ -15,6 +15,7 @@ MonoBehaviour:
   spellData:
     manaCost: 50
     goldCost: 50
+    globalRadius: 6
     radius: 2
     damage: 20
     targeted: 0

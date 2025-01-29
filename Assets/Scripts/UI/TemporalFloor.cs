@@ -191,7 +191,7 @@ public class TemporalFloor : Floor
     public void SetSpell(SpellData spellData)
     {
         visual.sprite = spellData.UIicon;
-        float offsetF = spellData.radius / cellSize;
+        float offsetF = spellData.globalRadius / cellSize;
         visual.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         //visual.color = visuals[0].color;
         arrows[0].localPosition = new Vector3(-offsetF, -offsetF);

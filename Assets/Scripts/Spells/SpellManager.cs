@@ -19,8 +19,6 @@ public class SpellManager : MonoBehaviour {
     public void Awake()
     {
         spellAnimators = new SpellObject[8];
-        spellDatas = new SpellData[8];
-        spawnDatas = new SpellSpawnData[8];
 
         for (int i = 0; i < 8; i++)
         {
@@ -82,8 +80,6 @@ public class SpellManager : MonoBehaviour {
                     Debug.Log("Simple spell casting " + i);
                     if (count >= spellAnimators.Length) Resize();
                     position.z = 0;
-                    spellAnimators[i].transform.SetPositionAndRotation(position, Quaternion.identity);
-                    spellAnimators[i].gameObject.SetActive(true);
                     spellAnimators[i].Init(animations, i, position, data);
                     break;
                 }

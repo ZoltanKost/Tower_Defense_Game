@@ -11769,6 +11769,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88cfb8404c352e743a1e776699fb8f07, type: 2}
   - {fileID: 11400000, guid: 4f4033e2a2e5b5447b2ef9d163c6a028, type: 2}
   - {fileID: 11400000, guid: 65994b16201a0274987f3f822cb76383, type: 2}
+  - {fileID: 11400000, guid: ee2f4adb212abba429e864903ba771b9, type: 2}
   playerActionManager: {fileID: 1018600448}
   magicPage: {fileID: 0}
   inventoryModel: {fileID: 139541024}
