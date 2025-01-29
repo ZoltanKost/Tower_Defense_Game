@@ -10,6 +10,7 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy[] enemyPrefabs;
+    //[SerializeField] private 
     [SerializeField] private float spawnRate;
     Action onEnemyFinished;
     public Enemy[] enemies;
@@ -93,21 +94,20 @@ public class EnemyManager : MonoBehaviour {
                     x = Mathf.FloorToInt((enemies[i].transform.position.x + offset.x) / cellSize),
                     y = Mathf.FloorToInt((enemies[i].transform.position.y + offset.y) / cellSize)
                 };
-                Vector2Int buildingPosition = buildings[k].gridPosition;
-                Vector2Int diff = enemyGridPosition - buildingPosition;
+                Vector2Int diff = enemyGridPosition - buildings[k].gridPosition;
                 Vector2Int bDims = new Vector2Int
                 {
                     x = Mathf.Clamp(diff.x,0, buildings[k].w - 1),
                     y = Mathf.Clamp(diff.y, 0, buildings[k].h - 1)
                 };
-                Vector2Int pos = diff - bDims;
-                float distance = (new Vector3(pos.x * cellSize, pos.y * cellSize)).magnitude;
+                diff = diff - bDims;
+                float distance = (new Vector3(diff.x * cellSize, diff.y * cellSize)).magnitude;
                 //if(i == 0 && k == 1)Debug.Log($"pos: {pos}, distance: {distance}, bDimensions: {bDims}, diff: {diff}");
                 if (distance > minDistance) continue;
                 minDistance = distance;
                 enemies[i].currentTarget = buildings[k];
             }
-            if(enemies[i].currentTarget != null && enemies[i].currentTarget.HP > 0)
+            if(enemies[i].currentTarget != null)
             {
                 enemies[i].detectFlag = false;
                 enemies[i].state = EnemyState.attack;
@@ -221,10 +221,10 @@ public class EnemyManager : MonoBehaviour {
     public void GenerateWave(int wave)
     {
         List<Queue<PathCell>> paths = pathfinding.vectors;
-        int max = paths.Count>0?paths.Count:1;
+        int max = paths.Count;
         int waveCount = UnityEngine.Random.Range(1,Mathf.Min(wave + 1, max + 1));
-        waves = new Wave[waveCount];
-        for (int i = 0; i < waveCount; i++)
+        waves = new Wave[max];
+        for (int i = 0; i < max; i++)
         {
             Debug.Log($"Generating Wave; wave*path.Count:{wave * max}");
             waves[i] = new Wave(i,

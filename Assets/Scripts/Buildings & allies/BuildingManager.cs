@@ -8,7 +8,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
     [SerializeField] private ArcherManager archerManager;
     [SerializeField] private ProjectileManager projectileManager;
     public BuildingObject[] bs;
-    public int Count { get; private set; }
+    public int Count;
     bool active;
     public void Init()
     {
