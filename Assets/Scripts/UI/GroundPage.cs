@@ -23,6 +23,8 @@ public class GroundPage : MonoBehaviour {
     }
     public void ResetGroundArrays(GroundArray[] grounds){
         for(int i = 0; i < grounds.Length; i++){
+            buttons[i].gameObject.SetActive(true);
+            buttons[i].ActivateVisuals();
             buttons[i].SetGroundArray(grounds[i]);
         }
     }
@@ -31,5 +33,9 @@ public class GroundPage : MonoBehaviour {
     }
     public void DeactivateVisuals(int uiID){
         buttons[uiID].DeactivateVisuals();
+    }
+    public void DeactivateButton(int uiID)
+    {
+        buttons[uiID].gameObject.SetActive(false);
     }
 }

@@ -20,6 +20,10 @@ public class GroundPageModel : MonoBehaviour {
         _groundArrays[ID] = groundArrayGenerator.GenerateGA();
         groundPage.UpdateVisual(ID, _groundArrays[ID]);
     }
+    void RemoveGroundArray(int ID)
+    {
+        groundPage.DeactivateButton(ID);
+    }
     public void ResetGroundArrays(){
         for(int i = 0; i < _groundArrays.Length;i++){
             _groundArrays[i] = groundArrayGenerator.GenerateGA();
@@ -33,8 +37,9 @@ public class GroundPageModel : MonoBehaviour {
         groundPage.DeactivateVisuals(uiID);
         playerActionManager.SetPlaceCallback(() => 
             {
-                CreateGroundArray(uiID);
-                groundPage.ActivateVisuals(uiID);
+                RemoveGroundArray(uiID);
+                //CreateGroundArray(uiID);
+                //groundPage.ActivateVisuals(uiID);
                 playerActionManager.ClearCancelCallback();
             }
         );
