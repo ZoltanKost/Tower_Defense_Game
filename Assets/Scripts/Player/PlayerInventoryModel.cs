@@ -35,7 +35,7 @@ public class PlayerInventoryModel : MonoBehaviour
         playerActionManager.SetPlaceCallback(() =>
         {
             inventoryUIView.ActivateVisuals(uiID);
-            RemoveSpell(uiID);
+            //RemoveSpell(uiID);
         }
         );
         playerActionManager.SetCancelCallback(() => inventoryUIView.ActivateVisuals(uiID));

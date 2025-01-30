@@ -14,7 +14,6 @@ public class SpellManager : MonoBehaviour {
     public SpellObject[] spellAnimators;
     public SpellData[] spellDatas;
     public SpellSpawnData[] spawnDatas;
-    int spawnDataCount = 0;
     int count = 0;
     public void Awake()
     {
