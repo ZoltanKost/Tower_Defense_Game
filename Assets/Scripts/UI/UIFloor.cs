@@ -25,13 +25,6 @@ public class UIFloor: MonoBehaviour
             return floor == 0 ? TileID.None : TileID.Grass;
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-        }
-    }
     public void Init(int cellsize, int width, int height)
     {
         renderers[SHADOWLAYER].Init(width, height, cellsize, StaticTiles.GetTile(TileID.Shadow));
@@ -93,13 +86,15 @@ public class UIFloor: MonoBehaviour
     }
     public void Activate()
     {
-        foreach(var r in renderers)
+        //gameObject.SetActive(true);
+        foreach (var r in renderers)
         {
             r.SetActive(true);
         }
     }
     public void Deactivate()
     {
+        //gameObject.SetActive(false);
         foreach (var r in renderers)
         {
             r.SetActive(false);
