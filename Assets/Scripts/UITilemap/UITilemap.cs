@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(CanvasRenderer))]
 [RequireComponent(typeof(Tilemap))]
 public class UITilemap : MonoBehaviour {
+    static Mesh NullMesh;
     [SerializeField] private Material material;
     [SerializeField] private Texture texture;
     [SerializeField] private Mesh mesh;
@@ -17,6 +18,7 @@ public class UITilemap : MonoBehaviour {
     Vector3Int offset;
     public void Init(int width, int height, int cellsize, TileBase tile, Vector3Int offset = default)
     {
+        if(NullMesh == null) NullMesh = new Mesh();
         this.offset = offset;
         transform.localPosition = offset * cellsize;
         tilemap = GetComponent<Tilemap>();
@@ -104,6 +106,13 @@ public class UITilemap : MonoBehaviour {
 
     public void SetActive(bool active)
     {
-
+        if(active == true)
+        {
+            canvasRenderer.SetMesh(mesh);
+        }
+        else
+        {
+            canvasRenderer.SetMesh(NullMesh);
+        }
     }
 }
