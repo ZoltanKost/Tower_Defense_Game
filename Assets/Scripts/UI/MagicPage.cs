@@ -19,10 +19,11 @@ public class MagicPage : MonoBehaviour
     {
         buttonArray[ID].SetSprite(spell.UIicon);
     }
-    public void ResetGroundArrays(SpellSO[] spells)
+    public void ResetSpells(SpellSO[] spells)
     {
         for (int i = 0; i < buttonArray.Length; i++)
         {
+            buttonArray[i].gameObject.SetActive(true);
             buttonArray[i].SetSprite(spells[i].spellData.UIicon);
         }
     }
@@ -33,5 +34,9 @@ public class MagicPage : MonoBehaviour
     public void DeactivateVisuals(int uiID)
     {
         buttonArray[uiID].DeactivateVisuals();
+    }
+    public void DeactivateButton(int uiID)
+    {
+        buttonArray[uiID].gameObject.SetActive(false);
     }
 }

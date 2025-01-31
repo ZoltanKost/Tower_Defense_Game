@@ -33,7 +33,7 @@ private SpellSO[] _spells;
         {
             _spells[i] = possibleSpells[Random.Range(0, possibleSpells.Length)];
         }
-        magicPage.ResetGroundArrays(_spells);
+        magicPage.ResetSpells(_spells);
     }
 
     void OnMagicBuyCallBack(int uiID)
@@ -42,8 +42,8 @@ private SpellSO[] _spells;
         if (!playerResourceManager.EnoughtResource(Resource.Gold, spells[uiID].spellData.goldCost)) return;
         playerResourceManager.RemoveResource(Resource.Gold, spells[uiID].spellData.goldCost);
         inventoryModel.AddSpell(spells[uiID]);
-        //magicPage.DeactivateVisuals(uiID);
-        CreateSpell(uiID);
+        magicPage.DeactivateButton(uiID);
+        //CreateSpell(uiID);
         /*playerActionManager.SetPlaceCallback(() =>
         {
             magicPage.ActivateVisuals(uiID);
