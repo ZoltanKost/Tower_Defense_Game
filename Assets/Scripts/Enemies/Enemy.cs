@@ -43,6 +43,7 @@ public class Enemy : MonoBehaviour, IDamagable
     public Vector3 destination;
     int waveIndex;
     public bool detectFlag;
+    public int pointsLeft;
     void Awake()
     {
         if(animator == null) animator = GetComponent<CustomAnimator>();

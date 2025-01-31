@@ -127,6 +127,7 @@ public class EnemyManager : MonoBehaviour {
                 {
                     PathCell next = enemies[i].currentPath.Dequeue();
                     enemies[i].destination = next.pos;
+                    enemies[i].pointsLeft = enemies[i].currentPath.Count;
                     enemies[i].animator.SetSortingParams(6 + 1000 /next.gridY,next.floor);
                 }
                 else enemies[i].DamageCastle();

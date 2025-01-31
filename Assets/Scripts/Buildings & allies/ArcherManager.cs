@@ -59,27 +59,30 @@ public class ArcherManager : MonoBehaviour, IHandler {
             archersList[i].target = null;
             int lowestInactive = enemyManager.lowestInactive;
             float minDistance = archersList[i].attackRange;
+            int targetPointsLeft = int.MaxValue;
             for (int k = 0; k < lowestInactive; k++)
             {
                 if (!(enemyList[k].HP > 0)) continue;
+                int currentPointsLeft = enemyList[k].pointsLeft;
                 Vector2Int enemyGridPosition = new Vector2Int
                 {
                     x = (int)((enemyList[k].transform.position.x + offset.x) / cellSize),
                     y = (int)((enemyList[k].transform.position.y + offset.y) / cellSize)
                 };
                 Vector2Int buildingPosition = archersList[i].gridPosition;
-                Vector2Int diff = enemyGridPosition - buildingPosition;
-                Vector2Int bDims = new Vector2Int
+                Vector2Int res = enemyGridPosition - buildingPosition;
+                Vector2Int celloffset = new Vector2Int
                 {
-                    x = Mathf.Clamp(diff.x, 0, archersList[i].buildingSize.x - 1),
-                    y = Mathf.Clamp(diff.y, 0, archersList[i].buildingSize.y - 1)
+                    x = Mathf.Clamp(res.x, 0, archersList[i].buildingSize.x - 1),
+                    y = Mathf.Clamp(res.y, 0, archersList[i].buildingSize.y - 1)
                 };
-                diff = diff - bDims;
+                res = res - celloffset;
                 //float distance = (new Vector3(pos.x * cellSize, pos.y * cellSize)).magnitude;
-                float distance = Mathf.Abs(diff.x) + Mathf.Abs(diff.y);
+                float distance = Mathf.Abs(res.x) + Mathf.Abs(res.y);
                 //Debug.Log($"distance: {distance}, diff: {diff}, dBims: {bDims}, buildins: {buildingPosition}, enemy: {enemyGridPosition}");
-                if (distance <= minDistance)
+                if (distance <= minDistance && currentPointsLeft < targetPointsLeft)
                 {
+                    targetPointsLeft = currentPointsLeft;
                     minDistance = distance;
                     archersList[i].target = enemyList[k];
                 }
