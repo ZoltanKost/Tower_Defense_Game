@@ -8,8 +8,10 @@ public class DynamicItemPageUI : MonoBehaviour
     private List<BuildingButtonUI> buttons;
     private Action<int> callback;
     int length;
-    public void Init(Action<int> OnMagicBuyCallBack)
+    Resource resource;
+    public void Init(Action<int> OnMagicBuyCallBack, Resource res)
     {
+        resource = res;
         buttons = new List<BuildingButtonUI>();
         callback = OnMagicBuyCallBack;
         length = 0;
@@ -60,7 +62,17 @@ public class DynamicItemPageUI : MonoBehaviour
             ui = Instantiate(buttonPrefab, transform);
             buttons.Add(ui);
         }
-        ui.Init(callback, item.UIicon, id);
+        int cost = -1;
+        switch (resource)
+        {
+            case Resource.Gold:
+                cost = item.goldCost;
+                break;
+            case Resource.Mana:
+                cost = item.manaCost;                
+                break;
+        }
+        ui.Init(callback, item.UIicon,cost, id);
         ui.gameObject.SetActive(true);
     }
     public void RemoveItem(int id)

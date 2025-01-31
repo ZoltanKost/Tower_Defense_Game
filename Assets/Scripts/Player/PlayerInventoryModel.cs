@@ -4,44 +4,44 @@ using System.Collections.Generic;
 [RequireComponent(typeof(DynamicItemPageUI))]
 public class PlayerInventoryModel : MonoBehaviour
 {
-    [SerializeField] private DynamicItemPageUI inventoryUIView;
+    [SerializeField] private DynamicItemPageUI spellsUIView;
     [SerializeField] private PlayerActionManager playerActionManager;
     private List<SpellSO> spells;
 
     public void Init()
     {
-        inventoryUIView = GetComponent<DynamicItemPageUI>();
+        spellsUIView = GetComponent<DynamicItemPageUI>();
         spells = new List<SpellSO>();
-        inventoryUIView.Init(SetPlayerAction);
+        spellsUIView.Init(SetPlayerAction, Resource.Mana);
     }
 
     public void AddSpell(SpellSO data)
     {
         spells.Add(data);
-        inventoryUIView.AddItem(data.spellData);
+        spellsUIView.AddItem(data.spellData);
     }
     public void RemoveSpell(int id)
     {
         int last = spells.Count - 1;
         spells[id] = spells[last];
         spells.RemoveAt(last);
-        inventoryUIView.RemoveItem(id);
+        spellsUIView.RemoveItem(id);
     }
     public void SetPlayerAction(int uiID)
     {
         playerActionManager.CancelBuildingAction();
         playerActionManager.ChooseSpell(spells[uiID]);
-        inventoryUIView.DeactivateVisuals(uiID);
+        spellsUIView.DeactivateVisuals(uiID);
         playerActionManager.SetPlaceCallback(() =>
         {
-            inventoryUIView.ActivateVisuals(uiID);
+            spellsUIView.ActivateVisuals(uiID);
             //RemoveSpell(uiID);
         }
         );
-        playerActionManager.SetCancelCallback(() => inventoryUIView.ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => spellsUIView.ActivateVisuals(uiID));
     }
     public void ResetInventory()
     {
-        inventoryUIView.ResetVisuals(null);
+        spellsUIView.ResetVisuals(null);
     }
 }

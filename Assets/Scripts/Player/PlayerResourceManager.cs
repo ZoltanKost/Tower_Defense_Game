@@ -53,5 +53,6 @@ public class PlayerResourceManager : MonoBehaviour {
 public enum Resource{
     Gold,
     Wood,
-    Meat
+    Meat,
+    Mana
 }

@@ -11,7 +11,7 @@ public class MagicPage : MonoBehaviour
         for (int i = 0; i < buttonArray.Length; i++)
         {
             buttonArray[i] = Instantiate(buttonPrefab, transform);
-            buttonArray[i].Init(OnMagicBuyCallBack, spells[i].spellData.UIicon, i);
+            buttonArray[i].Init(OnMagicBuyCallBack, spells[i].spellData.UIicon,spells[i].spellData.goldCost, i);
         }
     }
 

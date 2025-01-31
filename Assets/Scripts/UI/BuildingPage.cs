@@ -10,7 +10,7 @@ public class BuildingPage : MonoBehaviour {
         buttons = new List<BuildingButtonUI>();
         for(int i = 0; i < buildings.Length; i++){
             BuildingButtonUI ui = Instantiate(prefab,transform);
-            ui.Init(OnGroundChosenCallBack,buildings[i].sprite, i);
+            ui.Init(OnGroundChosenCallBack,buildings[i].sprite, buildings[i].price, i);
             buttons.Add(ui);
         }
     }
