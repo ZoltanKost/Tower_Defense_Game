@@ -92,13 +92,14 @@ MonoBehaviour:
   animator: {fileID: 9071115895459296981}
   index: 0
   speed: 0.75
-  attackRange: 3
+  attackRange: 2
   MaxHP: 100
   attackPeriod: 2
   _killReward: 5
   time: 0
   destination: {x: 0, y: 0, z: 0}
   detectFlag: 0
+  pointsLeft: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,5 +18,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}
   resource: 0
   price: 25
-  attackRange: 3
+  attackRange: 4
   animations: []

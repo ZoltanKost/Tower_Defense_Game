@@ -295,13 +295,13 @@ MonoBehaviour:
   projectileSpeed: 8
   ProjectileFlightTime: 0.75
   target: {fileID: 0}
-  damage: 15
+  damage: 25
   buildingSize: {x: 0, y: 0}
   gridPosition: {x: 0, y: 0}
   buildingID: 0
   _active: 0
   ProjectileFlag: 0
-  attackRange: 3
+  attackRange: 4
   floor: 0
   _attackType: 1
   shooting: 0

@@ -86,6 +86,7 @@ public class EnemyManager : MonoBehaviour {
         {
             if (enemies[i].HP <= 0 || !enemies[i].detectFlag) continue;
             float minDistance = enemies[i].attackRange * cellSize;
+            enemies[i].currentTarget = null;
             for (int k = 1; k < length; k++)
             {
                 if (buildings[k] == null || !(buildings[k].HP > 0)) continue;
