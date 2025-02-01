@@ -44,6 +44,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private GameLoadManager gameLoadManager;
     [SerializeField] private GroundArrayGenerator groundGenerator;
     [SerializeField] private GameSaveManager gameSaveManager;
+    [SerializeField] private AudioManager musicManager;
     private GameState gameState;
     int wave;
     
@@ -118,6 +119,7 @@ public class WorldManager : MonoBehaviour {
         floorManager.Init();
         enemyManager.Init(FinishWave);
         shop.Init(6);
+        musicManager.PlayMenuMusic();
     }
     void Start(){
         wave = 1;
@@ -145,6 +147,7 @@ public class WorldManager : MonoBehaviour {
     }
     public void StartLevel(){
         if(!pathfinding.FindPathToCastle()) return;
+        musicManager.PlayWaveMusic();
         enemyManager.SpawnEnemies(wave++);
         playerActionManager.CancelBuildingAction();
         buildingManager.Switch(true);
@@ -180,6 +183,7 @@ public class WorldManager : MonoBehaviour {
         shop.Hide();
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
+        musicManager.PlayMenuMusic();
     }
     public void ResetLevel(){
         if ((int)gameState >= 2)
@@ -195,9 +199,11 @@ public class WorldManager : MonoBehaviour {
         enemyManager.ClearEntities();
         shop.ResetGroundArrays();
         playerResourceManager.Reset();
+        musicManager.PlayMenuMusic();
         //playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
+        musicManager.PlayLostMusic();
         StopLevel();
         defeatMenuManager.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);
