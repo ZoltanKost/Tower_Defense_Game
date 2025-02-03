@@ -3,6 +3,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour{
     [SerializeField] public Transform visuals;
     [SerializeField] public CustomAnimator animator;
+    public SpellSO spellSO;
     public IDamagable target;
     public Vector3 targetPosition;
     public Vector3 startPosition;
@@ -33,7 +34,8 @@ public class Projectile : MonoBehaviour{
         startPosition = data.startPosition;
         damage = data.damage;
         behaviour = data.behaviour;
-        ballistic = data.ballistic; 
+        ballistic = data.ballistic;
+        spellSO = data.spell;
         visuals.gameObject.SetActive(true);
         targetPosition = data.targetPosition;
         Vector2 dir = targetPosition - startPosition;

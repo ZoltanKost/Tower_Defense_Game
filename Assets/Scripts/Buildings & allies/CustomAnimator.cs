@@ -1,16 +1,21 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class CustomAnimator : MonoBehaviour{
+
     public SpriteRenderer spriteRenderer;
     public Animation[] animations;
     public DirectionAnimation[] directionAnimations;
     public UnityEvent[] actions;
+    public Tween tween;
+
     private int currentAnimation;
     private int currentDirAnimation;
     private int currentFrame;
     float time = 0;
+
     public void Init(){
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         PlayAnimation(0);

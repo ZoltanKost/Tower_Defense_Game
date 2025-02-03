@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Archer : MonoBehaviour{
     [SerializeField] public CustomAnimator animator;
+    //[SerializeField] public AudioSource audioSource;
     [SerializeField] private Sprite arrow;
     [SerializeField] public ProjectileData projectileData;
     [SerializeField] private float projectileSpeed = 5f;

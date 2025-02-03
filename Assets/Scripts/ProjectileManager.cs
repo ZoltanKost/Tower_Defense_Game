@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using TMPro;
 public class ProjectileManager : MonoBehaviour {
+    [SerializeField] private SpellManager spellManager;
     [SerializeField] private Projectile projectilePrefab;
     Projectile[] projectiles;
     [SerializeField] private float FreeFallAccelleration;
@@ -81,7 +82,7 @@ public class ProjectileManager : MonoBehaviour {
                 }
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.CastSpell) != 0)
                 {
-                    //target.
+                    spellManager.CastSpell(projectile.spellSO,projectile.transform.position);
                 }
             }
             if (!projectile.enable) RemoveProjectile(i);
@@ -120,6 +121,7 @@ public class ProjectileManager : MonoBehaviour {
 [Serializable]
 public struct ProjectileData
 {
+    public SpellSO spell;
     public IDamagable target;
     public Vector3 targetPosition;
     public Vector3 startPosition;

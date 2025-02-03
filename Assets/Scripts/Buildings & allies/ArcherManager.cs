@@ -126,6 +126,8 @@ public class ArcherManager : MonoBehaviour, IHandler {
             archersList[i].TickAnimator(delta);
             if (archersList[i].ProjectileFlag)
             {
+                //archersList[i].audioSource.pitch = Random.Range(0.9f, 1.31f);
+                //archersList[i].audioSource.Play();
                 projectileManager.SendProjectile(archersList[i].projectileData);
                 archersList[i].ProjectileFlag = false;
             }
