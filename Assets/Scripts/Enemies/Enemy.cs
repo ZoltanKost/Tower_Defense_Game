@@ -6,6 +6,7 @@ using System;
 [RequireComponent(typeof(CustomAnimator))]
 public class Enemy : MonoBehaviour, IDamagable
 {
+    [SerializeField] public AudioSource audioSource;
     Action<int> damageCastleEvent;
     Action<int> onKillEvent;
     Action<int,int> onRemoveEvent;
@@ -44,22 +45,27 @@ public class Enemy : MonoBehaviour, IDamagable
     int waveIndex;
     public bool detectFlag;
     public int pointsLeft;
+
     void Awake()
     {
         if(animator == null) animator = GetComponent<CustomAnimator>();
         animator.Init();
     }
+
     public void Damage(int damage)
     {
         if (state == EnemyState.dead) return;
         HP -= damage;
         hpBar.Set((float)HP / MaxHP);
         Animate();
+        audioSource.pitch = UnityEngine.Random.Range(0.6f,1.2f);
+        audioSource.Play();
         if (HP <= 0)
         {
             Kill();
         }
     }
+
     public void Kill()
     {
         state = EnemyState.dead;
@@ -67,10 +73,12 @@ public class Enemy : MonoBehaviour, IDamagable
         animator.PlayAnimation(0);
         onKillEvent?.Invoke(index);
     }
+
     public void RemoveInvoke()
     {
         onRemoveEvent?.Invoke(index,waveIndex);
     }
+
     public void Init(Enemy prefab, int waveIndex, int index, Queue<PathCell> path, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent)
     {
         this.onKillEvent = onKillEvent;
@@ -110,6 +118,7 @@ public class Enemy : MonoBehaviour, IDamagable
         damageCastleEvent?.Invoke(damage);
         onRemoveEvent?.Invoke(index, waveIndex);
     }
+    
     // UNITY EDITOR CALLBACK
     public void Attack()
     {
@@ -130,11 +139,13 @@ public class Enemy : MonoBehaviour, IDamagable
         }
         time = 0;
     }
+
     //CALLED BY CUSTOMANIMATOR(IN UNITY)
     public void ResetState()
     {
         state = EnemyState.idle;
     }
+
     public void Animate()
     {
         Tween tween = transform.DOScale(.99f, .05f);
@@ -143,6 +154,7 @@ public class Enemy : MonoBehaviour, IDamagable
             tween1.onComplete += () => transform.DOScale(1, .05f);
         };
     }
+    
     public Sprite GetSprite()
     {
         return  animator.spriteRenderer.sprite;

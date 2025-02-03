@@ -3225,6 +3225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0846e3fe3f760894b818a1c0c1cd3a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spellManager: {fileID: 2016557579}
   projectilePrefab: {fileID: 7778037953086895800, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
   FreeFallAccelleration: 40
   text: {fileID: 722254464}
@@ -11916,6 +11917,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4f4033e2a2e5b5447b2ef9d163c6a028, type: 2}
   - {fileID: 11400000, guid: 65994b16201a0274987f3f822cb76383, type: 2}
   - {fileID: 11400000, guid: ee2f4adb212abba429e864903ba771b9, type: 2}
+  - {fileID: 11400000, guid: 10e6afdc41527284696f37ebde62d1bb, type: 2}
   playerActionManager: {fileID: 1018600448}
   magicPage: {fileID: 0}
   inventoryModel: {fileID: 139541024}
@@ -21314,6 +21316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -7230456454974647073, guid: 2e5e25d57ebeafa4ab29ee511afbf3f8, type: 3}
   enemyManager: {fileID: 1830662301}
+  projectileManager: {fileID: 372981744}
   spellAnimators: []
   spellDatas: []
   spawnDatas: []

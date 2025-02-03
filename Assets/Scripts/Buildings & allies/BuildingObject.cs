@@ -4,6 +4,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
 {
     OnKillEvent onKillEvent;
     [SerializeField] private HealthBar hpBar;
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private TweenAnimator tweenAnimator;
     [SerializeField] private int maxHP = 100;
     public int AssetID = -1;
@@ -91,11 +92,15 @@ public class BuildingObject : MonoBehaviour, IDamagable
         HP -= damage;
         hpBar?.Set((float)HP/maxHP);
         Animate();
-        if(HP <= 0) Kill();
+        audioSource.pitch = Random.Range(0.5f, 0.76f);
+        audioSource.Play();
+        if (HP <= 0) Kill();
     }
 
     public void Kill()
     {
+        audioSource.pitch = Random.Range(0.5f, 0.76f);
+        audioSource.Play();
         hpBar?.gameObject.SetActive(false);
         animator.PlayAnimation(1);
     }
