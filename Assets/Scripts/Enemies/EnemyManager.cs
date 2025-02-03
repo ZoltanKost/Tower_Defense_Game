@@ -36,7 +36,7 @@ public class EnemyManager : MonoBehaviour {
         TickState(delta);
         TickMovement(delta);
         TickDetection();
-        AnimatorTick(Time.fixedDeltaTime);
+        AnimatorTick(delta);
         if (lowestInactive == 0)
         {
             bool left = false;
@@ -174,10 +174,15 @@ public class EnemyManager : MonoBehaviour {
     public void SpawnEnemies(int wave) {
         stage = 0;
         GenerateWave(wave);
-        enemies = new Enemy[32];
-        for (int i = 0; i < 32; i++)
+        Debug.Log(enemies.Length);
+        if (enemies.Length == 0)
         {
-            enemies[i] = Instantiate(enemyPrefabs[0], transform);
+            Debug.Log("Spawning 32 enemies");
+            enemies = new Enemy[32];
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                enemies[i] = Instantiate(enemyPrefabs[0], transform);
+            }
         }
     }
 
@@ -223,15 +228,21 @@ public class EnemyManager : MonoBehaviour {
     public void GenerateWave(int wave)
     {
         List<Queue<PathCell>> paths = pathfinding.vectors;
-        int max = paths.Count;
-        int waveCount = UnityEngine.Random.Range(1,Mathf.Min(wave + 1, max + 1));
-        waves = new Wave[max];
-        for (int i = 0; i < max; i++)
+        int pathsCount = paths.Count;
+        int enemyNumber = wave * 2 + wave/2;
+        waves = new Wave[pathsCount];
+        int pathCellsCount = 0;
+        foreach (var path in paths)
         {
-            Debug.Log($"Generating Wave; wave*path.Count:{wave * max}");
+            pathCellsCount += paths.Count;
+        }
+        for (int i = 0; i < pathsCount; i++)
+        {
+            float numForWave = paths[i].Count / pathCellsCount;
+            Debug.Log("Spawning: " + numForWave);
             waves[i] = new Wave(i,
-                    UnityEngine.Random.Range(wave, wave * 5),
-                    enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
+                    (int)(enemyNumber * numForWave),
+                    //enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
                     paths[i], spawnRate);
         }
     }
@@ -252,7 +263,7 @@ public class EnemyManager : MonoBehaviour {
     {
         Debug.Log("EnemySpawned");
         Enemy enemy = enemies[lowestInactive++];
-        enemy.Init(waves[ID].Prefab, ID, lowestInactive - 1, waves[ID].Path, RemoveEnemy, RegisterKill, playerManager.Damage);
+        enemy.Init(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)], ID, lowestInactive - 1, waves[ID].Path, RemoveEnemy, RegisterKill, playerManager.Damage);
         waves[ID].Count--;
         enemy.gameObject.SetActive(true);
         if (lowestInactive >= enemies.Length)
@@ -283,16 +294,16 @@ public class EnemyManager : MonoBehaviour {
 public struct Wave
 {
     public int ID;
-    public Enemy Prefab;
+    //public Enemy Prefab;
     public int Count;
     public int Spawned;
     public Queue<PathCell> Path;
     public float time;
     public float spawnRate;
-    public Wave(int id, int count, Enemy prefab, Queue<PathCell> path, float _spawnRate)
+    public Wave(int id, int count, Queue<PathCell> path, float _spawnRate)
     {
         Spawned = 0;
-        Prefab = prefab;
+        //Prefab = prefab;
         Count = count;
         ID = id;
         Path = path;
