@@ -10,6 +10,7 @@ public class SpellObject : MonoBehaviour
     public bool damage;
     public bool spawn;
     public bool remove;
+    public bool spawnProjectile;
     public void Init(Animation[] array, int index, Vector3 _position, SpellData spellData)
     {
         position = _position;
@@ -59,6 +60,11 @@ public class SpellObject : MonoBehaviour
         damage = false;
         remove = false;
         spawn = false;
+    }
+    public void SpawnProjectileCallback()
+    {
+        spawnProjectile = true;
+        spawnData.projectile.startPosition = transform.position;
     }
     public void DamageCallback()
     {

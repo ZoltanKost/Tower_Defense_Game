@@ -1,9 +1,14 @@
 using System;
 using UnityEngine;
+using DG.Tweening;
 
 [CreateAssetMenu(fileName = "SpellSO", menuName = "SpellSO", order = 0)]
 public class SpellSO : ScriptableObject {
     public SpellData spellData;
+    public bool tweenAnimation;
+    public Ease ease;
+    public Vector3 targetDeltaPosition;
+    public float animationTime, amplitude_overshoot;
     public Animation[] animations;
     public SpellSpawnData spawnData;
 }

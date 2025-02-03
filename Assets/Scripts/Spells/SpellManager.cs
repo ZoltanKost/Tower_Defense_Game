@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
@@ -5,10 +6,11 @@ public class SpellManager : MonoBehaviour {
     public const int CALLBACK_REMOVE = 0;
     public const int CALLBACK_DAMAGE_AREA= 1;
     public const int CALLBACK_SPAWN_SPELL = 2;
-    public const int CALLBACK_DAMAGE_TARGET= 3;
-    public const int CALLBACK_SPAWN_PPROJECTILE= 4;
+    public const int CALLBACK_SPAWN_PPROJECTILE= 3;
+    public const int CALLBACK_DAMAGE_TARGET= 4;
     [SerializeField] private SpellObject prefab;
     [SerializeField] private EnemyManager enemyManager;
+    [SerializeField] private ProjectileManager projectileManager;
     //[SerializeField] private AnimationManager animationManager;
     //List<CustomAnimator> spells = new List<CustomAnimator>();
     public SpellObject[] spellAnimators;
@@ -48,25 +50,21 @@ public class SpellManager : MonoBehaviour {
                     spellAnimators[i].Init(spell.animations, i, position,data, spell.spawnData);
                     break;
                 }
-            /*case SpellAction.SpawnSpells:
+            case SpellAction.SpawnProjectiles:
                 {
-                    *//*int i = count++;
+                    int i = count++;
                     Debug.Log(i);
-                    if (count >= spells.Length) Resize();
+                    if (count >= spellAnimators.Length) Resize();
                     position.z = 0;
-                    spells[i].transform.SetPositionAndRotation(position, Quaternion.identity);
-                    spells[i].gameObject.SetActive(true);
-                    spells[i].animations = spell.animations;
-                    spells[i].Init();
-                    spells[i].actions[CALLBACK_REMOVE].AddListener(() => { RemoveSpell(i); });
-                    SpellSO[] spellsToSpawn = spell.spellsToSpawn;
-                    Vector3[] positions = spell.deltaPosToSpawn;
-                    for (int l = 0; l < spellsToSpawn.Length; i++)
-                    {
-                        spells[i].actions[CALLBACK_SPAWN_SPELL].AddListener(() => { CastSpell(spellsToSpawn[i].spellData, position + positions[i]); });
-                    }*//*
+                    spellAnimators[i].Init(spell.animations, i, position,data, spell.spawnData);
                     break;
-                }*/
+                }
+        }
+        if (spell.tweenAnimation)
+        {
+            Transform obj = spellAnimators[count - 1].transform;
+            obj.position -= spell.targetDeltaPosition;
+            obj.DOMove(obj.position + spell.targetDeltaPosition, spell.animationTime).SetEase(spell.ease,spell.amplitude_overshoot);
         }
     }
     public void CastSpell(SpellData data, SpellSpawnData spawnData, Animation[] animations, Vector3 position)
@@ -137,16 +135,13 @@ public class SpellManager : MonoBehaviour {
         {
             spellAnimators[i].animator.UpdateAnimator(dt);
         }
-        for (int i = 0; i < count; i++)
+        for(int i = 0; i < count; i++)
         {
             if (spellAnimators[i].damage)
             {
                 spellAnimators[i].damage = false;
                 enemyManager.AreaSpell(spellAnimators[i].data, spellAnimators[i].position);
             }
-        }
-        for (int i = 0; i < count; i++)
-        {
             if (spellAnimators[i].spawn && spellAnimators[i].spawnData.repeat > 0)
             {
                 Debug.Log($"SpawnFlag detected, spawning... id:{i};more times:{spellAnimators[i].spawnData.repeat > 0}");
@@ -158,14 +153,28 @@ public class SpellManager : MonoBehaviour {
                     CastSpell(spellAnimators[i].data, spellAnimators[i].spawnData, spellAnimators[i].spawnData.spell.animations, spellAnimators[i].position + spellAnimators[i].spawnData.deltaPosToSpawn[l]);
                 }
             }
-        }
-        for (int i = 0; i < count; i++)
-        {
-            if (spellAnimators[i].remove) 
-            { 
+            if (spellAnimators[i].spawnProjectile)
+            {
+                Enemy[] targets = enemyManager.enemies;
+                int l = targets.Length;
+                for (int k =0; k < l; k++)
+                {
+                    float distance = (spellAnimators[i].transform.position - targets[k].transform.position).magnitude;
+                    if (spellAnimators[i].data.radius > distance)
+                    {
+                        spellAnimators[i].spawnData.projectile.targetPosition = targets[k].transform.position;
+                        spellAnimators[i].spawnData.projectile.target = targets[k];
+                        projectileManager.SendProjectile(spellAnimators[i].spawnData.projectile);
+                    }
+                }
+                spellAnimators[i].spawnProjectile = false;
+            }
+            if (spellAnimators[i].remove)
+            {
                 spellAnimators[i].remove = false;
                 RemoveSpell(i);
-            } // enemyManager.AreaSpell(spellAnimators[i].data, spellAnimators[i].position);
+                i--;
+            }
         }
     }
 }

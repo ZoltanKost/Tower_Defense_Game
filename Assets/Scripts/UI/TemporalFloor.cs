@@ -190,14 +190,22 @@ public class TemporalFloor : Floor
     }
     public void SetSpell(SpellData spellData)
     {
+        foreach (Tilemap map in visuals)
+        {
+            map.ClearAllTiles();
+        }
         visual.sprite = spellData.UIicon;
         float offsetF = spellData.globalRadius / cellSize;
         visual.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         //visual.color = visuals[0].color;
-        arrows[0].localPosition = new Vector3(-offsetF, -offsetF);
-        arrows[1].localPosition = new Vector3(offsetF, - offsetF);
-        arrows[2].localPosition = new Vector3(-offsetF, offsetF);
-        arrows[3].localPosition = new Vector3(offsetF, offsetF);
+        for (int y = -spellData.radius; y < spellData.radius; y++)
+        {
+            for (int x = -spellData.radius; x < spellData.radius; x++)
+            {
+                //if (Mathf.Abs(x) + Mathf.Abs(y) > spellData.radius) continue;
+                SetTile(new Vector3Int(x, y), 1, TileID.AttackRangeShadow);
+            }
+        }
     }
     public void SetArrows(Vector2Int gridPosition, Vector3Int rectSize)
     {
