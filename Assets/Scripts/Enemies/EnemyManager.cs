@@ -196,18 +196,19 @@ public class EnemyManager : MonoBehaviour {
 
     public void AreaSpell(SpellData spell, Vector3 position)
     {
-        string s = "Area spell Cast...";
+        int reached = 0;
         for (int i = 0; i < lowestInactive; i++)
         {
             if (enemies[i].state == EnemyState.dead) continue;
-            //float distance = Vector3.Distance(, position);
-            float dX = Mathf.Abs(enemies[i].transform.position.x - position.x);
-            float dY = Mathf.Abs(enemies[i].transform.position.y - position.y);
+            Vector3 enemyPos = enemies[i].transform.position;
+            float dX = Mathf.Abs(enemyPos.x - position.x);
+            float dY = Mathf.Abs(enemyPos.y - position.y);
 
             if (dX > spell.radius || dY > spell.radius) continue;
             enemies[i].Damage(spell.damage);
-            s += $"Damage id{i}: distanceX = {dX}, distanceY = {dY}";
+            reached++;
         }
+        string s = $"Area spell Cast, reached: { reached}spell.damage = {spell.damage}, spell.radius = {spell.radius}";
         Debug.Log(s);
     }
     public bool TryHighlightEntity(Vector3 position, out Enemy archer, float radius)
@@ -234,16 +235,17 @@ public class EnemyManager : MonoBehaviour {
         int pathCellsCount = 0;
         foreach (var path in paths)
         {
-            pathCellsCount += paths.Count;
+            pathCellsCount += path.Count;
         }
         for (int i = 0; i < pathsCount; i++)
         {
-            float numForWave = paths[i].Count / pathCellsCount;
-            Debug.Log("Spawning: " + numForWave);
+            float numForWave = (float)paths[i].Count / pathCellsCount;
+            Debug.Log("Spawning: " + enemyNumber * numForWave);
             waves[i] = new Wave(i,
                     (int)(enemyNumber * numForWave),
                     //enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
                     paths[i], spawnRate);
+            Debug.Log(wave);
         }
     }
     public void TickSpawn(float delta)

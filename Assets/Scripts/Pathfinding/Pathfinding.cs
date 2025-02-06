@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 public class Pathfinding : MonoBehaviour{
 	[SerializeField] FloorManager floor;
-	[SerializeField] private int maxPaths = 200;
+	[SerializeField] private int maxPaths = 1000;
 	public List<FloorCell> castlePositions;
-	// List<List<FloorCell>> paths = new();
 	public List<Queue<PathCell>> vectors{get;private set;}
 	int offsetX, offsetY;
 	float cellSize;
+
+	// Heap stuff
+	public List<Path> paths = new List<Path>();
+	public List<int> finishedPaths = new List<int>();
 	public void SetCastlePoint(int gridX, int gridY, int width, int height){
 		if(castlePositions == null)castlePositions = new List<FloorCell>();
 		gridX += width/2;
@@ -15,27 +19,64 @@ public class Pathfinding : MonoBehaviour{
 		floor.floorCells[gridX, gridY].road = true;
         FloorCell pos = floor.floorCells[gridX,gridY];
 		castlePositions.Add(pos);
-	}
+		paths.Add(new Path(new Vector2Int(pos.gridX,pos.gridX)));
+    }
 	public void ClearCastlePoint(){
 		castlePositions.Clear();
 	}
 	public void Awake(){
+		/*roads = new Vector2Int[32];
+		for (int i = 0; i < 32; i++)
+		{
+			roads[i] = -Vector2Int.one;
+		}*/
 		vectors = new List<Queue<PathCell>>();
-	}
+        cellSize = floor.GetComponent<Grid>().cellSize.x;
+    }
+	public void PlaceRoad(int x, int y, bool spawnPoint)
+	{
+		Vector2Int newRoad = new(x, y);
+		int Count = paths.Count;
+		bool addedToPath = false;
+		for(int i = 0; i < Count; i++)
+		{
+			int res = paths[i].TryAddCell(newRoad);
+			Debug.Log($"path: {i} result: {res} pos: {x},{y} ");
+			if (res == 0) 
+			{
+				addedToPath = true;
+                continue; 
+			}
+			if (res > 0)
+			{
+				addedToPath = true;
+                paths.Add(new Path(paths[i], newRoad, res));
+				if (spawnPoint) finishedPaths.Add(i);
+			}
+		}
+		if (!addedToPath)
+		{
+	        paths.Add(new Path(newRoad));
+        }
+        if (spawnPoint) finishedPaths.Add(paths.Count);
+    }
+
 	public bool FindPathToCastle(){
 		offsetX = floor.offset.x;
 		offsetY = floor.offset.y;
-		cellSize = floor.GetComponent<Grid>().cellSize.x;
 		// paths.Clear();
-		vectors.Clear();
+		/*vectors.Clear();
 		Stack<FloorCell> closedSet = new();
 		foreach(FloorCell graph in castlePositions){
-			BFSearch(graph,closedSet,vectors);
-		}
+			DFSearch(graph,closedSet,vectors);
+		}*/
+
+		Debug.Log($"Count: {paths.Count}, finished: {finishedPaths.Count}");
 		// Debug.Log(vectors.Count);
-		return vectors.Count > 0;
+		return false;
+		//return vectors.Count > 0;
 	}
-	public void BFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<PathCell>> result){
+	public void DFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<PathCell>> result){
 		if(result.Count > maxPaths) return;
 		if(!(current.road || current.bridge)) return;
 		if(closedSet.Count != 0)
@@ -106,13 +147,78 @@ public class Pathfinding : MonoBehaviour{
 		// Debug.Log($"Checking {current.gridX},{current.gridY}...");
 		foreach(FloorCell n in floor.GetNeighbours4(current.gridX, current.gridY)){
 			if(!closedSet.Contains(n)) {
-				BFSearch(n,closedSet,result);
+				DFSearch(n,closedSet,result);
 			}
 		}
 		// Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
 		closedSet.Pop();
 		return;
 	}
+}
+public struct Path
+{
+	public Vector2Int start;
+    public Vector2Int end;
+    public Vector2Int[] cells;
+    public int Count;
+	public Path(Vector2Int _start)
+	{
+		start = _start;
+		end = default;
+		cells = new Vector2Int[16];
+		cells[0] = start;
+        Count = 0;
+	}
+    public Path(Path path, Vector2Int add, int endIndex)
+    {
+        start = path.start;
+        end = path.cells[endIndex];
+        cells = new Vector2Int[endIndex * 2];
+        Array.Copy(path.cells,cells,endIndex);
+        cells[endIndex + 1] = add;
+		Count = endIndex + 2;
+    }
+    public void SortUp(int index)
+	{
+        int parent = (index - 1) / 2;
+        while ((cells[parent] - start).magnitude >= (cells[index] - start).magnitude)
+        {
+            var temp = cells[parent];
+            cells[parent] = cells[index];
+            cells[index] = temp;
+            index = parent;
+            parent = (parent - 1) / 2;
+        }
+    }
+	public bool SearchDesiredPlace(Vector2Int target, out int index)
+	{
+        index = 0;
+        int magnitude = Mathf.Abs(target.x - start.x) + Mathf.Abs(target.y - start.y);
+		while(magnitude != 1)
+		{
+            index++;
+            if (index >= Count) return false;
+            magnitude = Mathf.Abs(target.x - cells[index].x) + Mathf.Abs(target.y - cells[index].y);
+        }
+		return true;
+	}
+	public int TryAddCell(Vector2Int cell)
+	{
+        cells[Count++] = cell;
+		if ((int)(end - cell).magnitude == 1)
+		{
+			end = cell;
+			return 0;
+		}
+		if(SearchDesiredPlace(cell, out int index))
+		{
+			return index;
+		}
+		else
+		{
+			return -1;
+		}
+    }
 }
 
 public struct PathCell 

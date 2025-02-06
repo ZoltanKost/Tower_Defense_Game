@@ -20619,7 +20619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floor: {fileID: 2051073313}
-  maxPaths: 200
+  maxPaths: 1000
   castlePositions: []
 --- !u!4 &1963445668
 Transform:

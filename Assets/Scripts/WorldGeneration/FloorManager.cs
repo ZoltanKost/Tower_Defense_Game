@@ -138,15 +138,33 @@ public class FloorManager : MonoBehaviour{
             // }    
             return false;
         }*/
-        if(floorCells[posX, posY + 1].currentFloor == floor + 1){
+        //if (CheckSquareRoad(posX,posY)) return false;
+        if (floorCells[posX, posY + 1].currentFloor == floor + 1){
             floorCells[posX, posY].ladder = true;
             floors[floor + 1].PlaceStairs(pos);
         }
         //else if(floor == 0) return false;
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
+        pathfinding.PlaceRoad(posX,posY, floor ==0);
         return true;
     }
+    /*public bool CheckSquareRoad(int gridX, int gridY)
+    {
+        bool right = floorCells[gridX + 1, gridY].road || floorCells[gridX + 1, gridY].bridge ;
+        bool left =  floorCells[gridX - 1, gridY].road || floorCells[gridX - 1, gridY].bridge;
+        bool top =   floorCells[gridX, gridY + 1].road || floorCells[gridX, gridY + 1].bridge;
+        bool bot =  floorCells[gridX, gridY - 1].road || floorCells[gridX, gridY - 1].bridge;
+        bool topright = floorCells[gridX + 1, gridY + 1].road || floorCells[gridX + 1, gridY + 1].bridge;
+        if (right && top && topright) return true;
+        bool botright = floorCells[gridX + 1, gridY - 1].road || floorCells[gridX + 1, gridY - 1].bridge;
+        if (right && bot && botright) return true;
+        bool botleft = floorCells[gridX - 1, gridY - 1].road || floorCells[gridX - 1, gridY - 1].bridge;
+        if (left && bot && botleft) return true;
+        bool topleft = floorCells[gridX - 1, gridY + 1].road || floorCells[gridX - 1, gridY + 1].bridge;
+        if (left && top && topleft) return true;
+        return false;
+    }*/
     public bool PlaceBridge(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
         if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;

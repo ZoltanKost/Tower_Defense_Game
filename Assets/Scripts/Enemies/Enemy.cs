@@ -91,6 +91,7 @@ public class Enemy : MonoBehaviour, IDamagable
         transform.position = start.pos;
         destination = start.pos;
         state = EnemyState.run;
+        MaxHP = prefab.MaxHP;
         currentHP = prefab.MaxHP;
         speed = prefab.speed;
         damage = prefab.damage;

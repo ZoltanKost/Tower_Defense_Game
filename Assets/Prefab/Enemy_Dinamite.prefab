@@ -47,8 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
   ProjectileFlag: 0
   ProjectileData:
+    spell: {fileID: 0}
     targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 5
@@ -324,6 +326,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 647510513473006261}
     m_Modifications:
+    - target: {fileID: 4514302994049756918, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4957916278593064903, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
       propertyPath: m_Name
       value: EnemyHPBar_Canvas
