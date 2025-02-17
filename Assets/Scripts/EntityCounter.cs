@@ -10,23 +10,20 @@ public class EntityCounter : MonoBehaviour
     [SerializeField] private TMP_Text enemy;
     [SerializeField] private TMP_Text archer;
     [SerializeField] private TMP_Text building;
-    public float[] times;
-    public int num;
+    public int num = 0;
     public int l;
-    private void Awake()
-    {
-        times = new float[l];
-        num = 0;
-    }
+    float fps;
     void Update()
     {
         num++;
+        fps += 1f / Time.deltaTime;
         if(num < l)
             return;
         num = 0;
-        FPS.text = (Mathf.FloorToInt(1f / Time.deltaTime)).ToString();
+        FPS.text = Mathf.FloorToInt(fps/l).ToString();
+        fps = 0;
         enemy.text = enemyManager.lowestInactive.ToString();
         archer.text = archerManager.archersList.Count.ToString();
-        building.text = buildingManager.Count.ToString();
+        //building.text = buildingManager.Count.ToString();
     }
 }

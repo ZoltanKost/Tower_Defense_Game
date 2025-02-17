@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour {
     [SerializeField] private ProjectileManager projectileManager;
+    [SerializeField] private WaveHighlighting waveHighlighting;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private FloorManager floorManager;
     [SerializeField] private PlayerManager playerManager;
@@ -14,13 +15,16 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private float spawnRate;
     Action onEnemyFinished;
     public Enemy[] enemies;
-    Wave[] waves;
+    public List<Wave> waves = new();
     public int lowestInactive = 0;
+    int enemyNumber = 0;
     bool active;
     float cellSize;
     Vector3 offset;
-    int stage;
-    public void Init(Action win){
+    public int waveNumber;
+    public void Init(Action win, int _waveNumber = 0){
+        waveNumber = _waveNumber;
+        GenerateWave(++waveNumber);
         onEnemyFinished = win;
         offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
@@ -42,13 +46,14 @@ public class EnemyManager : MonoBehaviour {
             bool left = false;
             foreach (Wave wave in waves)
             {
-                if(wave.Count > 0)
+                if(wave.count > 0)
                 {
                     left = true;
                 }
             }
             if (left) return;
             onEnemyFinished?.Invoke();
+            GenerateWave(++waveNumber);
         }
     }
     public void RegisterKill(int index){
@@ -124,11 +129,11 @@ public class EnemyManager : MonoBehaviour {
             enemies[i].transform.position += (enemies[i].destination - enemies[i].transform.position).normalized * delta * enemies[i].speed;
             if ((enemies[i].destination - enemies[i].transform.position).magnitude <= .1f)
             {
-                if (enemies[i].currentPath.Count > 0) 
+                if (enemies[i].pointsLeft > 0) 
                 {
-                    PathCell next = enemies[i].currentPath.Dequeue();
+                    enemies[i].pointsLeft--;
+                    PathCell next = enemies[i].currentPath[enemies[i].pointsLeft];
                     enemies[i].destination = next.pos;
-                    enemies[i].pointsLeft = enemies[i].currentPath.Count;
                     enemies[i].animator.SetSortingParams(6 + 1000 /next.gridY,next.floor);
                 }
                 else enemies[i].DamageCastle();
@@ -171,9 +176,7 @@ public class EnemyManager : MonoBehaviour {
             }
         }
     }
-    public void SpawnEnemies(int wave) {
-        stage = 0;
-        GenerateWave(wave);
+    public void SpawnEnemies() {
         Debug.Log(enemies.Length);
         if (enemies.Length == 0)
         {
@@ -228,31 +231,42 @@ public class EnemyManager : MonoBehaviour {
     }
     public void GenerateWave(int wave)
     {
-        List<Queue<PathCell>> paths = pathfinding.vectors;
-        int pathsCount = paths.Count;
-        int enemyNumber = wave * 2 + wave/2;
-        waves = new Wave[pathsCount];
-        int pathCellsCount = 0;
+        waveNumber = wave;
+        CalculateWave();
+    }
+    public void CalculateWave()
+    {
+        //Debug.Log("CalculatingWave");
+        enemyNumber = waveNumber * 2 + waveNumber / 2;
+        List<List<PathCell>> paths = pathfinding.paths;
+        if (paths.Count < 1) 
+        {
+            waveHighlighting.ClearWaves();
+            return; 
+        }
+        waves.Clear();
         foreach (var path in paths)
         {
-            pathCellsCount += path.Count;
-        }
-        for (int i = 0; i < pathsCount; i++)
-        {
-            float numForWave = (float)paths[i].Count / pathCellsCount;
-            Debug.Log("Spawning: " + enemyNumber * numForWave);
-            waves[i] = new Wave(i,
+            if (path.Count < 1) 
+            {
+                Debug.Log("path is shorter then one"); continue;
+            }
+            int maxCells = path.Count;
+            //Debug.Log($"maxCells: {maxCells}");
+            float numForWave = maxCells ;
+            var wave = new Wave(waves.Count,
                     (int)(enemyNumber * numForWave),
-                    //enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
-                    paths[i], spawnRate);
-            Debug.Log(wave);
+                    path, spawnRate);
+            waves.Add(wave);
+            //Debug.Log($"wave {waves.Count - 1}, count: {wave.count} {enemyNumber} {numForWave}, paths: {wave.Paths.Count}");
         }
+        waveHighlighting.SetWaves(waves);
     }
     public void TickSpawn(float delta)
     {
-        for(int i = 0; i < waves.Length; i++)
+        for(int i = 0; i < waves.Count; i++)
         {
-            if (waves[i].Count <= 0) continue;
+            if (waves[i].count <= 0) continue;
             waves[i].time += delta;
             if (waves[i].time >= waves[i].spawnRate )
             {
@@ -266,7 +280,7 @@ public class EnemyManager : MonoBehaviour {
         Debug.Log("EnemySpawned");
         Enemy enemy = enemies[lowestInactive++];
         enemy.Init(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)], ID, lowestInactive - 1, waves[ID].Path, RemoveEnemy, RegisterKill, playerManager.Damage);
-        waves[ID].Count--;
+        waves[ID].count--;
         enemy.gameObject.SetActive(true);
         if (lowestInactive >= enemies.Length)
         {
@@ -293,20 +307,20 @@ public class EnemyManager : MonoBehaviour {
     }
 }
 [Serializable]
-public struct Wave
+public class Wave
 {
     public int ID;
     //public Enemy Prefab;
-    public int Count;
+    public int count;
     public int Spawned;
-    public Queue<PathCell> Path;
+    public List<PathCell> Path;
     public float time;
     public float spawnRate;
-    public Wave(int id, int count, Queue<PathCell> path, float _spawnRate)
+    public Wave(int id, int count, List<PathCell> path, float _spawnRate)
     {
         Spawned = 0;
         //Prefab = prefab;
-        Count = count;
+        this.count = count;
         ID = id;
         Path = path;
         time = 0;

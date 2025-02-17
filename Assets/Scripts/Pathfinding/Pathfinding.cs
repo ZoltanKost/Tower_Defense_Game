@@ -1,229 +1,280 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-public class Pathfinding : MonoBehaviour{
-	[SerializeField] FloorManager floor;
-	[SerializeField] private int maxPaths = 1000;
-	public List<FloorCell> castlePositions;
-	public List<Queue<PathCell>> vectors{get;private set;}
-	int offsetX, offsetY;
-	float cellSize;
+public class Pathfinding : MonoBehaviour
+{
+    [SerializeField] FloorManager floor;
+    [SerializeField] private EnemyManager enemyManager;
+    [SerializeField] private int maxPaths = 128;
+    FloorCell castlePosition;
+    int offsetX, offsetY;
+    float cellSize;
 
-	// Heap stuff
-	public List<Path> paths = new List<Path>();
-	public List<int> finishedPaths = new List<int>();
-	public void SetCastlePoint(int gridX, int gridY, int width, int height){
-		if(castlePositions == null)castlePositions = new List<FloorCell>();
-		gridX += width/2;
-		Debug.Log(message: $"Castle: {gridX},{gridY}");
-		floor.floorCells[gridX, gridY].road = true;
-        FloorCell pos = floor.floorCells[gridX,gridY];
-		castlePositions.Add(pos);
-		paths.Add(new Path(new Vector2Int(pos.gridX,pos.gridX)));
+    /*public Dictionary<PathListAccessor, List<List<PathCell>>> start_pathList;
+    int pathsCount = 0;
+    public int totalCells = 0;
+    int currentWaveCells;*/
+
+    public List<List<PathCell>> paths = new List<List<PathCell>>();
+    public List<FloorCell> possibleStarts = new List<FloorCell>();
+    public void SetTargetPoint(int gridX, int gridY, int width, int height)
+    {
+        gridX += width / 2;
+        Debug.Log(message: $"Castle: {gridX},{gridY}");
+        floor.floorCells[gridX, gridY].road = true;
+        FloorCell pos = floor.floorCells[gridX, gridY];
+        castlePosition = pos;
+        offsetX = floor.offset.x;
+        offsetY = floor.offset.y;
+        //paths.Add(new Path(new Vector2Int(pos.gridX,pos.gridY)));
     }
-	public void ClearCastlePoint(){
-		castlePositions.Clear();
-	}
-	public void Awake(){
-		/*roads = new Vector2Int[32];
+    public void ClearCastlePoint()
+    {
+        castlePosition = default;
+    }
+    public void Awake()
+    {
+        /*roads = new Vector2Int[32];
 		for (int i = 0; i < 32; i++)
 		{
 			roads[i] = -Vector2Int.one;
 		}*/
-		vectors = new List<Queue<PathCell>>();
+        paths = new();
         cellSize = floor.GetComponent<Grid>().cellSize.x;
     }
-	public void PlaceRoad(int x, int y, bool spawnPoint)
-	{
-		Vector2Int newRoad = new(x, y);
-		int Count = paths.Count;
-		bool addedToPath = false;
-		for(int i = 0; i < Count; i++)
-		{
-			int res = paths[i].TryAddCell(newRoad);
-			Debug.Log($"path: {i} result: {res} pos: {x},{y} ");
-			if (res == 0) 
-			{
-				addedToPath = true;
-                continue; 
-			}
-			if (res > 0)
-			{
-				addedToPath = true;
-                paths.Add(new Path(paths[i], newRoad, res));
-				if (spawnPoint) finishedPaths.Add(i);
-			}
-		}
-		if (!addedToPath)
-		{
-	        paths.Add(new Path(newRoad));
+
+    public void UpdatePaths()
+    {
+        paths.Clear();
+        for (int i = 0; i < possibleStarts.Count; i++)
+        {
+            if (!FindPath(possibleStarts[i], castlePosition, out List<PathCell> res)) continue;
+            paths.Add(res);
         }
-        if (spawnPoint) finishedPaths.Add(paths.Count);
+        enemyManager.CalculateWave();
     }
+    /*void OnDrawGizmos()
+    {
+        if (paths == null || paths.Count < 1) { Debug.Log("Nothing to Draw"); return; }
+        foreach (var path in paths)
+        {
+            var offset = new Vector3(0, 0, 5);
+            if (path.Count < 1) continue;
+            Vector3 prevCell = path[0].pos;
+            foreach (var nextCell in path)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(prevCell + offset,nextCell.pos + offset);
+                prevCell = nextCell.pos;
+            }
+        }
+    }*/
+    public unsafe bool FindPath(FloorCell start, FloorCell end, out List<PathCell> result)
+    {
+        result = new();
+        FloorCell[,] grid = floor.floorCells;
+        int w = grid.GetLength(0);
+        int h = grid.GetLength(1);
+        HashSet<FloorCell> closed = new();
+        Path_Cell[] openHeap = new Path_Cell[16];
+        int heapCount = 0;
+        HashSet<FloorCell> openCell = new();
+        Path_Cell startPath = new Path_Cell(start, GetStepCost(start), 
+                            Mathf.Abs(end.gridX - start.gridX)
+                            + Mathf.Abs(end.gridY - start.gridY), null);
+        openHeap[heapCount++] = startPath;
+        FloorCell[] neighbours = new FloorCell[4];
+        Debug.Log($"Start Calculating! {start.gridX}, {start.gridY}: {end.gridX}, {end.gridY} ");
+        int steps = 0;
+        Path_Cell current;
+        while (heapCount > 0 && steps < 100)
+        {
+            steps++;
+            current = PeekAndBalance(openHeap, heapCount--);
+            Debug.Log($"Checking! {current.gridX}, {current.gridY} ");
+            if (current.gridX == end.gridX && current.gridY == end.gridY) 
+            {
+                Debug.Log($"find! {current.gridX}, {current.gridY}");
 
-	public bool FindPathToCastle(){
-		offsetX = floor.offset.x;
-		offsetY = floor.offset.y;
-		// paths.Clear();
-		/*vectors.Clear();
-		Stack<FloorCell> closedSet = new();
-		foreach(FloorCell graph in castlePositions){
-			DFSearch(graph,closedSet,vectors);
-		}*/
+                int i = 0;
+                //construct the path
+                /*while (current.cameFrom != null && current.gridX != start.gridX && current.gridY != start.gridY)
+                {
+                    i++;
+                    current = current.cameFrom;
+                    Debug.Log(i);
 
-		Debug.Log($"Count: {paths.Count}, finished: {finishedPaths.Count}");
-		// Debug.Log(vectors.Count);
-		return false;
-		//return vectors.Count > 0;
-	}
-	public void DFSearch(FloorCell current, Stack<FloorCell> closedSet, List<Queue<PathCell>> result){
-		if(result.Count > maxPaths) return;
-		if(!(current.road || current.bridge)) return;
-		if(closedSet.Count != 0)
-		{
-			FloorCell prev = closedSet.Peek();
-			if((prev.ladder || current.ladder) && prev.gridY == current.gridY) return;
-			if (current.bridge)
-			{
-				if ((prev.bridge && (prev.bridgeData.bridgeDirection != current.bridgeData.bridgeDirection || prev.bridgeData.floor != current.bridgeData.floor)) || (!prev.bridge && !current.bridgeData.start)) return;
-			}
-			else if (prev.bridge && !prev.bridgeData.start) return;
-			else
-			{
-				if (current.currentFloor == prev.currentFloor - 1)
-				{
-					Debug.Log($"Current is under: current: {current.gridX}:{current.gridY};{current.currentFloor}; prev: {prev.gridX}:{prev.gridY};{prev.currentFloor}");
-					if ((current.gridY != prev.gridY - 1)) {
-						Debug.Log("current is not up of previous cell");
-						return;
-					}
-					else
-					{
-                        Debug.Log("current is up of previous cell");
-                    }
-                }
-				else if (current.currentFloor == prev.currentFloor + 1)
-				{
-					Debug.Log($"Current is upon: current: {current.gridX}:{current.gridY};{current.currentFloor}; prev: {prev.gridX}:{prev.gridY};{prev.currentFloor}");
-					if ((current.gridY != prev.gridY + 1))
+                }*/
+
+                result.Add(new PathCell(current, cellSize, offsetX, offsetY));
+                do
+                {
+                    current = current.cameFrom;
+                    result.Add(new PathCell(current, cellSize, offsetX, offsetY));
+                } while (current.gridX != start.gridX && current.gridY != start.gridY);
+                return true;
+            }
+            GetNeighbours4(current,grid,w,h,neighbours);
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (!closed.Contains(neighbours[i]) && !openCell.Contains(neighbours[i])) 
+                {
+                    //Debug.Log($"{neighbours[i].gridX},{neighbours[i].gridY} is neither in open nor in closed set");
+                    if (IsWalkable(neighbours[i], grid))
                     {
-                        Debug.Log("current is not up of previous cell");
-                        return;
+                        int stepCost = GetStepCost(neighbours[i]);
+                        int leftCost = Mathf.Abs(end.gridX - neighbours[i].gridX)
+                            + Mathf.Abs(end.gridY - neighbours[i].gridY);
+                        Debug.Log( current);
+                        if(heapCount >= openHeap.Length)
+                        {
+                            Array.Resize(ref openHeap,heapCount * 2);
+                        }
+                        AddToHeap(
+                            new Path_Cell(neighbours[i], current.passedWayCost + stepCost, leftCost,current),
+                            openHeap, heapCount++);
+                        openCell.Add(neighbours[i]);
+                        //Debug.Log($"cell was scheduled in open set");
                     }
                     else
                     {
-                        Debug.Log("current is up of previous cell");
+                        //Debug.Log($"cell was denied as closed");
+                        closed.Add(neighbours[i]);
                     }
                 }
-			}
+            }
+            closed.Add(grid[current.gridX, current.gridY]);
+            openCell.Remove(grid[current.gridX, current.gridY]);
+            //Debug.Log($"{current.gridX},{current.gridY} has already been proceed, removing from sets");
         }
-		if(floor.IsStarting(current.gridX, current.gridY)){
-			if(closedSet.Count == 0) return;
-			string s =
-			$"Path nr.{result.Count} just finded! Start: {current.gridX},{current.gridY}, Cells:{closedSet.Count}.\n";
-			closedSet.Push(current);
-			Queue<PathCell> res = new Queue<PathCell>();
-            s += "Path contains following:\n";
-            foreach (FloorCell cell in closedSet){
-			 	s += $"Cell: {cell.gridX}:{cell.gridY};{cell.currentFloor};\n";
-                PathCell pathCell = new PathCell 
-				{
-                    pos = new Vector3()
-                    {
-                        x = cell.gridX - offsetX + cellSize / 2,
-                        y = cell.gridY - offsetY + cellSize / 2
-                    },
-					floor = cell.bridge && !cell.bridgeData.start ? cell.bridgeData.floor : cell.currentFloor,
-					gridY = cell.gridY
-				};
-				res.Enqueue(pathCell);
-			}
-			closedSet.Pop();
-			Debug.Log(s);
-			result.Add(res);
-			return;
-		}
-		closedSet.Push(current);
-		// Debug.Log($"Checking {current.gridX},{current.gridY}...");
-		foreach(FloorCell n in floor.GetNeighbours4(current.gridX, current.gridY)){
-			if(!closedSet.Contains(n)) {
-				DFSearch(n,closedSet,result);
-			}
-		}
-		// Debug.Log($"All the neighbours of {current.gridX},{current.gridY} are checked.");
-		closedSet.Pop();
-		return;
-	}
-}
-public struct Path
-{
-	public Vector2Int start;
-    public Vector2Int end;
-    public Vector2Int[] cells;
-    public int Count;
-	public Path(Vector2Int _start)
-	{
-		start = _start;
-		end = default;
-		cells = new Vector2Int[16];
-		cells[0] = start;
-        Count = 0;
-	}
-    public Path(Path path, Vector2Int add, int endIndex)
+        Debug.Log("No possible paths found...");
+        return false;
+    }
+    bool IsWalkable(FloorCell cell, FloorCell[,] grid)
     {
-        start = path.start;
-        end = path.cells[endIndex];
-        cells = new Vector2Int[endIndex * 2];
-        Array.Copy(path.cells,cells,endIndex);
-        cells[endIndex + 1] = add;
-		Count = endIndex + 2;
+        FloorCell up = grid[cell.gridX, cell.gridY + 1];
+        bool isUp = up.currentFloor == cell.currentFloor + 1;
+        return cell.currentFloor >= 0 && (!isUp || (isUp && cell.ladder));
     }
-    public void SortUp(int index)
-	{
-        int parent = (index - 1) / 2;
-        while ((cells[parent] - start).magnitude >= (cells[index] - start).magnitude)
+    int GetStepCost(FloorCell cell)
+    {
+        int res = 10;
+        if (cell.road || cell.bridge)
         {
-            var temp = cells[parent];
-            cells[parent] = cells[index];
-            cells[index] = temp;
-            index = parent;
-            parent = (parent - 1) / 2;
+            res -= 5;
+        }else if (cell.GetBuildingIDCallback != null)
+        {
+            res += 10;
         }
+        return res;
     }
-	public bool SearchDesiredPlace(Vector2Int target, out int index)
-	{
-        index = 0;
-        int magnitude = Mathf.Abs(target.x - start.x) + Mathf.Abs(target.y - start.y);
-		while(magnitude != 1)
-		{
-            index++;
-            if (index >= Count) return false;
-            magnitude = Mathf.Abs(target.x - cells[index].x) + Mathf.Abs(target.y - cells[index].y);
+    void GetNeighbours4(Path_Cell cell, FloorCell[,] grid, int w, int h, FloorCell[] result)
+    {
+        int gridX = cell.gridX;
+        int gridY = cell.gridY;
+        if (gridX - 1 >= 0) result[0] = grid[gridX - 1, gridY];
+        if (gridX + 1 < w) result[1] = grid[gridX + 1, gridY];
+        else result[1] = new FloorCell(-1,-1);
+        if (gridY + 1 < h) result[2] = grid[gridX, gridY + 1];
+        else result[2] = new FloorCell(-1,-1);
+        if (gridY - 1 >= 0) result[3] = grid[gridX, gridY - 1];
+    }
+    void AddToHeap(Path_Cell  element, Path_Cell[] heap, int count)
+    {
+        //Debug.Log($"adding {element.gridX},{element.gridY} to a heap...");
+        int index = count;
+        heap[index] = element;
+        int cost = element.leftCellsCost + element.passedWayCost;
+        int parent = (index - 1) / 2;
+        Path_Cell parentCell = heap[parent];
+        while (parentCell.leftCellsCost + parentCell.passedWayCost > cost) 
+        {
+            heap[parent] = heap[index];
+            heap[index] = parentCell;
+            index = parent;
+            parent = (index - 1) / 2;
+            if(parent >= 0)
+            {
+                parentCell = heap[parent];
+            }
+            else
+            {
+                //Debug.Log($"{element.gridX},{element.gridY} is now a head");
+                break;
+            }
         }
-		return true;
-	}
-	public int TryAddCell(Vector2Int cell)
-	{
-        cells[Count++] = cell;
-		if ((int)(end - cell).magnitude == 1)
-		{
-			end = cell;
-			return 0;
-		}
-		if(SearchDesiredPlace(cell, out int index))
-		{
-			return index;
-		}
-		else
-		{
-			return -1;
-		}
+        /*string s = $"added {element.gridX}, {element.gridY}; \n {count + 1} ";
+        for (int i = 0; i < count + 1; i++)
+        {
+            s += $"{heap[i].gridX}, {heap[i].gridY};  ";
+        }
+        Debug.Log(s);*/
+    }
+    Path_Cell PeekAndBalance(Path_Cell[] heap, int count)
+    {
+        Path_Cell result = heap[0];
+        if (count <= 1) return result;
+        int left, right, c1, c2, lowestChild, lowestCost;
+        int target = 0;
+        heap[target] = heap[count - 1];
+        int targetCost = heap[target].leftCellsCost + heap[target].passedWayCost;
+        var temp = heap[target];
+        left = target * 2 + 1;
+        right = target * 2 + 2;
+        do
+        {
+            if (left >= count || right >= count) break;
+            c1 = heap[left].leftCellsCost + heap[left].passedWayCost;
+            c2 = heap[right].leftCellsCost + heap[right].passedWayCost;
+            lowestCost = Mathf.Min(c1, c2);
+            lowestChild = c1 < c2 ? left : right;
+            
+            heap[target] = heap[lowestChild];
+            heap[lowestChild] = temp;
+            target = lowestChild;
+            left = target * 2 + 1;
+            right = target * 2 + 2;
+
+        } while (lowestCost < targetCost);
+
+        string s = $"peeked {result.gridX}, {result.gridY};   {count - 1} ";
+        for (int i = 0; i < count - 1; i++)
+        {
+            s += $"{heap[i].gridX}, {heap[i].gridY};  ";
+        }
+        Debug.Log(s);
+        return result;
+    }
+}
+public class Path_Cell 
+{
+    public int gridY;
+    public int gridX;
+    public int floor;
+    public int passedWayCost;
+    public int leftCellsCost;
+    public Path_Cell cameFrom;
+    public Path_Cell(FloorCell cell, int _passedCost, int leftCost, Path_Cell _cameFrom)
+    {
+        gridY = cell.gridY;
+        gridX = cell.gridX;
+        floor = cell.currentFloor;
+        passedWayCost = _passedCost;
+        leftCellsCost = leftCost;
+        cameFrom = _cameFrom;
+    }
+}
+public struct PathCell
+{
+    public Vector3 pos;
+    public int floor;
+    public int gridY;
+    public PathCell(Path_Cell cell, float cellSize, int offsetX, int offsetY)
+    {
+        pos = new Vector3(cell.gridX * cellSize - offsetX, cell.gridY * cellSize - offsetY);
+        floor = cell.floor;
+        gridY = cell.gridY;
     }
 }
 
-public struct PathCell 
-{
-	public Vector3 pos;
-    public int gridY;
-    public int floor;
-}

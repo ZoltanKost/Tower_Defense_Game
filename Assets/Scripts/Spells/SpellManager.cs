@@ -112,7 +112,7 @@ public class SpellManager : MonoBehaviour {
     }
     void RemoveSpell(int index)
     {
-        Debug.Log("Removing spell " + index);
+        //Debug.Log("Removing spell " + index);
         spellAnimators[index].gameObject.SetActive(false);
         var temp = spellAnimators[index];
         spellAnimators[index] = spellAnimators[--count];

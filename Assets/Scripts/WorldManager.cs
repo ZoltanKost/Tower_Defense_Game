@@ -117,6 +117,7 @@ public class WorldManager : MonoBehaviour {
         winScreen.Init(new Action[]{Restart,Application.Quit});
         //playerHealthBar.gameObject.SetActive(false);
         floorManager.Init();
+        enemyManager.SpawnEnemies();
         enemyManager.Init(FinishWave);
         shop.Init(6);
         musicManager.PlayMenuMusic();
@@ -133,8 +134,10 @@ public class WorldManager : MonoBehaviour {
         floorManager.FloodFloor(mid, mid + new Vector3Int(3,2));
         floorManager.FloodFloor(mid + new Vector3(0,-3), mid + new Vector3Int(3,0));
         floorManager.FloodFloor(mid + new Vector3(1,-1), mid + new Vector3Int(2,0));
-        floorManager.PlaceRoad(mid + new Vector3(1.5f, -1));
+        //pathfinding.ClearRoads();
         floorManager.CreateCastle(mid,castle);
+        floorManager.PlaceRoad(mid + new Vector3(1.5f, -1));
+        floorManager.PlaceRoad(mid + new Vector3(1.5f, -2));
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
@@ -146,9 +149,9 @@ public class WorldManager : MonoBehaviour {
         playerHealthBar.gameObject.SetActive(false);*/
     }
     public void StartLevel(){
-        if(!pathfinding.FindPathToCastle()) return;
-        musicManager.PlayWaveMusic();
-        enemyManager.SpawnEnemies(wave++);
+        if(pathfinding.paths.Count <= 0) return;
+        //musicManager.PlayWaveMusic();
+        //enemyManager.GenerateWave(wave++);
         playerActionManager.CancelBuildingAction();
         buildingManager.Switch(true);
         enemyManager.Switch(true);
@@ -240,6 +243,8 @@ public class WorldManager : MonoBehaviour {
     public void Load(LevelData data)
     {
         ResetWave();
+        pathfinding.ClearCastlePoint();
+        pathfinding.SetTargetPoint(data.castlePositions[0].x, data.castlePositions[0].y,castle.width, castle.height);
         floorManager.LoadFloorCells(data.floorCells, data.offset, data.roads, data.ladders, data.bridgeStarts, data.bridges);
         groundGenerator.LoadParameters(data.RandomParameters);
         buildingManager.ResetEntities();
@@ -247,8 +252,6 @@ public class WorldManager : MonoBehaviour {
         {
             floorManager.PlaceBuilding_DontCheck(b);
         }
-        pathfinding.ClearCastlePoint();
-        pathfinding.SetCastlePoint(data.castlePositions[0].x, data.castlePositions[0].y,castle.width, castle.height);
         playerManager.currentHp = data.playerHP;
         playerResourceManager.SetResource(Resource.Gold, data.goldCount);
         //pathfinding.SetCastlePoint(,);

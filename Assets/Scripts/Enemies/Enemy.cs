@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] private int damage;
     public BuildingObject currentTarget;
     [SerializeField] public CustomAnimator animator;
-    public Queue<PathCell> currentPath;
+    public List<PathCell> currentPath;
     public int index;
     [SerializeField] public float speed;
     [SerializeField] public int attackRange = 3;
@@ -45,6 +45,7 @@ public class Enemy : MonoBehaviour, IDamagable
     int waveIndex;
     public bool detectFlag;
     public int pointsLeft;
+    public int pathLength;
 
     void Awake()
     {
@@ -79,15 +80,16 @@ public class Enemy : MonoBehaviour, IDamagable
         onRemoveEvent?.Invoke(index,waveIndex);
     }
 
-    public void Init(Enemy prefab, int waveIndex, int index, Queue<PathCell> path, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent)
+    public void Init(Enemy prefab, int waveIndex, int index, List<PathCell> path, Action<int, int> onRemoveEvent, Action<int> onKillEvent, Action<int> damageCastleEvent)
     {
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
         this.damageCastleEvent = damageCastleEvent;
         this.waveIndex = waveIndex;
         this.index = index;
-        currentPath = new Queue<PathCell>(path);
-        PathCell start = path.Peek();
+        currentPath = new List<PathCell>(path);
+        PathCell start = path[path.Count - 1];
+        pointsLeft = path.Count;
         transform.position = start.pos;
         destination = start.pos;
         state = EnemyState.run;

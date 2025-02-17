@@ -25,7 +25,7 @@ public class GroundUI : MonoBehaviour{
         }
         foreach(GACell v in ga.grounds){
             int floor = v.floor;
-            Debug.Log(floor);
+            //Debug.Log(floor);
             while(floor >= 0)
             {
                 floors[floor].floor = floor;

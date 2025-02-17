@@ -62,7 +62,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
             }
         }
-        pathfinding.SetCastlePoint(posX, posY, b.width, b.height);
+        pathfinding.SetTargetPoint(posX, posY, b.width, b.height);
     }
     // public bool CreateGroundArray(Vector3 input, GroundArray groundArray){
     //     Vector3Int pos = floors[0].WorldToCell(input);
@@ -100,6 +100,7 @@ public class FloorManager : MonoBehaviour{
             Vector3Int vec = pos + g.position;
             int placingFLoor = currentFloor;
             int stopFloor = floorCells[x, y].currentFloor >= 0? floorCells[x, y].currentFloor:0;
+            // sand outline
             if (placingFLoor > 0)
             {
                 //if (floorCells[x, y].currentFloor == -1) floors[++floorCells[x, y].currentFloor].CreateGround(vec);
@@ -117,6 +118,7 @@ public class FloorManager : MonoBehaviour{
             {
                 floors[placingFLoor--].CreateGround(vec);
             }
+            if (floorCells[x, y].ladder) pathfinding.possibleStarts.Remove(floorCells[x, y]);
             floorCells[x, y].currentFloor = currentFloor;
             floorCells[x, y].bridgeData = default;
             floorCells[x, y].bridge = false;
@@ -127,26 +129,17 @@ public class FloorManager : MonoBehaviour{
     }
     public bool PlaceRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
-        //if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        /*if(floor < 0 || floor > floors.Count || floorCells[posX,posY].occupied){ 
-            // if(floorCells[posX, posY].road && floorCells[posX, posY + 1].currentFloor == floor + 1){
-            //     floors[floor + 1].PlaceStairs(pos);
-            //     return true;
-            // }    
-            return false;
-        }*/
-        //if (CheckSquareRoad(posX,posY)) return false;
         if (floorCells[posX, posY + 1].currentFloor == floor + 1){
             floorCells[posX, posY].ladder = true;
             floors[floor + 1].PlaceStairs(pos);
+            if (floor == 0) pathfinding.possibleStarts.Add(floorCells[posX, posY]);
         }
-        //else if(floor == 0) return false;
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
-        pathfinding.PlaceRoad(posX,posY, floor ==0);
+        pathfinding.UpdatePaths();
         return true;
     }
     /*public bool CheckSquareRoad(int gridX, int gridY)
@@ -236,6 +229,7 @@ public class FloorManager : MonoBehaviour{
             Vector3Int offset = horizontal ? Vector3Int.down : default;
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
+            pathfinding.UpdatePaths();
             return true;
         }
         return false;
@@ -467,11 +461,11 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        if(floor < 0 || floor > floors.Count || floorCells[posX,posY].occupied){ 
-            if(floorCells[posX, posY].road && floorCells[posX, posY + 1].currentFloor == floor + 1){
+        if(floor < 0 || (floor == 0 && floorCells[posX, posY + 1].currentFloor != floor + 1) || floor > floors.Count || floorCells[posX,posY].occupied){ 
+            /*if(floorCells[posX, posY].road && floorCells[posX, posY + 1].currentFloor == floor + 1){
                 floors[floor + 1].PlaceStairs(pos);
                 return true;
-            }    
+            }    */
             return false;
         }
         return true;
@@ -529,8 +523,9 @@ public class FloorManager : MonoBehaviour{
         {
             floorCells[gridX, gridY].ladder = false;
             floors[floor + 1].RemoveStairs(pos);
+            if (floor == 0) pathfinding.possibleStarts.Remove(floorCells[gridX, gridY]);
         }
-        if(floorCells[gridX, gridY].road)
+        if (floorCells[gridX, gridY].road)
         {
             floorCells[gridX,gridY].road = false;
             floors[floor].RemoveRoad(pos);
@@ -567,6 +562,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[gridX, gridY].bridge = false;
             //floorCells[gridX, gridY].currentFloor--;
         }
+        pathfinding.UpdatePaths();
     }
     public void DestroyBuilding(int gridX, int gridY, int w, int h){
         for(int x = gridX; x < gridX + w; x++){
@@ -643,6 +639,7 @@ public class FloorManager : MonoBehaviour{
             if (changed.Contains(pos))
             {
                 int floor = cell.currentFloor;
+                // TODO: Refactor 
                 while(floor >= 0)
                 {
                     floors[floor--].CreateGround(pos - offset);
@@ -673,6 +670,7 @@ public class FloorManager : MonoBehaviour{
         {
             floor.Animate();
         }
+        pathfinding.UpdatePaths();
     }
     public void FloodFloor(Vector3 start, Vector3 end)
     {
@@ -699,6 +697,7 @@ public class FloorManager : MonoBehaviour{
             }
         }
         floors[targetFloor + 1].Animate();
+        pathfinding.UpdatePaths();
     }
     public void EraseFloor(Vector3 start, Vector3 end)
     {

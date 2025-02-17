@@ -4,15 +4,17 @@ using System.Collections.Generic;
 [RequireComponent(typeof(DynamicItemPageUI))]
 public class PlayerInventoryModel : MonoBehaviour
 {
+    [SerializeField] private SpellSO defaultSpell;
     [SerializeField] private DynamicItemPageUI spellsUIView;
     [SerializeField] private PlayerActionManager playerActionManager;
     private List<SpellSO> spells;
 
     public void Init()
     {
-        spellsUIView = GetComponent<DynamicItemPageUI>();
-        spells = new List<SpellSO>();
+        //spellsUIView = GetComponent<DynamicItemPageUI>();
+        spells = new List<SpellSO>() { defaultSpell};
         spellsUIView.Init(SetPlayerAction, Resource.Mana);
+        spellsUIView.AddItem(defaultSpell.spellData);
     }
 
     public void AddSpell(SpellSO data)
