@@ -3,55 +3,95 @@ using System.Collections.Generic;
 using System;
 public class Pathfinding : MonoBehaviour
 {
-    [SerializeField] FloorManager floor;
-    [SerializeField] private EnemyManager enemyManager;
+    //[SerializeField] FloorManager floor;
+    //[SerializeField] private EnemyManager enemyManager;
+
+    [SerializeField] private Transform target;
+    [SerializeField] private Transform entity;
+    [SerializeField] private GridVisual visualPrefab;
+    [SerializeField] private Vector2Int offset;
+    int baseMoveCost = 50;
+
+
     [SerializeField] private int maxPaths = 128;
-    FloorCell castlePosition;
-    int offsetX, offsetY;
-    float cellSize;
+    [SerializeField] float cellSize;
+    [SerializeField] int w,h;
 
     /*public Dictionary<PathListAccessor, List<List<PathCell>>> start_pathList;
     int pathsCount = 0;
     public int totalCells = 0;
     int currentWaveCells;*/
-
+    [SerializeField] private GridVisual prefab;
+    CustomGrid<GridVisual> grid;
+    public GridVisual[] openHeap;
+    public List<GridVisual> result = new();
+    public int heapCount;
     public List<List<PathCell>> paths = new List<List<PathCell>>();
     public List<FloorCell> possibleStarts = new List<FloorCell>();
+    public void Awake()
+    {
+        //floor.Init();
+        //floor.CreateCastle(transform.position, b);
+        //SetTargetPoint(Mathf.Abs(offset.x), Mathf.Abs(offset.y), 0,0);
+        paths = new();
+        //cellSize = floor.GetComponent<Grid>().cellSize.x;
+        grid = new CustomGrid<GridVisual>(w,h,cellSize,offset, InstantiateGridVisual);
+    }
+    public GridVisual InstantiateGridVisual(int x, int y)
+    {
+        return Instantiate(prefab, transform).Init(x,y, cellSize,GridToWorld(x,y));
+    }
+    public Vector2 GridToWorld(int x, int y)
+    {
+        if (x < 0 || x >= w || y < 0 || y >= h) return default;
+        return new Vector2(x, y) * cellSize - offset;
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FindPath(grid.GetValue(entity.position), grid.GetValue(target.position), out List<GridVisual> result);
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            var cell = grid.GetValue(Input.mousePosition);
+            cell.moveCost += 10;
+            cell.ChangeAlpha(-0.1f);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            var cell = grid.GetValue(Input.mousePosition);
+            cell.moveCost -= 10;
+            cell.ChangeAlpha(0.1f);
+        }
+    }
     public void SetTargetPoint(int gridX, int gridY, int width, int height)
     {
-        gridX += width / 2;
-        Debug.Log(message: $"Castle: {gridX},{gridY}");
-        floor.floorCells[gridX, gridY].road = true;
-        FloorCell pos = floor.floorCells[gridX, gridY];
-        castlePosition = pos;
-        offsetX = floor.offset.x;
-        offsetY = floor.offset.y;
+        //gridX += width / 2;
+        //Debug.Log(message: $"Castle: {gridX},{gridY}");
+        //floor.floorCells[gridX, gridY].road = true;
+        //FloorCell pos = floor.floorCells[gridX, gridY];
+        //castlePosition = pos;
         //paths.Add(new Path(new Vector2Int(pos.gridX,pos.gridY)));
     }
     public void ClearCastlePoint()
     {
-        castlePosition = default;
     }
-    public void Awake()
+    public GridVisual TraceStep(GridVisual current)
     {
-        /*roads = new Vector2Int[32];
-		for (int i = 0; i < 32; i++)
-		{
-			roads[i] = -Vector2Int.one;
-		}*/
-        paths = new();
-        cellSize = floor.GetComponent<Grid>().cellSize.x;
+        current.SetColor(new Color (0.5f,0.5f,1f,1f ));
+        result.Add(current);
+        return current.cameFrom;
     }
-
     public void UpdatePaths()
     {
-        paths.Clear();
+        /*paths.Clear();
         for (int i = 0; i < possibleStarts.Count; i++)
         {
-            if (!FindPath(possibleStarts[i], castlePosition, out List<PathCell> res)) continue;
+            //if (!FindPath(possibleStarts[i], castlePosition, out List<PathCell> res)) continue;
             paths.Add(res);
         }
-        enemyManager.CalculateWave();
+        enemyManager.CalculateWave();*/
     }
     /*void OnDrawGizmos()
     {
@@ -69,105 +109,84 @@ public class Pathfinding : MonoBehaviour
             }
         }
     }*/
-    public unsafe bool FindPath(FloorCell start, FloorCell end, out List<PathCell> result)
+    public unsafe bool FindPath(GridVisual start, GridVisual end, out List<GridVisual> result)
     {
         result = new();
-        FloorCell[,] grid = floor.floorCells;
-        int w = grid.GetLength(0);
-        int h = grid.GetLength(1);
-        HashSet<FloorCell> closed = new();
-        Path_Cell[] openHeap = new Path_Cell[16];
+        //FloorCell[,] grid = floor.floorCells;
+        HashSet<GridVisual> closed = new();
+        GridVisual[] openHeap = new GridVisual[16];
         int heapCount = 0;
-        HashSet<FloorCell> openCell = new();
-        Path_Cell startPath = new Path_Cell(start, GetStepCost(start), 
-                            Mathf.Abs(end.gridX - start.gridX)
-                            + Mathf.Abs(end.gridY - start.gridY), null);
-        openHeap[heapCount++] = startPath;
-        FloorCell[] neighbours = new FloorCell[4];
+        openHeap[heapCount++] = start;
+        HashSet<GridVisual> openCell = new();
+        GridVisual[] neighbours = new GridVisual[4];
         Debug.Log($"Start Calculating! {start.gridX}, {start.gridY}: {end.gridX}, {end.gridY} ");
-        int steps = 0;
-        Path_Cell current;
-        while (heapCount > 0 && steps < 100)
+        while (heapCount > 0)
         {
-            steps++;
-            current = PeekAndBalance(openHeap, heapCount--);
-            Debug.Log($"Checking! {current.gridX}, {current.gridY} ");
-            if (current.gridX == end.gridX && current.gridY == end.gridY) 
+            GridVisual current = PeekAndBalance(openHeap, heapCount--);
+            current.SetColor(Color.black);
+            closed.Add(current);
+            //Debug.Log("Adding cell from closed and removing from open");
+            openCell.Remove(current);
+            //Debug.Log($"Checking! {current.gridX}, {current.gridY} ");
+            if (current.gridX == end.gridX && current.gridY == end.gridY)
             {
+                // TODO: traceback 
                 Debug.Log($"find! {current.gridX}, {current.gridY}");
-
-                int i = 0;
-                //construct the path
-                /*while (current.cameFrom != null && current.gridX != start.gridX && current.gridY != start.gridY)
-                {
-                    i++;
-                    current = current.cameFrom;
-                    Debug.Log(i);
-
-                }*/
-
-                result.Add(new PathCell(current, cellSize, offsetX, offsetY));
-                do
-                {
-                    current = current.cameFrom;
-                    result.Add(new PathCell(current, cellSize, offsetX, offsetY));
-                } while (current.gridX != start.gridX && current.gridY != start.gridY);
                 return true;
             }
-            GetNeighbours4(current,grid,w,h,neighbours);
-
+            grid.GetNeighbours(current.gridX, current.gridY, neighbours);
             for (int i = 0; i < 4; i++)
             {
-                if (!closed.Contains(neighbours[i]) && !openCell.Contains(neighbours[i])) 
+                if (neighbours[i] == null) continue;
+                //Debug.Log(i + "th neighbour");
+                if (!closed.Contains(neighbours[i]))
                 {
-                    //Debug.Log($"{neighbours[i].gridX},{neighbours[i].gridY} is neither in open nor in closed set");
-                    if (IsWalkable(neighbours[i], grid))
-                    {
-                        int stepCost = GetStepCost(neighbours[i]);
-                        int leftCost = Mathf.Abs(end.gridX - neighbours[i].gridX)
+                    int stepCost = GetStepCost(neighbours[i]);
+                    int leftCost = Mathf.Abs(end.gridX - neighbours[i].gridX)
                             + Mathf.Abs(end.gridY - neighbours[i].gridY);
-                        Debug.Log( current);
-                        if(heapCount >= openHeap.Length)
+                    if (openCell.Contains(neighbours[i]))
+                    {
+                        if (current.cost + stepCost + leftCost * baseMoveCost < GetTogetherCost(neighbours[i]))
                         {
-                            Array.Resize(ref openHeap,heapCount * 2);
+                            neighbours[i].UpdateInfo(Color.green, current.cost + stepCost, leftCost, current);
+                            SortUpElement(neighbours[i].index, openHeap);
                         }
-                        AddToHeap(
-                            new Path_Cell(neighbours[i], current.passedWayCost + stepCost, leftCost,current),
-                            openHeap, heapCount++);
-                        openCell.Add(neighbours[i]);
-                        //Debug.Log($"cell was scheduled in open set");
                     }
                     else
                     {
-                        //Debug.Log($"cell was denied as closed");
-                        closed.Add(neighbours[i]);
+                        neighbours[i].UpdateInfo(Color.green, current.cost + stepCost, leftCost, current);
+                        if (heapCount >= openHeap.Length)
+                        {
+                            Array.Resize(ref openHeap, heapCount * 2);
+                        }
+                        AddToHeap(
+                            neighbours[i],
+                            openHeap, heapCount++);
+                        openCell.Add(neighbours[i]);
                     }
                 }
             }
-            closed.Add(grid[current.gridX, current.gridY]);
-            openCell.Remove(grid[current.gridX, current.gridY]);
-            //Debug.Log($"{current.gridX},{current.gridY} has already been proceed, removing from sets");
         }
         Debug.Log("No possible paths found...");
         return false;
     }
-    bool IsWalkable(FloorCell cell, FloorCell[,] grid)
+    bool IsWalkable(GridVisual cell)
     {
-        FloorCell up = grid[cell.gridX, cell.gridY + 1];
-        bool isUp = up.currentFloor == cell.currentFloor + 1;
-        return cell.currentFloor >= 0 && (!isUp || (isUp && cell.ladder));
+        /*FloorCell up = grid[cell.gridX, cell.gridY + 1];
+        bool isUp = up.currentFloor == cell.currentFloor + 1;*/
+        return true;
     }
-    int GetStepCost(FloorCell cell)
+    int GetStepCost(GridVisual cell)
     {
         int res = 10;
-        if (cell.road || cell.bridge)
+        /*if (cell.road || cell.bridge)
         {
             res -= 5;
         }else if (cell.GetBuildingIDCallback != null)
         {
             res += 10;
-        }
-        return res;
+        }*/
+        return cell.moveCost;
     }
     void GetNeighbours4(Path_Cell cell, FloorCell[,] grid, int w, int h, FloorCell[] result)
     {
@@ -180,15 +199,19 @@ public class Pathfinding : MonoBehaviour
         else result[2] = new FloorCell(-1,-1);
         if (gridY - 1 >= 0) result[3] = grid[gridX, gridY - 1];
     }
-    void AddToHeap(Path_Cell  element, Path_Cell[] heap, int count)
+    void AddToHeap(GridVisual element, GridVisual[] heap, int count)
     {
         //Debug.Log($"adding {element.gridX},{element.gridY} to a heap...");
         int index = count;
         heap[index] = element;
-        int cost = element.leftCellsCost + element.passedWayCost;
+        heap[index].SetIndex(index);
+        string s = $"adding {element.gridX}, {element.gridY}, {GetTogetherCost(element)}";
+        Debug.Log(s);
+        SortUpElement(index, heap);
+        /*int cost = element.left * baseMoveCost + element.cost;
         int parent = (index - 1) / 2;
-        Path_Cell parentCell = heap[parent];
-        while (parentCell.leftCellsCost + parentCell.passedWayCost > cost) 
+        GridVisual parentCell = heap[parent];
+        while (parentCell.left * baseMoveCost + parentCell.cost > cost) 
         {
             heap[parent] = heap[index];
             heap[index] = parentCell;
@@ -203,45 +226,92 @@ public class Pathfinding : MonoBehaviour
                 //Debug.Log($"{element.gridX},{element.gridY} is now a head");
                 break;
             }
-        }
-        /*string s = $"added {element.gridX}, {element.gridY}; \n {count + 1} ";
-        for (int i = 0; i < count + 1; i++)
-        {
-            s += $"{heap[i].gridX}, {heap[i].gridY};  ";
-        }
-        Debug.Log(s);*/
+        }*/
+        
     }
-    Path_Cell PeekAndBalance(Path_Cell[] heap, int count)
+    void SortUpElement(int index, GridVisual[] heap)
     {
-        Path_Cell result = heap[0];
-        if (count <= 1) return result;
-        int left, right, c1, c2, lowestChild, lowestCost;
-        int target = 0;
-        heap[target] = heap[count - 1];
-        int targetCost = heap[target].leftCellsCost + heap[target].passedWayCost;
-        var temp = heap[target];
+        int count = index + 1;
+        var temp = heap[index];
+        int together = GetTogetherCost(temp);
+        int parent = (index - 1) / 2;
+        heap[0].SetColor(Color.green);
+
+        string s = $"sorting {temp.gridX}, {temp.gridY}, {together}, {heap[index].left}; \n count: {count} \n";
+        while (parent >= 0 && GetTogetherCost(heap[parent]) >= together)
+        {
+            if (GetTogetherCost(heap[parent]) == together && !(temp.left < heap[parent].left))
+                break;
+            Swap(index, parent, heap);
+
+            index = parent;
+            parent = (index - 1) / 2;
+        }
+        heap[0].SetColor(Color.red);
+        for (int i = 0; i < count; i++)
+        {
+            s += $"grid: {heap[i].gridX},{heap[i].gridY}; childOf: {heap[(i - 1) / 2].gridX},{heap[(i - 1) / 2].gridY}; together: {GetTogetherCost(heap[i])}; leftCells: {heap[i].left}; cost:{heap[i].cost}; \n";
+        }
+        Debug.Log(s);
+    }
+    public int GetTogetherCost(GridVisual cell)
+    {
+        return cell.left * 50 + cell.cost;
+    }
+    public void SortDown(int target, GridVisual[] heap, int count)
+    {
+        int left, right, c1, c2, lowestChild = 0, lowestCost;
+        int targetCost = heap[target].left * baseMoveCost + heap[target].cost;
         left = target * 2 + 1;
         right = target * 2 + 2;
-        do
+        c1 = heap[left].left * baseMoveCost + heap[left].cost;
+        c2 = heap[right].left * baseMoveCost + heap[right].cost;
+        lowestCost = Mathf.Min(c1, c2);
+        while (lowestCost <= targetCost && right < count && left < count)
         {
-            if (left >= count || right >= count) break;
-            c1 = heap[left].leftCellsCost + heap[left].passedWayCost;
-            c2 = heap[right].leftCellsCost + heap[right].passedWayCost;
-            lowestCost = Mathf.Min(c1, c2);
-            lowestChild = c1 < c2 ? left : right;
-            
-            heap[target] = heap[lowestChild];
-            heap[lowestChild] = temp;
+            c1 = heap[left].left * baseMoveCost + heap[left].cost;
+            c2 = heap[right].left * baseMoveCost + heap[right].cost;
+            if(c1 == c2)
+            {
+                lowestChild = c1 < c2 ? left : right;
+            }
+            else
+            {
+                lowestChild = heap[left].left < heap[right].left? left : right;
+            }
+            lowestCost = heap[lowestChild].left * baseMoveCost + heap[left].cost;
+
+            if (lowestCost == targetCost && !(heap[lowestChild].left < heap[target].left))
+            {
+                break;
+            }
+            Swap(target,lowestChild, heap);
             target = lowestChild;
             left = target * 2 + 1;
             right = target * 2 + 2;
-
-        } while (lowestCost < targetCost);
-
-        string s = $"peeked {result.gridX}, {result.gridY};   {count - 1} ";
+        }
+        Debug.Log($"new Index: {lowestChild}; lowestCost: {lowestCost}; {left}, {right}");
+    }
+    public void Swap(int first, int second, GridVisual[] heap)
+    {
+        var temp = heap[first];
+        heap[first] = heap[second];
+        heap[second] = temp;
+        heap[first].SetIndex(first);
+        heap[second].SetIndex(second);
+    }
+    GridVisual PeekAndBalance(GridVisual[] heap, int count)
+    {
+        GridVisual result = heap[0];
+        if (count <= 1) { Debug.Log("Count <= 1, don't balance!"); return result; }
+        int target = 0;
+        heap[target] = heap[count - 1];
+        heap[target].index = target;
+        SortDown(target,heap,count - 1);
+        string s = $"peeked {result.gridX}, {result.gridY}; {result.moveCost}, {result.left}; \n count: {count - 1} \n";
         for (int i = 0; i < count - 1; i++)
         {
-            s += $"{heap[i].gridX}, {heap[i].gridY};  ";
+            s += $"grid: {heap[i].gridX},{heap[i].gridY}; childOf: {heap[(i - 1) / 2].gridX},{heap[(i - 1) / 2].gridY}; together: {GetTogetherCost(heap[i])}; leftCells: {heap[i].left}; cost:{heap[i].cost}; \n ";
         }
         Debug.Log(s);
         return result;
@@ -265,6 +335,7 @@ public class Path_Cell
         cameFrom = _cameFrom;
     }
 }
+[Serializable]
 public struct PathCell
 {
     public Vector3 pos;
@@ -277,4 +348,5 @@ public struct PathCell
         gridY = cell.gridY;
     }
 }
+
 
