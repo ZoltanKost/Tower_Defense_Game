@@ -20784,22 +20784,8 @@ MonoBehaviour:
   floor: {fileID: 2051073313}
   enemyManager: {fileID: 1830662301}
   defaultMoveCost: 50
-  roadMoveBonus: 10
-  buildingMovePenalty: 10
-  debug: {fileID: 929526730820784896, guid: 7cd73607791bce343b0f565802f6627b, type: 3}
-  prefab:
-    currentFloor: 0
-    bridgeData:
-      bridgeDirection: 0
-      start: 0
-      floor: 0
-    bridge: 0
-    road: 0
-    ladder: 0
-    heapIndex: 0
-    cost: 0
-    left: 0
-    comeFrom: {x: 0, y: 0}
+  roadMoveBonus: 50
+  buildingMovePenalty: 1000
   possibleStarts: []
 --- !u!4 &1963445668
 Transform:

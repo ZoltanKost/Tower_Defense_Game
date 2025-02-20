@@ -17,10 +17,15 @@ MonoBehaviour:
     goldCost: 25
     globalRadius: 2
     radius: 2
-    damage: 20
+    damage: 50
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
+  tweenAnimation: 0
+  ease: 0
+  targetDeltaPosition: {x: 0, y: 0, z: 0}
+  animationTime: 0
+  amplitude_overshoot: 0
   animations:
   - events:
     - acitonID: 1
@@ -45,6 +50,7 @@ MonoBehaviour:
   spawnData:
     spell: {fileID: 0}
     projectile:
+      spell: {fileID: 0}
       targetPosition: {x: 0, y: 0, z: 0}
       startPosition: {x: 0, y: 0, z: 0}
       speed: 0
