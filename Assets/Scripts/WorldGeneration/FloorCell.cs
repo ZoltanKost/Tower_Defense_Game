@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public struct FloorCell{
@@ -13,6 +14,9 @@ public struct FloorCell{
     public readonly int gridX;
 	public readonly int gridY;
 
+    public int heapIndex,cost, left;
+    public Vector2Int comeFrom;
+
     public FloorCell(int x, int y, int lastFloor = -1){
         gridX = x;
         gridY = y;
@@ -22,6 +26,10 @@ public struct FloorCell{
         road = false;
         ladder = false;
         GetBuildingIDCallback = null;
+        heapIndex = -1;
+        cost = -1;
+        left = -1;
+        comeFrom = -Vector2Int.one;
     }
     public FloorCell(
         int x, int y, 
@@ -38,7 +46,11 @@ public struct FloorCell{
         this.bridge = bridge;
         this.road = road;
         this.ladder = ladder;
-        GetBuildingIDCallback = null;
+        GetBuildingIDCallback = null; 
+        heapIndex = -1;
+        cost = -1;
+        left = -1;
+        comeFrom = -Vector2Int.one;
     }
     public void Reset()
     {
@@ -46,6 +58,10 @@ public struct FloorCell{
         bridge = false;
         road = false;
         ladder = false;
+        heapIndex = -1;
+        cost = -1;
+        left = -1;
+        comeFrom = -Vector2Int.one;
     }
 }
 [Serializable]

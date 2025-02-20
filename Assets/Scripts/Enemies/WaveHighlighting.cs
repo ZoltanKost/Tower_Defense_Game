@@ -1,8 +1,8 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class WaveHighlighting : MonoBehaviour
 {
@@ -50,7 +50,7 @@ public class WaveHighlighting : MonoBehaviour
         int tempCount = templates.Count;
         int waveCount = waves.Count;
         if (waveCount == 0) return;
-        Debug.Log("Setting wave");
+        //Debug.Log("Setting wave");
         int i = 0;
         for (;i < tempCount && i < waveCount; i++)
         {
@@ -80,9 +80,9 @@ public class WaveHighlighting : MonoBehaviour
             t.gameObject.SetActive(false);
         }
     }
-    /*void Update()
+    void Update()
     {
-        if(arrowCount <= 0 && currentWave != null && currentWave.Path != null)
+        if (arrowCount <= 0 && currentWave != null && currentWave.Path != null)
         {
             waveIndex++;
             if (waveIndex >= enemyManager.waves.Count)
@@ -92,7 +92,7 @@ public class WaveHighlighting : MonoBehaviour
             currentWave = enemyManager.waves[waveIndex];
             SendArrows();
         }
-    }*/
+    }
     private void FixedUpdate()
     {
         UpdateArrows(Time.fixedDeltaTime);

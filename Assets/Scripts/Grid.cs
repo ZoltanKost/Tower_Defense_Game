@@ -6,19 +6,21 @@ public class CustomGrid<T>
     public readonly int w, h;
     public readonly float cellsize;
     public readonly Vector2 offset;
-    public CustomGrid(int _w, int _h, float _cellSize, Vector2 _offset, Func<int,int,T> func)
+    Func<int, int, T> func;
+    public CustomGrid(int _w, int _h, float _cellSize, Vector2 _offset, Func<int,int,T> _func)
     {
         w = _w; h = _h;
         grid = new T[w, h]; 
         cellsize = _cellSize;
         offset = _offset;
-        for (int x = 0; x < w; x++)
+        func = _func;
+        /*for (int x = 0; x < w; x++)
         {
             for (int y = 0; y < w; y++)
             {
-                grid[x, y] = func.Invoke(x,y);
+                grid[x, y] = null;
             }
-        }
+        }*/
     }
     public Vector2 GridToWorld(int x, int y)
     {
@@ -43,6 +45,7 @@ public class CustomGrid<T>
     public T GetValue(int x, int y)
     {
         if (x < 0 || x >= w || y < 0 || y >= h) Debug.LogError($"coordinates aare outside of the grid {x} {y} {w} {h}");
+        if (grid[x, y] == null) grid[x, y] = func.Invoke(x,y);
         return grid[x, y];
     }
     public T GetValue(Vector2 pos)

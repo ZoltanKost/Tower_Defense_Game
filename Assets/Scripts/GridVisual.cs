@@ -1,15 +1,15 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GridVisual : MonoBehaviour
 {
     public const int basemovecost = 50;
-    [SerializeField] Image image;
+    [SerializeField] SpriteRenderer image;
     [SerializeField] TMP_Text costText;
     [SerializeField] TMP_Text leftText;
     [SerializeField] TMP_Text togetherText;
     [SerializeField] TMP_Text indexText;
+    [SerializeField] TMP_Text comeFromIndexText;
     public int gridX, gridY, cost, left;
     public int moveCost = 50;
     public GridVisual cameFrom;
@@ -20,6 +20,7 @@ public class GridVisual : MonoBehaviour
         leftText.text = "0";
         togetherText.text = "0";
         indexText.text = "-1";
+        //comeFromIndexText.text = "-1";
         //transform.localScale = new Vector3(size, size, size);
         transform.position = position;
         gridX = _gridX;
@@ -29,15 +30,28 @@ public class GridVisual : MonoBehaviour
         image.color = c;
         return this;
     }
-    public void UpdateInfo(Color color, int _cost, int _left, GridVisual _cameFrom)
+    public void UpdateInfo(Color color, int _cost, int _left, int heapIndex, Vector2Int comeFrom)
     {
         image.color = color;
         cost = _cost;
         left = _left;
         costText.text = _cost.ToString();
         leftText.text = _left.ToString();
+        comeFromIndexText.text = comeFrom.x.ToString()+";"+comeFrom.y.ToString();
         togetherText.text = (left * 50 + cost).ToString();
-        cameFrom = _cameFrom;
+        indexText.text = heapIndex.ToString();
+    }
+    public void UpdateInfo(Color color, FloorCell cell)
+    {
+        if(color != Color.black)
+        image.color = color;
+        cost = cell.cost;
+        left = cell.left;
+        costText.text = cost.ToString();
+        leftText.text = left.ToString();
+        comeFromIndexText.text = cell.comeFrom.x.ToString() + ";" + cell.comeFrom.y.ToString();
+        togetherText.text = (left * 50 + cost).ToString();
+        indexText.text = cell.heapIndex.ToString();
     }
     public void SetColor(Color color)
     {

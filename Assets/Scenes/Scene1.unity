@@ -20783,7 +20783,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floor: {fileID: 2051073313}
   enemyManager: {fileID: 1830662301}
-  maxPaths: 1000
+  defaultMoveCost: 50
+  roadMoveBonus: 10
+  buildingMovePenalty: 10
+  debug: {fileID: 929526730820784896, guid: 7cd73607791bce343b0f565802f6627b, type: 3}
+  prefab:
+    currentFloor: 0
+    bridgeData:
+      bridgeDirection: 0
+      start: 0
+      floor: 0
+    bridge: 0
+    road: 0
+    ladder: 0
+    heapIndex: 0
+    cost: 0
+    left: 0
+    comeFrom: {x: 0, y: 0}
   possibleStarts: []
 --- !u!4 &1963445668
 Transform:
@@ -22596,6 +22612,7 @@ MonoBehaviour:
   height: 100
   floorPrefab: {fileID: 6185729091870479477, guid: a23bc3d8b1db09e44b4debcb7e201790, type: 3}
   pathfinding: {fileID: 1963445667}
+  cellSize: 0
   castle: {fileID: 0}
 --- !u!1 &2087370521
 GameObject:

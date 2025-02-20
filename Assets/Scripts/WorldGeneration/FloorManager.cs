@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Runtime.CompilerServices;
 
 public class FloorManager : MonoBehaviour{
     [SerializeField] private BuildingManager bm;
@@ -11,6 +12,7 @@ public class FloorManager : MonoBehaviour{
     [SerializeField] Pathfinding pathfinding;
     List<Floor> floors;
     public FloorCell[,] floorCells{get;private set;}
+    public float cellSize;
     public Vector3Int offset{get;private set;}
     [SerializeField] private Building castle;
      
@@ -30,6 +32,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y] = new FloorCell(x,y,-1);
             }
         }
+        cellSize = floors[0].visuals[0].cellSize.x;
         offset = new Vector3Int(width/2, height/2);
     }
     public void ClearFloor(){
@@ -118,7 +121,10 @@ public class FloorManager : MonoBehaviour{
             {
                 floors[placingFLoor--].CreateGround(vec);
             }
-            if (floorCells[x, y].ladder) pathfinding.possibleStarts.Remove(floorCells[x, y]);
+            if (floorCells[x, y].ladder) {
+                pathfinding.possibleStarts.Remove(new Vector2Int(x, y));
+                Debug.Log("Removing Ladder from floor 0");   
+            };
             floorCells[x, y].currentFloor = currentFloor;
             floorCells[x, y].bridgeData = default;
             floorCells[x, y].bridge = false;
@@ -126,6 +132,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[x, y].ladder = false;
         }
         floors[currentFloor].Animate();
+        pathfinding.UpdatePaths();
     }
     public bool PlaceRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -135,7 +142,7 @@ public class FloorManager : MonoBehaviour{
         if (floorCells[posX, posY + 1].currentFloor == floor + 1){
             floorCells[posX, posY].ladder = true;
             floors[floor + 1].PlaceStairs(pos);
-            if (floor == 0) pathfinding.possibleStarts.Add(floorCells[posX, posY]);
+            if (floor == 0) pathfinding.possibleStarts.Add(new Vector2Int(posX, posY));
         }
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
@@ -523,14 +530,19 @@ public class FloorManager : MonoBehaviour{
         {
             floorCells[gridX, gridY].ladder = false;
             floors[floor + 1].RemoveStairs(pos);
-            if (floor == 0) pathfinding.possibleStarts.Remove(floorCells[gridX, gridY]);
+            if (floor == 0)
+            {
+                pathfinding.possibleStarts.Remove(new Vector2Int(gridX, gridY));
+                Debug.Log($"removing {gridX},{gridY}");
+            }
+            
         }
         if (floorCells[gridX, gridY].road)
         {
-            floorCells[gridX,gridY].road = false;
+            floorCells[gridX, gridY].road = false;
             floors[floor].RemoveRoad(pos);
         }
-        if(floorCells[gridX, gridY].bridge)
+        if (floorCells[gridX, gridY].bridge)
         {
             BridgeData data = floorCells[gridX, gridY].bridgeData;
             floors[data.floor].RemoveBridgeSpot(pos);
@@ -591,6 +603,10 @@ public class FloorManager : MonoBehaviour{
     public Vector3 CellToWorld(Vector3 position)
     {
         return floors[0].WorldToCell(position);
+    }
+    public Vector3 CellToWorld(Vector3Int position)
+    {
+        return floors[0].CellToWorld(position);
     }
     public void LoadFloorCells(FloorCellSaveData[] load, Vector3Int offset, Vector3Int[] roads, Vector3Int[] ladders, BridgeSaveData[] bridgeStarts, BridgeSaveData[] bridges)
     {
