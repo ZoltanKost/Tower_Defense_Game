@@ -120,7 +120,7 @@ public class WorldManager : MonoBehaviour {
         enemyManager.SpawnEnemies();
         enemyManager.Init(FinishWave);
         shop.Init(6);
-        musicManager.PlayMenuMusic();
+        //musicManager.PlayMenuMusic();
     }
     void Start(){
         wave = 1;
@@ -129,18 +129,17 @@ public class WorldManager : MonoBehaviour {
         Camera.main.transform.position = new Vector3(0,0,-100);
         Vector3 input = default;
         input -= new Vector3(5,5);
-        floorManager.FloodFloor(input, input + new Vector3Int(8,4));
+        Vector3Int pos = floorManager.WorldToCell(input);
+        floorManager.FloodFloorInt(pos, pos + new Vector3Int(8,5));
         Vector3 mid = input + Vector3.up * 3 + Vector3.right * 3;
-        floorManager.FloodFloor(mid, mid + new Vector3Int(3,2));
-        floorManager.FloodFloor(mid + new Vector3(0,-3), mid + new Vector3Int(3,0));
-        floorManager.FloodFloor(mid + new Vector3(1,-1), mid + new Vector3Int(2,0));
+        floorManager.FloodFloorInt(pos + Vector3Int.up, pos + new Vector3Int(8,5));
         //pathfinding.ClearRoads();
         floorManager.CreateCastle(mid,castle);
-        floorManager.PlaceRoad(mid + new Vector3(1.5f, -1));
-        floorManager.PlaceRoad(mid + new Vector3(1.5f, -2));
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
+        enemyManager.GenerateWave(1);
+        //pathfinding.CreatePossibleStart();
     }
     public void FinishWave(){
         ResetWave();
@@ -186,7 +185,7 @@ public class WorldManager : MonoBehaviour {
         shop.Hide();
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
-        musicManager.PlayMenuMusic();
+        //musicManager.PlayMenuMusic();
     }
     public void ResetLevel(){
         if ((int)gameState >= 2)
@@ -196,13 +195,12 @@ public class WorldManager : MonoBehaviour {
         shop.Hide();
         playerShopUIManager.CloseAll();
         archerManager.ClearEntities();
-        projectileManager.ClearEntities();
-        buildingManager.ClearEntities();
-        projectileManager.ClearEntities();
-        enemyManager.ClearEntities();
+        projectileManager.ResetEntities();
+        buildingManager.ResetEntities();
+        enemyManager.ResetEntities();
         shop.ResetGroundArrays();
         playerResourceManager.Reset();
-        musicManager.PlayMenuMusic();
+        //musicManager.PlayMenuMusic();
         //playerHealthBar.gameObject.SetActive(false);
     }
     public void Defeat(){
@@ -254,6 +252,7 @@ public class WorldManager : MonoBehaviour {
         }
         playerManager.currentHp = data.playerHP;
         playerResourceManager.SetResource(Resource.Gold, data.goldCount);
+        pathfinding.UpdatePaths();
         //pathfinding.SetCastlePoint(,);
     }
     public void Save(string name)

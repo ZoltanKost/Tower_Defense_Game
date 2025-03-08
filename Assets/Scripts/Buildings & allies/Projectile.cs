@@ -3,6 +3,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour{
     [SerializeField] public Transform visuals;
     [SerializeField] public CustomAnimator animator;
+    [SerializeField] public AudioSource audioSource;
     public SpellSO spellSO;
     public IDamagable target;
     public Vector3 targetPosition;
@@ -36,6 +37,9 @@ public class Projectile : MonoBehaviour{
         behaviour = data.behaviour;
         ballistic = data.ballistic;
         spellSO = data.spell;
+        audioSource.volume = data.audioVolume;
+        audioSource.clip = data.hitClip;
+        audioSource.pitch = Random.Range(0.9f, 1.2f);
         visuals.gameObject.SetActive(true);
         targetPosition = data.targetPosition;
         Vector2 dir = targetPosition - startPosition;

@@ -25,7 +25,7 @@ public class CustomGrid<T>
     public Vector2 GridToWorld(int x, int y)
     {
         if (x < 0 || x >= w || y < 0 || y >= h) return default;
-        return new Vector2(x, y) * cellsize - offset;
+        return new Vector2(x, y) * cellsize - offset + 0.5f * cellsize * Vector2.one;
     }
     public void WorldToGrid(Vector2 pos, out int x, out int y)
     {

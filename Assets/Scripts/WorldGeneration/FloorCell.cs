@@ -8,6 +8,8 @@ public struct FloorCell{
     public bool bridge;
     public bool road;
     public bool ladder;
+    public bool walkable;
+
     public bool building => GetBuildingIDCallback != null;
     public Func<int> GetBuildingIDCallback;
     public bool occupied => road || building || bridge;
@@ -30,6 +32,7 @@ public struct FloorCell{
         cost = -1;
         left = -1;
         comeFrom = -Vector2Int.one;
+        walkable = true;
     }
     public FloorCell(
         int x, int y, 
@@ -51,6 +54,7 @@ public struct FloorCell{
         cost = -1;
         left = -1;
         comeFrom = -Vector2Int.one;
+        walkable = true;
     }
     public void Reset()
     {

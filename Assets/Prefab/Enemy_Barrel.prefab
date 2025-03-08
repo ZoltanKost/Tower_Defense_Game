@@ -49,8 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 6639582566830661153}
+  damageClip: {fileID: 8300000, guid: 0ab71d6b4a762c342a389ecd33dff961, type: 3}
   ProjectileFlag: 0
   ProjectileData:
+    hitClip: {fileID: 8300000, guid: 45528749c36249049b6c5e2e21b0a5d3, type: 3}
+    audioVolume: 0
     spell: {fileID: 0}
     targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
@@ -68,6 +71,7 @@ MonoBehaviour:
   damage: 15
   currentTarget: {fileID: 0}
   animator: {fileID: 9071115895459296981}
+  currentPath: []
   index: 0
   speed: 0.7
   attackRange: 0
@@ -78,6 +82,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   detectFlag: 0
   pointsLeft: 0
+  pathLength: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +223,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: eb2bd6f4927adb5418253bc2b31c6d4b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.15
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

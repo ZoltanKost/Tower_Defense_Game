@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using System.Runtime.CompilerServices;
+using UnityEngine.UIElements;
+using UnityEngine.Windows;
+using Unity.VisualScripting;
 
 public class FloorManager : MonoBehaviour{
     [SerializeField] private BuildingManager bm;
@@ -10,12 +12,15 @@ public class FloorManager : MonoBehaviour{
     [SerializeField] int height;
     [SerializeField] Floor floorPrefab; 
     [SerializeField] Pathfinding pathfinding;
+    [SerializeField] EnemyManager enemyManager;
+    [SerializeField] private AudioSource audioSource;
     List<Floor> floors;
     public FloorCell[,] floorCells{get;private set;}
     public float cellSize;
     public Vector3Int offset{get;private set;}
     [SerializeField] private Building castle;
-     
+    public int edgeEndX = 0, edgeEndY = 0;
+    public int edgeStartX, edgeStartY;
     public void Init(){
         floors = new List<Floor>
         {
@@ -34,6 +39,8 @@ public class FloorManager : MonoBehaviour{
         }
         cellSize = floors[0].visuals[0].cellSize.x;
         offset = new Vector3Int(width/2, height/2);
+        edgeStartX = width;
+        edgeStartY = height;
     }
     public void ClearFloor(){
         floorCells = new FloorCell[width,height];
@@ -63,6 +70,7 @@ public class FloorManager : MonoBehaviour{
         for(int x = posX; x < posX + b.width; x++){
             for(int y = posY; y < posY + b.height; y++){
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
+                floorCells[x, y].walkable = false;
             }
         }
         pathfinding.SetTargetPoint(posX, posY, b.width, b.height);
@@ -94,6 +102,12 @@ public class FloorManager : MonoBehaviour{
         pos.z = 0;
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
+        int w = groundArray.width;
+        int h = groundArray.height;
+        if (posX  < edgeStartX) edgeStartX = posX;
+        else if (posX + w> edgeEndX) edgeEndX = posX + w;
+        if (posY < edgeStartY) edgeStartY = posY;
+        else if (posY + h > edgeEndY) edgeEndY = posY + h;
         int currentFloor = floorCells[posX + groundArray.grounds[0].position.x, posY + groundArray.grounds[0].position.y].currentFloor + 1;
         if (currentFloor < 1) currentFloor = 1;
         if (groundArray.targetFloor == 0) currentFloor = 0;
@@ -103,18 +117,19 @@ public class FloorManager : MonoBehaviour{
             Vector3Int vec = pos + g.position;
             int placingFLoor = currentFloor;
             int stopFloor = floorCells[x, y].currentFloor >= 0? floorCells[x, y].currentFloor:0;
-            // sand outline
             if (placingFLoor > 0)
             {
                 //if (floorCells[x, y].currentFloor == -1) floors[++floorCells[x, y].currentFloor].CreateGround(vec);
-                if (floorCells[x + 1, y].currentFloor == -1) floors[++floorCells[x + 1, y].currentFloor].CreateGround(vec + Vector3Int.right);
+                // sand outline
+                /*if (floorCells[x + 1, y].currentFloor == -1) floors[++floorCells[x + 1, y].currentFloor].CreateGround(vec + Vector3Int.right);
                 if (floorCells[x + 1, y - 1].currentFloor == -1) floors[++floorCells[x + 1, y - 1].currentFloor].CreateGround(vec + Vector3Int.right + Vector3Int.down);
                 if (floorCells[x + 1, y - 2].currentFloor == -1) floors[++floorCells[x + 1, y - 2].currentFloor].CreateGround(vec + Vector3Int.right + Vector3Int.down * 2);
-                if (floorCells[x, y - 1].currentFloor == -1) floors[++floorCells[x, y - 1].currentFloor].CreateGround(vec + Vector3Int.down);
                 if (floorCells[x, y - 2].currentFloor == -1) floors[++floorCells[x, y - 2].currentFloor].CreateGround(vec + Vector3Int.down * 2);
                 if (floorCells[x - 1, y - 1].currentFloor == -1) floors[++floorCells[x - 1, y - 1].currentFloor].CreateGround(vec + Vector3Int.left + Vector3Int.down);
                 if (floorCells[x - 1, y - 2].currentFloor == -1) floors[++floorCells[x - 1, y - 2].currentFloor].CreateGround(vec + Vector3Int.left + Vector3Int.down * 2);
-                if (floorCells[x - 1, y].currentFloor == -1) floors[++floorCells[x - 1, y].currentFloor].CreateGround(vec + Vector3Int.left);
+                if (floorCells[x - 1, y].currentFloor == -1) floors[++floorCells[x - 1, y].currentFloor].CreateGround(vec + Vector3Int.left);*/
+                // Sand under the rocks
+                if (floorCells[x, y - 1].currentFloor == -1) floors[++floorCells[x, y - 1].currentFloor].CreateGround(vec + Vector3Int.down);
             }
             //if (currentFloor - floorCells[x, y - 1].currentFloor > 1) floors[++floorCells[x, y - 1].currentFloor].CreateGround(vec + Vector3Int.down);
             while (placingFLoor >= stopFloor)
@@ -122,7 +137,7 @@ public class FloorManager : MonoBehaviour{
                 floors[placingFLoor--].CreateGround(vec);
             }
             if (floorCells[x, y].ladder) {
-                pathfinding.possibleStarts.Remove(new Vector2Int(x, y));
+                //pathfinding.possibleStarts.Remove(new Vector2Int(x, y));
                 Debug.Log("Removing Ladder from floor 0");   
             };
             floorCells[x, y].currentFloor = currentFloor;
@@ -132,21 +147,26 @@ public class FloorManager : MonoBehaviour{
             floorCells[x, y].ladder = false;
         }
         floors[currentFloor].Animate();
-        pathfinding.UpdatePaths();
+        audioSource.pitch = UnityEngine.Random.Range(0.3f,0.6f);
+        audioSource.Play();
+        pathfinding.CheckIfNeedMovePossibleStarts();
+        //pathfinding.UpdatePaths();
     }
     public bool PlaceRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        if (floorCells[posX, posY + 1].currentFloor == floor + 1){
+        if (floor!=0 && floorCells[posX, posY + 1].currentFloor == floor + 1){
             floorCells[posX, posY].ladder = true;
             floors[floor + 1].PlaceStairs(pos);
-            if (floor == 0) pathfinding.possibleStarts.Add(new Vector2Int(posX, posY));
+            //if (floor == 0) pathfinding.possibleStarts.Add(new Vector2Int(posX, posY));
         }
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
         pathfinding.UpdatePaths();
+        audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
+        audioSource.Play();
         return true;
     }
     /*public bool CheckSquareRoad(int gridX, int gridY)
@@ -165,6 +185,119 @@ public class FloorManager : MonoBehaviour{
         if (left && top && topleft) return true;
         return false;
     }*/
+    public bool PlaceBridge_DontCheck(Vector3 position)
+    {
+        bool start = false;
+        Vector3Int pos = floors[0].WorldToCell(position);
+        if (pos.x < -offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX, posY].currentFloor;
+        if (floor < -1 || floor > floors.Count || floorCells[posX, posY].bridge) return false;
+
+        //FloorCell target = floorCells[posX, posY];
+        if(floor > 0)
+        {
+            List<FloorCell> temp = GetNeighbours4(posX, posY);
+            foreach (FloorCell c in temp)
+            {
+                if (c.currentFloor < floor) { start = true; break; }
+            }
+        }
+        bool hasBridgeNeighbour = false;
+        bool horizontal = false;
+        bool vertical = false;
+        FloorCell left = floorCells[posX - 1, posY];
+        FloorCell right = floorCells[posX + 1, posY];
+        FloorCell bot = floorCells[posX, posY - 1];
+        FloorCell top = floorCells[posX, posY + 1];
+        int resultFloor = -1;
+        if (left.bridge /* && !(floorCells[posX,posY].road && floorCells[posX, posY].currentFloor >= left.bridgeData.floor)*/)
+        {
+            hasBridgeNeighbour = true;
+            if (left.bridgeData.start && left.bridgeData.bridgeDirection == 0 || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+            {
+                Debug.Log(left.bridgeData.bridgeDirection);
+                horizontal = true;
+                left.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
+                resultFloor = left.bridgeData.floor;
+            }
+        }
+        if (right.bridge)
+        {
+            if (hasBridgeNeighbour && !horizontal) return false;
+            hasBridgeNeighbour = true;
+            if ((right.bridgeData.start && right.bridgeData.bridgeDirection == 0 || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal))
+            {
+                horizontal = true;
+                right.bridgeData.bridgeDirection = BridgeDirection.Horizontal;
+                resultFloor = right.bridgeData.floor;
+                //if (resultFloor != -1 && resultFloor != right.bridgeData.floor) return false;
+            }
+        }
+        if (bot.bridge)
+        {
+            Debug.Log(bot.bridgeData.bridgeDirection);
+            if (horizontal || hasBridgeNeighbour) return false;
+            if ((bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0 || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                vertical = true;
+                bot.bridgeData.bridgeDirection = BridgeDirection.Vertical;
+                hasBridgeNeighbour = true;
+                resultFloor = bot.bridgeData.floor;
+            }
+        }
+        if (top.bridge)
+        {
+            Debug.Log(top.bridgeData.bridgeDirection);
+            if (horizontal || hasBridgeNeighbour && !vertical) return false;
+            if (top.bridgeData.start && top.bridgeData.bridgeDirection == 0 || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical)
+            {
+                top.bridgeData.bridgeDirection = BridgeDirection.Vertical;
+                hasBridgeNeighbour = true;
+                resultFloor = top.bridgeData.floor;
+                //if (resultFloor != -1 && resultFloor != top.bridgeData.floor) return false;
+            }
+        }
+        if (start)
+        {
+            floorCells[left.gridX, left.gridY] = left;
+            floorCells[right.gridX, right.gridY] = right;
+            floorCells[bot.gridX, bot.gridY] = bot;
+            floorCells[top.gridX, top.gridY] = top;
+            floorCells[posX, posY].bridge = true;
+            BridgeDirection bridgeDirection = 0;
+            if (hasBridgeNeighbour)
+            {
+                bridgeDirection = (BridgeDirection)(horizontal ? 1 : 2);
+            }
+            floorCells[posX, posY].bridgeData = new BridgeData { start = start, bridgeDirection = bridgeDirection, floor = floor };
+            floors[floor].SetBridgeSpot(pos);
+            pathfinding.UpdatePaths();
+            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
+            audioSource.Play();
+            return true;
+        }
+        //if (resultFloor == floorCells[posX, posY].currentFloor) return false;
+        if (hasBridgeNeighbour && resultFloor >= 0)
+        {
+            floorCells[left.gridX, left.gridY] = left;
+            floorCells[right.gridX, right.gridY] = right;
+            floorCells[bot.gridX, bot.gridY] = bot;
+            floorCells[top.gridX, top.gridY] = top;
+            floorCells[posX, posY].bridge = true;
+            floorCells[posX, posY].bridgeData = new BridgeData { bridgeDirection = (BridgeDirection)(horizontal ? 1 : 2), floor = resultFloor };
+            floors[resultFloor].PlaceBridge(pos);
+            Vector3Int offset = horizontal ? Vector3Int.down : default;
+            int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
+            floors[placeFloor].PlaceBridgeShadow(pos + offset);
+            pathfinding.UpdatePaths();
+            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
+            audioSource.Play();
+            return true;
+        }
+        return false;
+    }
     public bool PlaceBridge(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
         if(pos.x <  - offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
@@ -237,6 +370,8 @@ public class FloorManager : MonoBehaviour{
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
             pathfinding.UpdatePaths();
+            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
+            audioSource.Play();
             return true;
         }
         return false;
@@ -273,6 +408,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
             }
         }
+        pathfinding.UpdatePaths();
     }
     public void PlaceBuilding_DontCheck(BuildingSaveData data)
     {
@@ -394,6 +530,134 @@ public class FloorManager : MonoBehaviour{
         }
         return true;
     }
+    public bool CheckBridgeOrBridgeSpot(Vector3 input)
+    {
+        bool edge = false;
+        Vector3Int pos = floors[0].WorldToCell(input);
+        if (pos.x < -offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
+        int posX = pos.x + offset.x;
+        int posY = pos.y + offset.y;
+        int floor = floorCells[posX, posY].currentFloor;
+        if (floor < -1 || floor + 1 > floors.Count || floorCells[posX, posY].bridge) return false;
+
+        FloorCell target = floorCells[posX, posY];
+        if (floor > 0 && !target.bridge && !target.building) 
+        {
+            List<FloorCell> temp = GetNeighbours4(posX, posY);
+            foreach (FloorCell c in temp)
+            {
+                if (c.currentFloor < floor) edge = true;
+                if (edge && c.bridge && (c.bridgeData.start || c.bridgeData.floor != floor)) return false;
+            }
+        }
+        // need for bridge logic run properly
+
+        bool hasBridgeNeighbour = false;
+        bool horizontal = false;
+        bool vertical = false;
+        // Debug.Log($"Checking bridge's {posX},{posY} neighbours...");
+        FloorCell left = floorCells[posX - 1, posY];
+        FloorCell right = floorCells[posX + 1, posY];
+        FloorCell bot = floorCells[posX, posY - 1];
+        FloorCell top = floorCells[posX, posY + 1];
+
+        if (edge)
+        {
+            if (left.bridge)
+            {
+                if (left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+                {
+                    horizontal = true;
+                }
+                else
+                {
+                    return false;
+                }
+                hasBridgeNeighbour = true;
+            }
+            if (right.bridge)
+            {
+                if (hasBridgeNeighbour && !horizontal) return false;
+                if (right.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+                {
+                    horizontal = true;
+                }
+                else
+                {
+                    return false;
+                }
+                hasBridgeNeighbour = true;
+            }
+            if (bot.bridge)
+            {
+                if (horizontal || hasBridgeNeighbour) return false;
+                if (bot.bridgeData.bridgeDirection == BridgeDirection.Vertical)
+                {
+                    hasBridgeNeighbour = true;
+                    vertical = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            if (top.bridge)
+            {
+                if (horizontal || hasBridgeNeighbour && !vertical) return false;
+                if (top.bridgeData.bridgeDirection == BridgeDirection.Vertical)
+                {
+                    hasBridgeNeighbour = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            //Debug.Log($"{edge}, {hasBridgeNeighbour}");
+            return true ;
+        }
+
+        if (left.bridge)
+        {
+            //Debug.Log($"left dir: {left.bridgeData.bridgeDirection}");
+            if ((left.bridgeData.start && left.bridgeData.bridgeDirection == 0) || !left.bridgeData.start && left.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+            {
+                horizontal = true;
+            }
+            hasBridgeNeighbour = true;
+        }
+        if (right.bridge)
+        {
+            //Debug.Log($"right dir: {left.bridgeData.bridgeDirection}");
+            if (hasBridgeNeighbour && !horizontal) return false;
+            if ((right.bridgeData.start && right.bridgeData.bridgeDirection == 0) || !right.bridgeData.start && right.bridgeData.bridgeDirection == BridgeDirection.Horizontal)
+            {
+                horizontal = true;
+            }
+            hasBridgeNeighbour = true;
+        }
+        if (bot.bridge)
+        {
+            //Debug.Log($"bot dir: {left.bridgeData.bridgeDirection}");
+            if (horizontal || hasBridgeNeighbour) return false;
+            if (((bot.bridgeData.start && bot.bridgeData.bridgeDirection == 0) || !bot.bridgeData.start && bot.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                hasBridgeNeighbour = true;
+                vertical = true;
+            }
+        }
+        if (top.bridge)
+        {
+            //Debug.Log($"top dir: {left.bridgeData.bridgeDirection}");
+            if (horizontal || hasBridgeNeighbour && !vertical) return false;
+            if (((top.bridgeData.start && top.bridgeData.bridgeDirection == 0) || !top.bridgeData.start && top.bridgeData.bridgeDirection == BridgeDirection.Vertical))
+            {
+                hasBridgeNeighbour = true;
+            }
+        }
+        //Debug.Log($"{edge}, {hasBridgeNeighbour}");
+        return hasBridgeNeighbour;
+    }
     public bool CheckBridge(Vector3 input) {
         Vector3Int pos = floors[0].WorldToCell(input);
         if (pos.x < -offset.x || pos.x >= offset.x || pos.y < 1 - offset.x || pos.y >= offset.x) return false;
@@ -459,8 +723,7 @@ public class FloorManager : MonoBehaviour{
             if(c.currentFloor < floor) edge = true;
             if(c.bridgeData.floor == floor && c.bridge) return false;
         }
-        if (!edge) return false;
-        return true;
+        return edge;
     }
     public bool CheckRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -530,11 +793,11 @@ public class FloorManager : MonoBehaviour{
         {
             floorCells[gridX, gridY].ladder = false;
             floors[floor + 1].RemoveStairs(pos);
-            if (floor == 0)
+            /*if (floor == 0)
             {
                 pathfinding.possibleStarts.Remove(new Vector2Int(gridX, gridY));
                 Debug.Log($"removing {gridX},{gridY}");
-            }
+            }*/
             
         }
         if (floorCells[gridX, gridY].road)
@@ -575,6 +838,8 @@ public class FloorManager : MonoBehaviour{
             //floorCells[gridX, gridY].currentFloor--;
         }
         pathfinding.UpdatePaths();
+        audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
+        audioSource.Play();
     }
     public void DestroyBuilding(int gridX, int gridY, int w, int h){
         for(int x = gridX; x < gridX + w; x++){
@@ -665,6 +930,7 @@ public class FloorManager : MonoBehaviour{
                     if (cell.ladder)
                     {
                         floors[cell.currentFloor + 1].PlaceStairs(pos - offset);
+                        //pathfinding.possibleStarts.Add(new Vector2Int(pos.x,pos.y));
                     }
                     else
                     {
@@ -686,7 +952,8 @@ public class FloorManager : MonoBehaviour{
         {
             floor.Animate();
         }
-        pathfinding.UpdatePaths();
+        pathfinding.CheckIfNeedMovePossibleStarts();
+        //pathfinding.UpdatePaths();
     }
     public void FloodFloor(Vector3 start, Vector3 end)
     {
@@ -694,12 +961,20 @@ public class FloorManager : MonoBehaviour{
         Vector3Int endPos = floors[0].WorldToCell(end);
         startPos.z = 0;
         endPos.z = 0;
+        FloodFloorInt(startPos, endPos);
+    }
+    public void FloodFloorInt(Vector3Int startPos, Vector3Int endPos)
+    {
         if (startPos.x < -offset.x || startPos.x >= offset.x || startPos.y < 1 - offset.y || startPos.y >= offset.y) return;
         if (endPos.x < -offset.x || endPos.x >= offset.x || endPos.y < 1 - offset.y || endPos.y >= offset.y) return;
         int startPosX = startPos.x + offset.x;
         int startPosY = startPos.y + offset.y;
         int endPosX = endPos.x + offset.x;
         int endPosY = endPos.y + offset.y;
+        if (startPosX < edgeStartX) edgeStartX = startPosX;
+        else if (endPosX > edgeEndX) edgeEndX = endPosX;
+        if (startPosY < edgeStartY) edgeStartY = startPosY;
+        else if (endPosY > edgeEndY) edgeEndY = endPosY;
         int targetFloor = floorCells[startPosX, startPosY].currentFloor;
         for (int y = startPosY; y <= endPosY; y++)
         {
@@ -709,7 +984,7 @@ public class FloorManager : MonoBehaviour{
                 if (floorCells[x, y - 1].currentFloor < targetFloor) continue;
                 floorCells[x, y].currentFloor++;
                 floorCells[x, y].Reset();
-                floors[targetFloor + 1].CreateGround(new Vector3Int(x,y) - offset);
+                floors[targetFloor + 1].CreateGround(new Vector3Int(x, y) - offset);
             }
         }
         floors[targetFloor + 1].Animate();

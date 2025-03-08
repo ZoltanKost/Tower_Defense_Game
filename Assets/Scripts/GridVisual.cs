@@ -50,7 +50,7 @@ public class GridVisual : MonoBehaviour
         costText.text = cost.ToString();
         leftText.text = left.ToString();
         comeFromIndexText.text = cell.comeFrom.x.ToString() + ";" + cell.comeFrom.y.ToString();
-        togetherText.text = (left * 50 + cost).ToString();
+        togetherText.text = (left * 64 + cost).ToString();
         indexText.text = cell.heapIndex.ToString();
     }
     public void SetColor(Color color)

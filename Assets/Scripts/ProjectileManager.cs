@@ -63,6 +63,7 @@ public class ProjectileManager : MonoBehaviour {
             projectile.time += delta;
             if (projectile.time >= projectile.maxTime)
             {
+                projectile.audioSource.Play();
                 projectile.active = false;
                 projectile.enable = false;
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.StayIfMissed) != 0
@@ -105,7 +106,7 @@ public class ProjectileManager : MonoBehaviour {
            projectiles[i].Deactivate();
         }
     }
-    public void ClearEntities()
+    public void DestroyEntities()
     {
         for(int i = 0; i < projectiles.Length; i++){
             if(projectiles[i] != null){
@@ -121,6 +122,8 @@ public class ProjectileManager : MonoBehaviour {
 [Serializable]
 public struct ProjectileData
 {
+    public AudioClip hitClip;
+    public float audioVolume;
     public SpellSO spell;
     public IDamagable target;
     public Vector3 targetPosition;

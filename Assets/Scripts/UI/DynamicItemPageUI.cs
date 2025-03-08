@@ -36,18 +36,18 @@ public class DynamicItemPageUI : MonoBehaviour
             for (int i = 0; i < buttons.Count; i++)
             {
                 if (i < sprites.Length) buttons[i].SetSprite(sprites[i]);
-                else buttons[i].DeactivateVisuals();
+                //else buttons[i].DeactivateVisuals();
             }
             length = sprites.Length;
         }
     }
     public void ActivateVisuals(int uiID)
     {
-        buttons[uiID].ActivateVisuals();
+        //buttons[uiID].ActivateVisuals();
     }
     public void DeactivateVisuals(int uiID)
     {
-        buttons[uiID].DeactivateVisuals();
+        //buttons[uiID].DeactivateVisuals();
     }
     public void AddItem(SpellData item)
     {

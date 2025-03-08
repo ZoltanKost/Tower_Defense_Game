@@ -7,6 +7,7 @@ using System;
 public class Enemy : MonoBehaviour, IDamagable
 {
     [SerializeField] public AudioSource audioSource;
+    [SerializeField] private AudioClip damageClip;
     Action<int> damageCastleEvent;
     Action<int> onKillEvent;
     Action<int,int> onRemoveEvent;
@@ -59,8 +60,6 @@ public class Enemy : MonoBehaviour, IDamagable
         HP -= damage;
         hpBar.Set((float)HP / MaxHP);
         Animate();
-        audioSource.pitch = UnityEngine.Random.Range(0.6f,1.2f);
-        audioSource.Play();
         if (HP <= 0)
         {
             Kill();
@@ -103,6 +102,7 @@ public class Enemy : MonoBehaviour, IDamagable
         projectileSpeed = prefab.projectileSpeed;
         _attackType = prefab.attackType;
         ProjectileData = prefab.ProjectileData;
+        damageClip = prefab.damageClip;
         currentTarget = null;
         animator.InitFromPrefab(prefab.animator);
         animator.SetSortingParams(6 + 1000 / start.gridY,start.floor);
@@ -129,6 +129,9 @@ public class Enemy : MonoBehaviour, IDamagable
         {
             case AttackType.Melee:
                 currentTarget.Damage(damage);
+                audioSource.clip = damageClip;
+                audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.2f);
+                audioSource.Play();
                 break;
             case AttackType.Projectile:
                 ProjectileFlag = true;

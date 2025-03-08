@@ -92,8 +92,6 @@ public class BuildingObject : MonoBehaviour, IDamagable
         HP -= damage;
         hpBar?.Set((float)HP/maxHP);
         Animate();
-        audioSource.pitch = Random.Range(0.5f, 0.76f);
-        audioSource.Play();
         if (HP <= 0) Kill();
     }
 

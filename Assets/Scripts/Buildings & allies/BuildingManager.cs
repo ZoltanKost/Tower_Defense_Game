@@ -1,12 +1,13 @@
 using UnityEngine;
 using System;
 
-public class BuildingManager : MonoBehaviour, IHandler {
+public class BuildingManager : MonoBehaviour{
     [SerializeField] private FloorManager floorManager;
     [SerializeField] private Building[] buildingData;
     [SerializeField] private BuildingObject prefab;
     [SerializeField] private ArcherManager archerManager;
     [SerializeField] private ProjectileManager projectileManager;
+    [SerializeField] private AudioSource audioSource;
     public BuildingObject[] bs;
     public int Count;
     bool active;
@@ -40,6 +41,8 @@ public class BuildingManager : MonoBehaviour, IHandler {
         if(Count >= bs.Length){
             Resize();
         }
+        //audioSource.pitch = UnityEngine.Random.Range(0.7f,1f);
+        audioSource.Play();
     }
     public void Build(BuildingSaveData data, out Func<int> getID)
     {
@@ -157,7 +160,7 @@ public class BuildingManager : MonoBehaviour, IHandler {
         Count = 0;
     }
 
-    public void ClearEntities()
+    public void DeleteEntities()
     {
         for(int i = 0; i < bs.Length; i++)
         {

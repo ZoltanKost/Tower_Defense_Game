@@ -99,8 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  damageClip: {fileID: 8300000, guid: 02d08b1ab1717954f9fd9c325a0f526c, type: 3}
   ProjectileFlag: 0
   ProjectileData:
+    hitClip: {fileID: 0}
+    audioVolume: 1
+    spell: {fileID: 0}
     targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}
     speed: 0
@@ -117,6 +122,7 @@ MonoBehaviour:
   damage: 15
   currentTarget: {fileID: 0}
   animator: {fileID: 9071115895459296981}
+  currentPath: []
   index: 0
   speed: 1
   attackRange: 1
@@ -127,6 +133,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   detectFlag: 0
   pointsLeft: 0
+  pathLength: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0

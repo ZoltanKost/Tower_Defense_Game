@@ -77,17 +77,17 @@ public class PlayerActionManager : MonoBehaviour{
                 }
             break;
             case ActionMode.Bridge:
-                if(!floorManager.PlaceBridge(position))
+                if (!floorManager.PlaceBridge_DontCheck(position))
                 {
                     actionFailedCallback?.Invoke();
                 }
-            break;
+                break;
             case ActionMode.BridgeSpot:
-                if(!floorManager.PlaceBridgeSpot(position))
+                if (!floorManager.PlaceBridge_DontCheck(position))
                 {
                     actionFailedCallback?.Invoke();
                 }
-            break;
+                break;
             case ActionMode.None:
                 highlighter.TryHighlight(position);
             break;
@@ -116,15 +116,15 @@ public class PlayerActionManager : MonoBehaviour{
                 }
                 break;
             case ActionMode.Bridge:
-                if (floorManager.PlaceBridge(position))
+                if (!floorManager.PlaceBridge_DontCheck(position))
                 {
-                    temporalFloor.JellyAnimation();
+                    actionFailedCallback?.Invoke();
                 }
                 break;
             case ActionMode.BridgeSpot:
-                if (floorManager.PlaceBridgeSpot(position))
+                if (!floorManager.PlaceBridge_DontCheck(position))
                 {
-                    temporalFloor.JellyAnimation();
+                    actionFailedCallback?.Invoke();
                 }
                 break;
             case ActionMode.DestroyGround:
@@ -231,9 +231,9 @@ public class PlayerActionManager : MonoBehaviour{
             case ActionMode.Building:
                 return gameState_int == BUILDING_STATE && floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
             case ActionMode.Bridge:
-                return gameState_int == BUILDING_STATE && floorManager.CheckBridge(position);
+                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeOrBridgeSpot(position);
             case ActionMode.BridgeSpot:
-                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeSpot(position);
+                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeOrBridgeSpot(position);
             case ActionMode.MassGround:
                 // mass building
                 break;

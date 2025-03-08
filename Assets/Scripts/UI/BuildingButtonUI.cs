@@ -18,14 +18,15 @@ public class BuildingButtonUI : EventSubscribeButton {
         image.sprite = sprite;
         image.SetNativeSize();
     }
-    public void ActivateVisuals()
+    /*public void ActivateVisuals()
     {
         image.enabled = true;
     }
     public void DeactivateVisuals()
     {
+        //targetButton.image.sprite = targetButton.
         image.enabled = false;
-    }
+    }*/
     public void SetID(int id)
     {
         ID = id;

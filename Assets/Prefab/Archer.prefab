@@ -264,9 +264,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3429721088360299154}
-  audioSource: {fileID: 1437784672213509116}
   arrow: {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
   projectileData:
+    hitClip: {fileID: 8300000, guid: 58f2e95d2125d9343993fcc789b7109b, type: 3}
+    audioVolume: 0.3
     spell: {fileID: 0}
     targetPosition: {x: 0, y: 0, z: 0}
     startPosition: {x: 0, y: 0, z: 0}

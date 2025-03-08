@@ -24,7 +24,7 @@ public class EnemyManager : MonoBehaviour {
     public int waveNumber;
     public void Init(Action win, int _waveNumber = 0){
         waveNumber = _waveNumber;
-        GenerateWave(++waveNumber);
+        //GenerateWave(++waveNumber);
         onEnemyFinished = win;
         offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
@@ -189,7 +189,7 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
-    public void ClearEntities()
+    public void DestroyEntities()
     {
         foreach(Enemy enemy in enemies){
             if(enemy != null) Destroy(enemy.gameObject);
@@ -229,12 +229,18 @@ public class EnemyManager : MonoBehaviour {
         }
         return false;
     }
+    /*public void RegenerateWave()
+    {
+        GenerateWave(waveNumber);
+    }*/
     public void GenerateWave(int wave)
     {
         waveNumber = wave;
-        CalculateWave();
+        //waveHighlighting.ClearWaves();
+        pathfinding.CreatePossibleStarts(wave/10 + 1);
+        //pathfinding.UpdatePaths();
     }
-    public void CalculateWave()
+    public void ShowWave()
     {
         //Debug.Log("CalculatingWave");
         enemyNumber = waveNumber * 2 + waveNumber / 2;
@@ -251,11 +257,10 @@ public class EnemyManager : MonoBehaviour {
             {
                 Debug.Log("path is shorter then one"); continue;
             }
-            int maxCells = path.Count;
+            //int maxCells = path.Count;
             //Debug.Log($"maxCells: {maxCells}");
-            float numForWave = maxCells ;
             var wave = new Wave(waves.Count,
-                    (int)(enemyNumber * numForWave),
+                    enemyNumber,
                     path, spawnRate);
             waves.Add(wave);
             //Debug.Log($"wave {waves.Count - 1}, count: {wave.count} {enemyNumber} {numForWave}, paths: {wave.Paths.Count}");

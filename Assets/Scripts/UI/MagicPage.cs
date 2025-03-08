@@ -29,11 +29,11 @@ public class MagicPage : MonoBehaviour
     }
     public void ActivateVisuals(int uiID)
     {
-        buttonArray[uiID].ActivateVisuals();
+        //buttonArray[uiID].ActivateVisuals();
     }
     public void DeactivateVisuals(int uiID)
     {
-        buttonArray[uiID].DeactivateVisuals();
+        //buttonArray[uiID].DeactivateVisuals();
     }
     public void DeactivateButton(int uiID)
     {

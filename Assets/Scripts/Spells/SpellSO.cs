@@ -5,6 +5,7 @@ using DG.Tweening;
 [CreateAssetMenu(fileName = "SpellSO", menuName = "SpellSO", order = 0)]
 public class SpellSO : ScriptableObject {
     public SpellData spellData;
+    public float cooldown;
     public bool tweenAnimation;
     public Ease ease;
     public Vector3 targetDeltaPosition;

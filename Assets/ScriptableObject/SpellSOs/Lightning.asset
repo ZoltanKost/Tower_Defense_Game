@@ -21,6 +21,7 @@ MonoBehaviour:
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
+  cooldown: 2
   tweenAnimation: 0
   ease: 0
   targetDeltaPosition: {x: 0, y: 0, z: 0}
@@ -50,6 +51,8 @@ MonoBehaviour:
   spawnData:
     spell: {fileID: 0}
     projectile:
+      hitClip: {fileID: 0}
+      audioVolume: 0
       spell: {fileID: 0}
       targetPosition: {x: 0, y: 0, z: 0}
       startPosition: {x: 0, y: 0, z: 0}

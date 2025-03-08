@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a180e0ade807656449e2418c60ab2b10, type: 3}
+  m_Name: Bomb
+  m_EditorClassIdentifier: 
+  spellData:
+    manaCost: 50
+    goldCost: 50
+    globalRadius: 1
+    radius: 1
+    damage: 50
+    targeted: 0
+    spellAction: 0
+    UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}
+  cooldown: 2
+  tweenAnimation: 0
+  ease: 23
+  targetDeltaPosition: {x: -1, y: -3, z: 0}
+  animationTime: 1
+  amplitude_overshoot: 1.2
+  animations:
+  - events:
+    - acitonID: 1
+      frame: 1
+    - acitonID: 0
+      frame: 8
+    sprites:
+    - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+    duration: 0.8
+    flipX: 0
+  spawnData:
+    spell: {fileID: 11400000, guid: a4274ac766b5dbf408189b766d6b0374, type: 2}
+    projectile:
+      hitClip: {fileID: 0}
+      audioVolume: 0
+      spell: {fileID: 11400000, guid: a4274ac766b5dbf408189b766d6b0374, type: 2}
+      targetPosition: {x: 0, y: 0, z: 0}
+      startPosition: {x: 0, y: 0, z: 0}
+      speed: 5
+      animations:
+      - events: []
+        sprites:
+        - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+        duration: 0.1
+        flipX: 0
+      - events:
+        - acitonID: 0
+          frame: 0
+        sprites:
+        - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+        duration: 1
+        flipX: 0
+      - events:
+        - acitonID: 0
+          frame: 0
+        sprites:
+        - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+        duration: 0.1
+        flipX: 0
+      damage: 50
+      behaviour: 10
+      ballistic: 1
+      flightTime: 0.3
+    deltaPosToSpawn: []
+    repeat: 0
