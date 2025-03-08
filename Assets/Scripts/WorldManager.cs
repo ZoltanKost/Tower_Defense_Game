@@ -39,6 +39,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private MenuUIManager winScreen;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
+    [SerializeField] private HealthBar playerManaBar;
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private PlayerShopUIManager playerShopUIManager;
     [SerializeField] private GameLoadManager gameLoadManager;
@@ -88,6 +89,7 @@ public class WorldManager : MonoBehaviour {
             actionFailedCallback,
             temporalFloor,
             playerResourceManager.EnoughtResource,
+            playerManager.RemoveMana,
             playerResourceManager.RemoveResource,
             null,
             destroyBuildingCb
@@ -113,7 +115,7 @@ public class WorldManager : MonoBehaviour {
             Defeat();
             playerHealthBar.gameObject.SetActive(false);
         };
-        playerManager.Init(playerDefeat,playerHealthBar.Set);
+        playerManager.Init(playerDefeat,playerHealthBar.Set, playerManaBar.Set);
         winScreen.Init(new Action[]{Restart,Application.Quit});
         //playerHealthBar.gameObject.SetActive(false);
         floorManager.Init();
@@ -390,7 +392,7 @@ public class LevelData
     public RandomParameters RandomParameters;
     public Vector3Int offset;
     public int goldCount;
-    public int playerHP;
+    public float playerHP;
 }
 [Serializable] public struct BridgeSaveData
 {

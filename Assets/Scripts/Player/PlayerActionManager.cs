@@ -14,19 +14,21 @@ public class PlayerActionManager : MonoBehaviour{
     Action<Resource, int> buyCallback;
     Func<Resource,int, bool> canBuyCallBack;
     Action<int> destroyBuildingCallback;
+    Func<float,bool> manaCallback;
     GroundArray chosenGround;
     Building chosenBuilding;
     SpellSO chosenSpell;
     [SerializeField] ActionMode mode;
     byte gameState_int;
     Vector3 startPosition;
-    public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
+    public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Func<float,bool> _manaCallback, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         actionFailedCallback = buildingFailedCb;
         temporalFloor = tp;
         canBuyCallBack = canBuyCb;
         buyCallback = buyCb;
         highlightBuildingCallback = highlightBuildingCb;
         destroyBuildingCallback = destroyBuildingCb;
+        manaCallback = _manaCallback;
     }
     public void Switch(GameState state)
     {
@@ -53,9 +55,16 @@ public class PlayerActionManager : MonoBehaviour{
             break;
             case ActionMode.CastSpell:
                 //mode = 0;
-                // ManaCallback?.Invoke(Resource.Mana, chosenSpell.goldCost);
-                spellManager.CastSpell(chosenSpell, position);
-                FinishBuildingAction();
+                if (manaCallback.Invoke(chosenSpell.spellData.manaCost)) 
+                {
+                    spellManager.CastSpell(chosenSpell, position);
+                    FinishBuildingAction();
+                }
+                else
+                {
+                    actionFailedCallback?.Invoke();
+                }
+
                 break;
             case ActionMode.Road:
                 if(!floorManager.PlaceRoad(position))

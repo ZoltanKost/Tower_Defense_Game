@@ -11,6 +11,7 @@ public class SpellManager : MonoBehaviour {
     [SerializeField] private SpellObject prefab;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private ProjectileManager projectileManager;
+    [SerializeField] private PlayerManager playerManager;
     //[SerializeField] private AnimationManager animationManager;
     //List<CustomAnimator> spells = new List<CustomAnimator>();
     public SpellObject[] spellAnimators;
