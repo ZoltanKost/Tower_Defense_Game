@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 public class Pathfinding : MonoBehaviour
 {
     [SerializeField] FloorManager floor;
@@ -21,8 +19,13 @@ public class Pathfinding : MonoBehaviour
 
     //[SerializeField] private FloorCell prefab;
     FloorCell[,] grid;
-    public List<List<PathCell>> paths = new List<List<PathCell>>();
-    public List<PossibleStart> possibleStarts = new List<PossibleStart>();
+    public List<List<PathCell>> enemyPaths = new List<List<PathCell>>();
+    public List<Vector2Int> possibleStarts = new List<Vector2Int>();
+
+    public List<Vector2Int> ships = new();
+    [SerializeField]
+    public List<List<PathCell>> shipPaths = new();
+
     public FloorCell castlePosition;
 
     CustomGrid<GridVisual> debugGrid;
@@ -31,7 +34,7 @@ public class Pathfinding : MonoBehaviour
         //floor.Init();
         //floor.CreateCastle(transform.position, b);
         //SetTargetPoint(Mathf.Abs(offset.x), Mathf.Abs(offset.y), 0,0);
-        paths = new();
+        enemyPaths = new();
         //cellSize = floor.GetComponent<Grid>().cellSize.x;
         grid = floor.floorCells;
         cellSize = floor.cellSize;
@@ -55,191 +58,146 @@ public class Pathfinding : MonoBehaviour
     {
         castlePosition = default;        
     }
-    public void CreatePossibleStarts(int count)
-    {
-        possibleStarts.Clear();
-        while(count-- > 0)
-        {
-            possibleStarts.Add(GenereratePossibleStart());
-        }
-        UpdatePaths();
-    }
-    public void CheckIfNeedMovePossibleStarts()
-    {
-        // TODO finish
-        //Debug.Log("Checking if need move possible start");
-        int l = possibleStarts.Count;
-        for (int i = 0; i < l; i++)
-        {
-            var vec = possibleStarts[i];
-            if (vec.vertical)
-            {
-
-                if (vec.pos.y < floor.edgeStartY || vec.pos.y >= floor.edgeEndY) 
-                {
-                    possibleStarts[i] = MovePossibleStart(possibleStarts[i]);
-                    continue;
-                }
-                if (floor.edgeStartX != vec.pos.x && floor.edgeEndX != vec.pos.x)
-                {
-                    possibleStarts[i] = MovePossibleStart(possibleStarts[i]);
-                    continue;
-                }
-            }
-            else
-            {
-                if (vec.pos.x < floor.edgeStartX || vec.pos.x >= floor.edgeEndX)
-                {
-                    possibleStarts[i] = MovePossibleStart(possibleStarts[i]);
-                    continue;
-                }
-                if (floor.edgeStartY != vec.pos.y && floor.edgeEndY != vec.pos.y)
-                {
-                    possibleStarts[i] = MovePossibleStart(possibleStarts[i]);
-                    continue;
-                }
-            }
-        }
-        UpdatePaths();
-    }
-    public PossibleStart MovePossibleStart(PossibleStart start )
-    {
-        //Debug.Log($"Moving Possible Start: {start.pos.x};{start.pos.y}, {start.vertical}, {floor.edgeStartX}, {floor.edgeEndX}");
-        int posX = start.pos.x, posY = start.pos.y;
-        bool vertical = start.vertical;
-        if (vertical)
-        {
-            int a = Mathf.Abs(posX - floor.edgeStartX);
-            int b = Mathf.Abs(posX - floor.edgeEndX);
-            if (a < b)
-            {
-                posX = floor.edgeStartX;
-            }
-            else
-            {
-                posX = floor.edgeEndX;
-            }
-        }
-        else
-        {
-            int a = Mathf.Abs(posY - floor.edgeStartY);
-            int b = Mathf.Abs(posY - floor.edgeEndY);
-            if (a < b)
-            {
-                posY = floor.edgeStartY;
-            }
-            else
-            {
-                posY = floor.edgeEndY;
-            }
-        }
-        if (grid[posX, posY].currentFloor > 0)
-        {
-            start.pos = new Vector2Int(posX, posY);
-        }
-        else
-        {
-            var cell = castlePosition;
-            Vector2 dir = new Vector2Int(cell.gridX, cell.gridY) - new Vector2Int(posX, posY);
-            dir.x = Mathf.Clamp(dir.x, -1, 1);
-            dir.y = Mathf.Clamp(dir.y, -1, 1);
-            int deltaX = (int)dir.x;
-            int deltaY = (int)dir.y;
-            //UnityEngine.Debug.Log($"{dir} deltaX and deltaY in finding possible start are: {deltaX},{deltaY}");
-            int i = 0;
-            while (i < 1000 && grid[posX, posY].currentFloor < 1)
-            {
-                i++;
-                posX += deltaX;
-                posY += deltaY;
-            }
-            //Debug.Log(i);
-            start.pos = new Vector2Int(posX, posY);
-        }
-        //UnityEngine.Debug.Log($"{posX}:{posY}");
-        return start;
-    }
-    public PossibleStart GenereratePossibleStart()
+    public PossibleStart NeedMovePossibleStart(PossibleStart start, List<PathCell> path)
     {
         /*
-         1. Pick a point
-         2. If point is already walkable, set as a wave start         
-         3. Else raycast the point towards the castle start
-         4. Set the first intersection as a wave start
+         1. Snap start to the correspondent edge(with correspondent coordinate)
+         2. if not walkable, find nearest walkable.
          */
-        //possibleStarts.Clear();
-        //FloorCell[,] grid = floorManager.floorCells;
-        //Debug.Log("Generating new possible start");
-        int posX, posY;
-        bool vertical = UnityEngine.Random.Range(0, 2) == 1;
-        if (!vertical)
+        path.Clear();
+        if (start.vertical)
         {
-            posX = UnityEngine.Random.Range(floor.edgeStartX, floor.edgeEndX);
-            posY = UnityEngine.Random.Range(0, 2) == 1 ? floor.edgeStartY : floor.edgeEndY;
+            start.pos.x = start.fixedMinimum?floor.edgeStartX:floor.edgeEndX;
         }
         else
         {
-            posY = UnityEngine.Random.Range(floor.edgeStartY, floor.edgeEndY);
-            posX = UnityEngine.Random.Range(0, 2) == 1 ? floor.edgeStartX : floor.edgeEndX;
+            start.pos.y = start.fixedMinimum ? floor.edgeStartY : floor.edgeEndY;
+        }
+        if (FindPath(grid[start.pos.x, start.pos.y], castlePosition, path))
+        {
+            return start;
+        }
+        start.pos = FindFirstwalkable(start.pos.x, start.pos.y, path);
+        return start;
+    }
+    public PossibleStart GenereratePossibleStart(bool randomAxisY, bool fixedAxisMinimal,
+        out List<PathCell> enemyPath)
+    {
+
+        /*1.Pick a point
+         2.If a way can be created from a point, return it
+         3.Else find very first walkable point around it
+         4.If a way can be created from it, return*/
+
+        int posX, posY;
+        if (!randomAxisY)
+        {
+            posX = UnityEngine.Random.Range(floor.edgeStartX, floor.edgeEndX + 1);
+            posY = fixedAxisMinimal ? floor.edgeStartY : floor.edgeEndY;
+        }
+        else
+        {
+            posY = UnityEngine.Random.Range(floor.edgeStartY, floor.edgeEndY + 1);
+            posX = fixedAxisMinimal ? floor.edgeStartX : floor.edgeEndX;
         }
         //UnityEngine.Debug.Log($"Xdism:{floor.edgeStartX},{floor.edgeEndX}, Ydims:{floor.edgeStartY},{floor.edgeEndY}");
-        if (grid[posX, posY].currentFloor > 0)
+        enemyPath = new();
+        Vector2Int pos = new Vector2Int(posX, posY);
+        Debug.Log($"{posX}:{posY} edges: {floor.edgeStartX},{floor.edgeEndX}:{floor.edgeStartY},{floor.edgeEndY} ");
+        if (!(grid[posX, posY].currentFloor > 0 && FindPath(grid[posX, posY], castlePosition, enemyPath)))
         {
-            return new PossibleStart()
-            {
-                pos = new Vector2Int(posX, posY),
-                vertical = vertical
-            };
+            pos = FindFirstwalkable(posX, posY, enemyPath);
         }
-        else
+        Debug.Log($"{posX}:{posY} edges: {floor.edgeStartX},{floor.edgeEndX}:{floor.edgeStartY},{floor.edgeEndY} ");
+        return new PossibleStart()
         {
-            var cell = castlePosition;
-            Vector2 dir = new Vector2Int(cell.gridX, cell.gridY) - new Vector2Int(posX, posY);
-            dir.x = Mathf.Clamp(dir.x, -1, 1);
-            dir.y = Mathf.Clamp(dir.y, -1, 1);
-            int deltaX = (int)dir.x;
-            int deltaY = (int)dir.y;
-            //UnityEngine.Debug.Log($"{dir} deltaX and deltaY in finding possible start are: {deltaX},{deltaY}");
-            int i = 0;
-            while (i < 1000 && grid[posX, posY].currentFloor < 1)
+            pos = pos,
+            vertical = randomAxisY,
+            fixedMinimum = fixedAxisMinimal
+        };
+    }
+    public Vector2Int FindFirstwalkable(int posX, int posY, List<PathCell> path)
+    {
+        int w = grid.GetLength(0), h = grid.GetLength(1);
+        FloorCell[] neighs = new FloorCell[4];
+        GetNeighbours4(grid[posX, posY], grid, w, h, neighs);
+        Queue<FloorCell> open = new(neighs);
+        FloorCell current = open.Dequeue();
+        HashSet<FloorCell> closed = new() { current };
+        // - probably should move only in castle direction.
+        // - probably should not check all the cells checked in pathfinding
+        while (true)
+        {
+            if (current.currentFloor < 1)
             {
-                i++;
-                posX += deltaX;
-                posY += deltaY;
+                GetNeighbours4(current, grid, w, h, neighs);
+                foreach (var n in neighs)
+                {
+                    if (closed.Contains(n) || open.Contains(n)) continue;
+                    open.Enqueue(n);
+                }
             }
-            //UnityEngine.Debug.Log($"{i},{posX}:{posY}");
-            return new PossibleStart()
+            else
             {
-                pos = new Vector2Int(posX, posY),
-                vertical = vertical
-            };
+                if (FindPath(current, castlePosition, path))
+                {
+                    return new Vector2Int(current.gridX, current.gridY);
+                }
+            }
+            current = open.Dequeue();
+            closed.Add(current);
         }
     }
-    public void UpdatePaths()
+
+    /*public void UpdatePaths()
     {
-        StopAllCoroutines();
-        paths.Clear();
+        enemyPaths.Clear();
         //Debug.Log(possibleStarts.Count);
         for (int i = 0; i < possibleStarts.Count; i++)
         {
             //result = new();
             var start = possibleStarts[i];
             var res = new List<PathCell>();
-            if (FindPath(grid[start.pos.x, start.pos.y], castlePosition, res)) { paths.Add(res);}
+            //StartCoroutine(FindPathCoroutine(grid[start.x, start.y], castlePosition, res));
+            if (FindPath(grid[start.x, start.y], castlePosition, res)) { enemyPaths.Add(res); }
+            Debug.Log(enemyPaths.Count);
         }
         enemyManager.ShowWave();
-    }
+    }*/
+    /*public void UpdateShipPaths()
+    {
+        enemyPaths.Clear();
+        shipPaths.Clear();
+        possibleStarts.Clear();
+        //Debug.Log(possibleStarts.Count);
+
+        for (int i = 0; i < ships.Count; i++)
+        {
+            //result = new();
+            var start = ships[i];
+            var shipPath = new List<PathCell>();
+            var enemyPath = new List<PathCell>();
+            //StartCoroutine(FindPathBoatCoroutine(grid[start.x, start.y], castlePosition, shipPath, enemyPath));
+            if (FindPathBoat(grid[start.x, start.y], castlePosition, shipPath, enemyPath, out var enemyStart))
+            {
+                possibleStarts.Add(enemyStart);
+                shipPaths.Add(shipPath);
+                enemyPaths.Add(enemyPath);
+            }
+        }
+        enemyManager.ShowWave();
+    }*/
     /*private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
             StopAllCoroutines();
-            var start = possibleStarts[0];
+            var start = ships[0];
             var res = new List<PathCell>();
-            StartCoroutine(FindPathCoroutine(grid[start.pos.x, start.pos.y], castlePosition, res));
+            StartCoroutine(FindPathBoatCoroutine(grid[start.x, start.y], castlePosition, res, new()));
         }
     }*/
-    /*public IEnumerator FindPathCoroutine(FloorCell start, FloorCell end, List<PathCell> res)
+    public IEnumerator FindPathCoroutine(FloorCell start, FloorCell end, List<PathCell> res)
     {
         bool f = false;
         //FloorCell[,] grid = floor.floorCells;
@@ -319,7 +277,7 @@ public class Pathfinding : MonoBehaviour
                         if (current.cost + stepCost + left * defaultMoveCost < GetTogetherCost(neighbours[i]))
                         {
                             FloorCell cell = neighbours[i];
-                            cell = grid[cell.gridX,cell.gridY];
+                            cell = grid[cell.gridX, cell.gridY];
                             cell.cost = stepCost + current.cost;
                             cell.left = left;
                             cell.comeFrom = new Vector2Int(current.gridX, current.gridY);
@@ -363,27 +321,105 @@ public class Pathfinding : MonoBehaviour
         Debug.Log("No possible paths found...");
         //res = null;
         yield break;  //
-        //return false;
-    }*/
-    /*void OnDrawGizmos()
+                      //return false;
+    }
+    public IEnumerator FindPathBoatCoroutine(FloorCell start, FloorCell end, List<PathCell> res)
     {
-        if (paths == null || paths.Count < 1) { return; }
-        foreach (var path in paths)
+        //enemyStart = new Vector2Int(-1, -1);
+        HashSet<Vector2Int> closed = new();
+        FloorCell[] openHeap = new FloorCell[16];
+        int heapCount = 0;
+        openHeap[heapCount++] = start;
+        HashSet<Vector2Int> openCell = new();
+        FloorCell[] neighbours = new FloorCell[8];
+        while (heapCount > 0)
         {
-            var offset = new Vector3(0, 0, 5);
-            if (path.Count < 1) continue;
-            Vector3 prevCell = path[0].pos;
-            foreach (var nextCell in path)
+            bool f = false;
+            while (!f)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
-                prevCell = nextCell.pos;
+                yield return null;
+                f = Input.GetKeyDown(KeyCode.F);
+            }
+            FloorCell current = openHeap[0];
+            debugGrid.GetValue(current.gridX, current.gridY).SetColor(Color.black);
+            RemoveFirst(openHeap, heapCount--);
+            Vector2Int currentPos = new Vector2Int(current.gridX, current.gridY);
+            closed.Add(currentPos);
+            openCell.Remove(currentPos);
+            GetNeighbours8(current, grid, w, h, neighbours);
+            Debug.Log(current.gridX + " " + current.gridY);
+            for (int i = 0; i < 8; i++)
+            {
+                if (neighbours[i].gridX == -1 || neighbours[i].gridY == -1)
+                {
+                    continue;
+                }
+                if (!IsWalkableBoat(neighbours[i]))
+                {
+                    if (Mathf.Abs(current.gridX-end.gridX)<2 
+                        && Mathf.Abs(current.gridY - end.gridY)<2)
+                    {
+                        while (current.gridX != start.gridX || current.gridY != start.gridY)
+                        {
+                            res.Add(new PathCell(current, cellSize, offset.x, offset.y));
+                            current = grid[current.comeFrom.x, current.comeFrom.y];
+                        }
+                        res.Add(new PathCell(current, cellSize, offset.x, offset.y));
+                        yield break;
+                    }
+                    continue;
+                }
+                var neighPos = new Vector2Int(neighbours[i].gridX, neighbours[i].gridY);
+                if (!closed.Contains(neighPos))
+                {
+                    int stepCost = (int)(10 * new Vector2(neighbours[i].gridX - current.gridX, neighbours[i].gridY - current.gridY).magnitude);
+                    int left = Mathf.Abs(end.gridX - neighbours[i].gridX)
+                            + Mathf.Abs(end.gridY - neighbours[i].gridY);
+                    if (openCell.Contains(neighPos))
+                    {
+                        if (current.cost + stepCost + left * defaultMoveCost < GetTogetherCost(neighbours[i]))
+                        {
+                            FloorCell cell = neighbours[i];
+                            cell = grid[cell.gridX, cell.gridY];
+                            cell.cost = stepCost + current.cost;
+                            cell.left = left;
+                            cell.comeFrom = new Vector2Int(current.gridX, current.gridY);
+                            openHeap[cell.heapIndex] = cell;
+                            SortUpElement(cell.heapIndex, openHeap);
+                            debugGrid.GetValue(cell.gridX, cell.gridY)
+                                .UpdateInfo(
+                                Color.green, cell);
+                        }
+                    }
+                    else
+                    {
+                        var cell = neighbours[i];
+                        grid[cell.gridX, cell.gridY].heapIndex = heapCount;
+                        grid[cell.gridX, cell.gridY].cost = stepCost + current.cost;
+                        grid[cell.gridX, cell.gridY].left = left;
+                        grid[cell.gridX, cell.gridY].comeFrom = new Vector2Int(current.gridX, current.gridY);
+                        if (heapCount >= openHeap.Length)
+                        {
+                            Array.Resize(ref openHeap, heapCount * 2);
+                        }
+                        AddToHeap(
+                            grid[cell.gridX, cell.gridY],
+                            openHeap, heapCount++);
+                        openCell.Add(neighPos);
+                        debugGrid.GetValue(cell.gridX, cell.gridY)
+                                .UpdateInfo(
+                                Color.green, cell);
+                    }
+                }
             }
         }
-    }*/
+        //Debug.Log("No possible paths found...");
+        yield break;//return false;
+    }
+
     GridVisual CreateEmptyObject(int gridX, int gridY)
     {
-        return Instantiate(debug, transform).Init(gridX, gridY, 0f, 
+        return Instantiate(debug, transform).Init(gridX, gridY, 0f,
             floor.CellToWorld(new Vector3Int(gridX, gridY) - offset));
     }
     public bool FindPath(FloorCell start, FloorCell end, List<PathCell> res)
@@ -459,12 +495,109 @@ public class Pathfinding : MonoBehaviour
         //Debug.Log("No possible paths found...");
         return false;
     }
+    public bool FindPathBoat(FloorCell start, FloorCell end, List<PathCell> res)
+    {
+        //enemyStart = new Vector2Int(-1,-1);
+        HashSet<Vector2Int> closed = new();
+        FloorCell[] openHeap = new FloorCell[16];
+        int heapCount = 0;
+        openHeap[heapCount++] = start;
+        HashSet<Vector2Int> openCell = new();
+        FloorCell[] neighbours = new FloorCell[8];
+        while (heapCount > 0)
+        {
+            /*bool f = Input.GetKeyDown(KeyCode.F);
+            while (!f)
+            {
+                yield return null;
+                f = Input.GetKeyDown(KeyCode.F);
+            }
+            f = false;*/
+            FloorCell current = openHeap[0];
+            //debugGrid.GetValue(current.gridX, current.gridY).SetColor(Color.black);
+            RemoveFirst(openHeap, heapCount--);
+            Vector2Int currentPos = new Vector2Int(current.gridX, current.gridY);
+            closed.Add(currentPos);
+            openCell.Remove(currentPos);
+            GetNeighbours8(current, grid, w, h, neighbours);
+            for (int i = 0; i < 8; i++)
+            {
+                if (neighbours[i].gridX == -1 || neighbours[i].gridY == -1)
+                {
+                    continue;
+                }
+                if (!IsWalkableBoat(neighbours[i]))
+                {
+                    if (Mathf.Abs(current.gridX - end.gridX) < 2
+                        && Mathf.Abs(current.gridY - end.gridY) < 2)
+                    {
+                        while (current.gridX != start.gridX || current.gridY != start.gridY)
+                        {
+                            res.Add(new PathCell(current, cellSize, offset.x, offset.y));
+                            current = grid[current.comeFrom.x, current.comeFrom.y];
+                        }
+                        res.Add(new PathCell(current, cellSize, offset.x, offset.y));
+                        return true;
+                    }
+                    continue;
+                }
+                var neighPos = new Vector2Int(neighbours[i].gridX, neighbours[i].gridY);
+                if (!closed.Contains(neighPos))
+                {
+                    int stepCost = (int)(10 * new Vector2(neighbours[i].gridX - current.gridX, neighbours[i].gridY - current.gridY).magnitude);
+                    int left = Mathf.Abs(end.gridX - neighbours[i].gridX)
+                            + Mathf.Abs(end.gridY - neighbours[i].gridY);
+                    if (openCell.Contains(neighPos))
+                    {
+                        if (current.cost + stepCost + left * defaultMoveCost < GetTogetherCost(neighbours[i]))
+                        {
+                            FloorCell cell = neighbours[i];
+                            cell = grid[cell.gridX, cell.gridY];
+                            cell.cost = stepCost + current.cost;
+                            cell.left = left;
+                            cell.comeFrom = new Vector2Int(current.gridX, current.gridY);
+                            openHeap[cell.heapIndex] = cell;
+                            SortUpElement(cell.heapIndex, openHeap);
+                            /*debugGrid.GetValue(cell.gridX, cell.gridY)
+                                .UpdateInfo(
+                                Color.green, cell);*/
+                        }
+                    }
+                    else
+                    {
+                        var cell = neighbours[i];
+                        grid[cell.gridX, cell.gridY].heapIndex = heapCount;
+                        grid[cell.gridX, cell.gridY].cost = stepCost + current.cost;
+                        grid[cell.gridX, cell.gridY].left = left;
+                        grid[cell.gridX, cell.gridY].comeFrom = new Vector2Int(current.gridX, current.gridY);
+                        if (heapCount >= openHeap.Length)
+                        {
+                            Array.Resize(ref openHeap, heapCount * 2);
+                        }
+                        AddToHeap(
+                            grid[cell.gridX, cell.gridY],
+                            openHeap, heapCount++);
+                        openCell.Add(neighPos);
+                        /*debugGrid.GetValue(cell.gridX, cell.gridY)
+                                .UpdateInfo(
+                                Color.green, cell);*/
+                    }
+                }
+            }
+        }
+        //Debug.Log("No possible paths found...");
+        return false;
+    }
     bool IsWalkable(FloorCell cell, FloorCell cameFrom)
     {
         if(!cell.walkable) return false;
         FloorCell up = grid[cell.gridX, cell.gridY + 1];
         bool isArock = up.currentFloor == cell.currentFloor + 1;
         return cell.currentFloor > 0 && (!isArock || isArock && cell.road) || (cell.bridge && (cameFrom.bridge || cell.bridgeData.start));
+    }
+    bool IsWalkableBoat(FloorCell cell)
+    {
+        return !(cell.currentFloor > -1 || cell.bridge); 
     }
     int GetStepCost(FloorCell cell)
     {
@@ -484,13 +617,50 @@ public class Pathfinding : MonoBehaviour
         int gridX = cell.gridX;
         int gridY = cell.gridY;
         if (gridX - 1 >= 0) result[0] = grid[gridX - 1, gridY];
-        else result[1] = new FloorCell(-1, -1);
+        else result[0] = new FloorCell(-1, -1);
         if (gridX + 1 < w) result[1] = grid[gridX + 1, gridY];
         else result[1] = new FloorCell(-1,-1);
         if (gridY + 1 < h) result[2] = grid[gridX, gridY + 1];
         else result[2] = new FloorCell(-1,-1);
         if (gridY - 1 >= 0) result[3] = grid[gridX, gridY - 1];
-        else result[1] = new FloorCell(-1, -1);
+        else result[3] = new FloorCell(-1, -1);
+    }
+    void GetNeighbours8(FloorCell cell, FloorCell[,] grid, int w, int h, FloorCell[] result8)
+    {
+        int gridX = cell.gridX;
+        int gridY = cell.gridY;
+        
+        if (gridX - 1 >= 0)
+            result8[0] = grid[gridX - 1, gridY];
+        else result8[0] = new FloorCell(-1, -1);
+
+        if (gridX - 1 >= 0 && gridY + 1 < h)
+            result8[1] = grid[gridX - 1, gridY + 1];
+        else result8[1] = new FloorCell(-1, -1);
+
+        if (gridY + 1 < h)
+            result8[2] = grid[gridX, gridY + 1];
+        else result8[2] = new FloorCell(-1, -1);
+
+        if (gridX + 1 < w && gridY + 1 < h)
+            result8[3] = grid[gridX + 1, gridY + 1];
+        else result8[3] = new FloorCell(-1, -1);
+
+        if (gridX + 1 < w)
+            result8[4] = grid[gridX + 1, gridY];
+        else result8[4] = new FloorCell(-1, -1);
+
+        if (gridX + 1 < w && gridY - 1 >= 0)
+            result8[5] = grid[gridX + 1, gridY - 1];
+        else result8[5] = new FloorCell(-1, -1);
+
+        if (gridY - 1 >= 0)
+            result8[6] = grid[gridX, gridY - 1];
+        else result8[6] = new FloorCell(-1, -1);
+
+        if (gridX - 1 >= 0 && gridY - 1 >= 0)
+            result8[7] = grid[gridX - 1, gridY - 1];
+        else result8[7] = new FloorCell(-1, -1);
     }
     void AddToHeap(FloorCell element, FloorCell[] heap, int count)
     {
@@ -646,11 +816,6 @@ public class Pathfinding : MonoBehaviour
         return result;
     }
 }
-public struct PossibleStart
-{
-    public Vector2Int pos;
-    public bool vertical;
-}
 [Serializable]
 public struct PathCell
 {
@@ -670,6 +835,12 @@ public struct PathCell
         }
         gridY = cell.gridY;
     }
+}
+public struct PossibleStart
+{
+    public bool vertical;
+    public bool fixedMinimum;
+    public Vector2Int pos;
 }
 
 

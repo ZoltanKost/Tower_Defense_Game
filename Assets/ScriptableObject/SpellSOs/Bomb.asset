@@ -15,9 +15,9 @@ MonoBehaviour:
   spellData:
     manaCost: 50
     goldCost: 50
-    globalRadius: 1
+    globalRadius: 2
     radius: 1
-    damage: 50
+    damage: 200
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}

@@ -11,11 +11,13 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy[] enemyPrefabs;
-    //[SerializeField] private 
+    [SerializeField] private GameObject shipPrefab;
+    [SerializeField] private float waveDefaultPeriod;
     [SerializeField] private float spawnRate;
     Action onEnemyFinished;
     public Enemy[] enemies;
     public List<Wave> waves = new();
+    List<Ship> ships = new();
     public int lowestInactive = 0;
     int enemyNumber = 0;
     bool active;
@@ -37,6 +39,7 @@ public class EnemyManager : MonoBehaviour {
     void FixedUpdate(){
         if(!active) return;
         float delta = Time.fixedDeltaTime;
+        TickShipMovement(delta);
         TickState(delta);
         TickMovement(delta);
         TickDetection();
@@ -50,10 +53,48 @@ public class EnemyManager : MonoBehaviour {
                 {
                     left = true;
                 }
+                else
+                {
+                    wave.shipPrefabToDestroy.gameObject.SetActive(false);
+                }
+            }
+            foreach (var ship in ships)
+            {
+                left = true;
+                break;
             }
             if (left) return;
+            waves.Clear();
             onEnemyFinished?.Invoke();
             GenerateWave(++waveNumber);
+        }
+    }
+    public void TickShipMovement(float dt)
+    {
+        int c = ships.Count;
+        for (int i = 0; i < c; i++)
+        {
+            ships[i].visual.position += (ships[i].destination - ships[i].visual.position).normalized * dt * ships[i].speed;
+            if ((ships[i].destination - ships[i].visual.position).magnitude <= .1f)
+            {
+                if (ships[i].pathIndex > 1)
+                {
+                    var ship = ships[i];
+                    ship.pathIndex--;
+                    Debug.Log(ship.path.Count + " " + ship.pathIndex);
+                    PathCell next = ship.path[ship.pathIndex];
+                    ship.destination = next.pos;
+                    ships[i] = ship;
+                }
+                else
+                {
+                    ships[i].wave.ID = waves.Count;
+                    waves.Add(ships[i].wave);
+                    ships.RemoveAt(i);
+                    i--;
+                    c--;
+                }
+            }
         }
     }
     public void RegisterKill(int index){
@@ -237,35 +278,140 @@ public class EnemyManager : MonoBehaviour {
     {
         waveNumber = wave;
         //waveHighlighting.ClearWaves();
-        pathfinding.CreatePossibleStarts(wave/10 + 1);
+        //pathfinding.CreatePossibleStarts(wave/5 + 1);
         //pathfinding.UpdatePaths();
+        GenerateShips(wave);
     }
-    public void ShowWave()
+    public void GenerateShips(int wave)
     {
-        //Debug.Log("CalculatingWave");
-        enemyNumber = waveNumber * 2 + waveNumber / 2;
-        List<List<PathCell>> paths = pathfinding.paths;
-        if (paths.Count < 1) 
+
+        /* 
+        1. Define Ship's Side: top,down,left or right
+        2. Find a nearest land point starting from the castle
+        3. Construct a path of ship to that possible start
+        */
+        int count = wave / 5 + 1;
+        for(int i = 0; i < count; i++)
         {
-            waveHighlighting.ClearWaves();
-            return; 
-        }
-        waves.Clear();
-        foreach (var path in paths)
-        {
-            if (path.Count < 1) 
+            Camera cam = Camera.main;
+            float Ysize = cam.orthographicSize * 2;
+            float height = cam.pixelHeight / (Ysize);
+            float width = cam.pixelWidth / (Ysize * cam.aspect);
+
+            bool vertical = UnityEngine.Random.Range(0, 2) == 1;
+            var floor = floorManager;
+            int posX = - 1, posY = -1;
+            bool fixedAxisMinimum = UnityEngine.Random.Range(0, 2) == 1;
+            if (!vertical)
             {
-                Debug.Log("path is shorter then one"); continue;
+                posX = UnityEngine.Random.Range(floor.edgeStartX, floor.edgeEndX + 1);
+                posY = (fixedAxisMinimum?floor.edgeStartY : floor.edgeEndY) - Mathf.FloorToInt(height)/2;
             }
-            //int maxCells = path.Count;
-            //Debug.Log($"maxCells: {maxCells}");
-            var wave = new Wave(waves.Count,
-                    enemyNumber,
-                    path, spawnRate);
-            waves.Add(wave);
-            //Debug.Log($"wave {waves.Count - 1}, count: {wave.count} {enemyNumber} {numForWave}, paths: {wave.Paths.Count}");
+            else
+            {
+                posY = UnityEngine.Random.Range(floor.edgeStartY, floor.edgeEndY + 1);
+                posX = (fixedAxisMinimum ? floor.edgeStartX : floor.edgeEndX) - Mathf.FloorToInt(width)/2;
+            }
+            //pathfinding.ships.Add(new Vector2Int(posX/10,posY/10));
+            var path = new List<PathCell>(); 
+            PossibleStart enemyStart = 
+                pathfinding.GenereratePossibleStart(vertical,fixedAxisMinimum,out List<PathCell> enemyPath);
+            posX = Mathf.Clamp(posX,0,99);
+            posY = Mathf.Clamp(posY,0,99);
+            var shipStart = floorManager.floorCells[posX, posY];
+            Debug.Log($"{path.Count}, {enemyStart.pos}:{shipStart.gridX}:{shipStart.gridY}");
+            pathfinding.FindPathBoat(
+                shipStart,
+                floor.floorCells[enemyStart.pos.x, enemyStart.pos.y],
+                path);
+            var visual = Instantiate(shipPrefab).transform;
+            var ship = new Ship
+            {
+                visual = visual,
+                wave = new Wave(-1,
+                    (wave * 3 + wave) / count,
+                    enemyStart,
+                    enemyPath, spawnRate, visual),
+                gridPosition = new Vector2Int(shipStart.gridX, shipStart.gridY),
+                //occupiedPositions;
+                path = path,
+                pathIndex = path.Count - 1,
+                speed = 10f,
+                destination = path[path.Count - 1].pos
+            };
+            ship.visual.transform.position = ship.destination;
+            ships.Add(ship);
+            Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
+                $"{floor.edgeStartY},{floor.edgeEndY}");
         }
-        waveHighlighting.SetWaves(waves);
+    }
+    void OnDrawGizmos()
+    {
+        if (ships != null && ships.Count > 0)
+        {
+            foreach (var shipStruct in ships)
+            {
+                var ship = shipStruct.path;
+                var offset = new Vector3(0, 0, 5);
+                if (ship.Count < 1) continue;
+                Vector3 prevCell = ship[0].pos;
+                foreach (var nextCell in ship)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
+                    prevCell = nextCell.pos;
+                }
+                foreach (var nextCell in shipStruct.wave.Path)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
+                    prevCell = nextCell.pos;
+                }
+            }
+        }
+        if (waves != null && waves.Count > 0)
+        {
+            foreach (var wave in waves)
+            {
+                var path = wave.Path;
+                var offset = new Vector3(0, 0, 5);
+                if (path.Count < 1) continue;
+                Vector3 prevCell = path[0].pos;
+                foreach (var nextCell in path)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
+                    prevCell = nextCell.pos;
+                }
+            }
+        }
+    }
+    public void UpdateShips()
+    {
+        for (int i = 0; i < ships.Count; i++)
+        {
+            var ship = ships[i];
+            var pos = ship.gridPosition;
+            var start = floorManager.floorCells[pos.x, pos.y];
+            
+            ship.wave.start = pathfinding.NeedMovePossibleStart(ship.wave.start,ship.wave.Path);
+            pos = ship.wave.start.pos;
+            ship.path.Clear();
+            pathfinding.FindPathBoat(
+                start, floorManager.floorCells[pos.x,pos.y],ship.path);
+            ship.pathIndex = ship.path.Count;
+            ships[i] = ship;
+        }
+    }
+    public void UpdatePaths()
+    {
+        for (int i = 0; i < waves.Count; i++)
+        {
+            waves[i].Path.Clear();
+            var start = waves[i].start;
+            var cell = floorManager.floorCells[start.pos.x, start.pos.y];
+            pathfinding.FindPath(cell, pathfinding.castlePosition, waves[i].Path);
+        }
     }
     public void TickSpawn(float delta)
     {
@@ -315,13 +461,14 @@ public class EnemyManager : MonoBehaviour {
 public class Wave
 {
     public int ID;
-    //public Enemy Prefab;
+    public Transform shipPrefabToDestroy;
     public int count;
     public int Spawned;
+    public PossibleStart start;
     public List<PathCell> Path;
     public float time;
     public float spawnRate;
-    public Wave(int id, int count, List<PathCell> path, float _spawnRate)
+    public Wave(int id, int count, PossibleStart _start, List<PathCell> path, float _spawnRate, Transform _shipPrefabToDestroy)
     {
         Spawned = 0;
         //Prefab = prefab;
@@ -330,5 +477,18 @@ public class Wave
         Path = path;
         time = 0;
         spawnRate = _spawnRate;
+        start = _start;
+        shipPrefabToDestroy = _shipPrefabToDestroy;
     }
+}
+public struct Ship
+{
+    public Transform visual;
+    public Wave wave;
+    public Vector2Int gridPosition;
+    public Vector2Int[] occupiedPositions;
+    public List<PathCell> path;
+    public int pathIndex;
+    public float speed;
+    public Vector3 destination;
 }

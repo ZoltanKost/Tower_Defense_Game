@@ -150,7 +150,7 @@ public class WorldManager : MonoBehaviour {
         playerHealthBar.gameObject.SetActive(false);*/
     }
     public void StartLevel(){
-        if(pathfinding.paths.Count <= 0) return;
+        //if(pathfinding.enemyPaths.Count <= 0) return;
         //musicManager.PlayWaveMusic();
         //enemyManager.GenerateWave(wave++);
         playerActionManager.CancelBuildingAction();
@@ -254,7 +254,7 @@ public class WorldManager : MonoBehaviour {
         }
         playerManager.currentHp = data.playerHP;
         playerResourceManager.SetResource(Resource.Gold, data.goldCount);
-        pathfinding.UpdatePaths();
+        //pathfinding.UpdatePaths();
         //pathfinding.SetCastlePoint(,);
     }
     public void Save(string name)

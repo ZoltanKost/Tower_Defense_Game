@@ -150,7 +150,7 @@ public class TemporalFloor : Floor
         Debug.Log("Activated, spell");
         foreach (var ar in arrows)
         {
-            ar.gameObject.SetActive(true);
+            ar.gameObject.SetActive(false);
         }
         SetSpell(data);
         visual.gameObject.SetActive(true);

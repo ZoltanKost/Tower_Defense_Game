@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using UnityEngine.UIElements;
-using UnityEngine.Windows;
-using Unity.VisualScripting;
 
 public class FloorManager : MonoBehaviour{
     [SerializeField] private BuildingManager bm;
@@ -52,6 +49,10 @@ public class FloorManager : MonoBehaviour{
         foreach(Floor floor in floors){
             floor.ClearAllTiles();
         }
+        edgeStartX = width;
+        edgeStartY = height;
+        edgeEndX = -1;
+        edgeEndY = -1;
     }
     public void CreateCastle(Vector3 input, Building b){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -149,8 +150,8 @@ public class FloorManager : MonoBehaviour{
         floors[currentFloor].Animate();
         audioSource.pitch = UnityEngine.Random.Range(0.3f,0.6f);
         audioSource.Play();
-        pathfinding.CheckIfNeedMovePossibleStarts();
-        //pathfinding.UpdatePaths();
+        //pathfinding.CheckIfNeedMovePossibleStarts();
+        enemyManager.UpdateShips();
     }
     public bool PlaceRoad(Vector3 input){
         Vector3Int pos = floors[0].WorldToCell(input);
@@ -164,7 +165,7 @@ public class FloorManager : MonoBehaviour{
         }
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
-        pathfinding.UpdatePaths();
+        enemyManager.UpdatePaths();
         audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
         audioSource.Play();
         return true;
@@ -273,7 +274,7 @@ public class FloorManager : MonoBehaviour{
             }
             floorCells[posX, posY].bridgeData = new BridgeData { start = start, bridgeDirection = bridgeDirection, floor = floor };
             floors[floor].SetBridgeSpot(pos);
-            pathfinding.UpdatePaths();
+            enemyManager.UpdateShips();
             audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
             audioSource.Play();
             return true;
@@ -291,7 +292,7 @@ public class FloorManager : MonoBehaviour{
             Vector3Int offset = horizontal ? Vector3Int.down : default;
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
-            pathfinding.UpdatePaths();
+            enemyManager.UpdateShips();
             audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
             audioSource.Play();
             return true;
@@ -369,7 +370,7 @@ public class FloorManager : MonoBehaviour{
             Vector3Int offset = horizontal ? Vector3Int.down : default;
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
-            pathfinding.UpdatePaths();
+            enemyManager.UpdatePaths();
             audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
             audioSource.Play();
             return true;
@@ -408,7 +409,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
             }
         }
-        pathfinding.UpdatePaths();
+        enemyManager.UpdatePaths();
     }
     public void PlaceBuilding_DontCheck(BuildingSaveData data)
     {
@@ -837,7 +838,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[gridX, gridY].bridge = false;
             //floorCells[gridX, gridY].currentFloor--;
         }
-        pathfinding.UpdatePaths();
+        enemyManager.UpdatePaths();
         audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
         audioSource.Play();
     }
@@ -952,7 +953,7 @@ public class FloorManager : MonoBehaviour{
         {
             floor.Animate();
         }
-        pathfinding.CheckIfNeedMovePossibleStarts();
+        //pathfinding.CheckIfNeedMovePossibleStarts();
         //pathfinding.UpdatePaths();
     }
     public void FloodFloor(Vector3 start, Vector3 end)
@@ -988,7 +989,7 @@ public class FloorManager : MonoBehaviour{
             }
         }
         floors[targetFloor + 1].Animate();
-        pathfinding.UpdatePaths();
+        enemyManager.UpdateShips();
     }
     public void EraseFloor(Vector3 start, Vector3 end)
     {

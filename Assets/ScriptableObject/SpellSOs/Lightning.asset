@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Lightning
   m_EditorClassIdentifier: 
   spellData:
-    manaCost: 0
+    manaCost: 25
     goldCost: 25
     globalRadius: 2
     radius: 2

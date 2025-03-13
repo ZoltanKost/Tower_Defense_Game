@@ -31,7 +31,6 @@ public class PlayerInventoryModel : MonoBehaviour
         //Debug.Log(l);
         for (int i = 0; i < l; i++)
         {
-                Debug.Log("cooldownTime is up!");
             var cd = cooldowns[i];
             cd.time -= dt;
             if (cd.time <= 0)
