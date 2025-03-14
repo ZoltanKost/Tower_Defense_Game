@@ -11,7 +11,7 @@ TagManager:
   - UI1
   - Water
   - UI
-  - 
+  - FX_BLOOM
   - 
   - 
   - 
@@ -61,4 +61,7 @@ TagManager:
     locked: 0
   - name: TempFloor
     uniqueID: 395631345
+    locked: 0
+  - name: FX_BLOOM
+    uniqueID: 3071887
     locked: 0
