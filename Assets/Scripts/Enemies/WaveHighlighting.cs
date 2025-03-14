@@ -1,13 +1,15 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class WaveHighlighting : MonoBehaviour
 {
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private Canvas arrowParent;
+    [SerializeField] private LineRenderer prefab;
+
+    List<LineRenderer> lines = new();
 
     [SerializeField] private WaveHighlightTemplate templatePrefab;
     [SerializeField] private Sprite templateDefaultSprite;
@@ -45,32 +47,49 @@ public class WaveHighlighting : MonoBehaviour
             arrows[i].gameObject.SetActive(false);
         }
     }
-    public void SetWaves(List<Wave> waves)
+    public void SetWaves(List<Wave> waves, List<Ship> ships)
     {
-        int tempCount = templates.Count;
-        int waveCount = waves.Count;
-        if (waveCount == 0) return;
-        //Debug.Log("Setting wave");
-        int i = 0;
-        for (;i < tempCount && i < waveCount; i++)
+        /*for(int i = 0; i < waves.Count;i++)
         {
-            templates[i].SetWaveData(waves[i].count, templateDefaultSprite, waves[i].Path[waves[i].Path.Count - 1].pos);
-        }
-        while (i < waveCount)
+            if(i>=lines.Count)
+                lines.Add(Instantiate(prefab, transform));
+            var line = lines[i];
+            var path = waves[i].Path;
+            int c = path.Count;
+            var points = new Vector3[path.Count];
+            for (int l = 0; l < c; i++)
+            {
+                points[l] = path[l].pos;
+            }
+            line.SetPositions(points);
+        }*/
+        for (int i = 0; i < ships.Count; i++)
         {
-            var newTemplate = Instantiate(templatePrefab);
-            newTemplate.SetWaveData(waves[i].count, templateDefaultSprite, waves[i].Path[waves[i].Path.Count - 1].pos);
-            templates.Add(newTemplate);
-            i++;
+            if (i*2 >= lines.Count)
+                lines.Add(Instantiate(prefab, transform));
+            var line = lines[i*2];
+            var path = ships[i].path;
+            int c = path.Count;
+            var points = new Vector3[c];
+            line.positionCount = c;
+            for (int l = 0; l < c; l++)
+            {
+                points[l] = path[l].pos;
+            }
+            line.SetPositions(points); 
+            if (i * 2+1 >= lines.Count)
+                lines.Add(Instantiate(prefab, transform));
+            line = lines[i*2+1];
+            path = ships[i].wave.Path;
+            c = path.Count;
+            points = new Vector3[c];
+            line.positionCount = c;
+            for (int l = 0; l < c; l++)
+            {
+                points[l] = path[l].pos;
+            }
+            line.SetPositions(points);
         }
-        while (i < tempCount)
-        {
-            templates[i].gameObject.SetActive(false);
-            i++;
-        }
-        waveIndex = 0;
-        pathIndex = 0;
-        currentWave = waves[waveIndex];
     }
     public void ClearWaves()
     {

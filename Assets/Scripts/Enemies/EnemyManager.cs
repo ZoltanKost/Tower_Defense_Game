@@ -281,6 +281,7 @@ public class EnemyManager : MonoBehaviour {
         //pathfinding.CreatePossibleStarts(wave/5 + 1);
         //pathfinding.UpdatePaths();
         GenerateShips(wave);
+        waveHighlighting.SetWaves(waves,ships);
     }
     public void GenerateShips(int wave)
     {
@@ -402,8 +403,9 @@ public class EnemyManager : MonoBehaviour {
             ship.pathIndex = ship.path.Count;
             ships[i] = ship;
         }
+        waveHighlighting.SetWaves(waves, ships);
     }
-    public void UpdatePaths()
+    /*public void UpdatePaths()
     {
         for (int i = 0; i < waves.Count; i++)
         {
@@ -412,7 +414,8 @@ public class EnemyManager : MonoBehaviour {
             var cell = floorManager.floorCells[start.pos.x, start.pos.y];
             pathfinding.FindPath(cell, pathfinding.castlePosition, waves[i].Path);
         }
-    }
+        waveHighlighting.SetWaves(waves, ships);
+    }*/
     public void TickSpawn(float delta)
     {
         for(int i = 0; i < waves.Count; i++)
@@ -425,6 +428,7 @@ public class EnemyManager : MonoBehaviour {
                 waves[i].time = 0;
             }
         }
+        waveHighlighting.SetWaves(waves, ships);
     }
     public void SpawnEnemy(int ID)
     {

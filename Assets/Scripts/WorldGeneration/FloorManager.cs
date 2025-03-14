@@ -165,7 +165,7 @@ public class FloorManager : MonoBehaviour{
         }
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
-        enemyManager.UpdatePaths();
+        enemyManager.UpdateShips();
         audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
         audioSource.Play();
         return true;
@@ -370,7 +370,7 @@ public class FloorManager : MonoBehaviour{
             Vector3Int offset = horizontal ? Vector3Int.down : default;
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
-            enemyManager.UpdatePaths();
+            enemyManager.UpdateShips();
             audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
             audioSource.Play();
             return true;
@@ -409,7 +409,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
             }
         }
-        enemyManager.UpdatePaths();
+        enemyManager.UpdateShips();
     }
     public void PlaceBuilding_DontCheck(BuildingSaveData data)
     {
@@ -838,7 +838,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[gridX, gridY].bridge = false;
             //floorCells[gridX, gridY].currentFloor--;
         }
-        enemyManager.UpdatePaths();
+        enemyManager.UpdateShips();
         audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
         audioSource.Play();
     }
