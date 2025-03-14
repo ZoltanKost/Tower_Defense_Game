@@ -46,7 +46,7 @@ public class Pathfinding : MonoBehaviour
     public void SetTargetPoint(int gridX, int gridY, int width, int height)
     {
         gridX += width / 2;
-        //Debug.Log(message: $"Castle: {gridX},{gridY}");
+        Debug.Log(message: $"Castle: {gridX},{gridY}");
         floor.floorCells[gridX, gridY].road = true;
         floor.floorCells[gridX, gridY].walkable = true;
         FloorCell pos = floor.floorCells[gridX, gridY];
@@ -597,7 +597,7 @@ public class Pathfinding : MonoBehaviour
     }
     bool IsWalkableBoat(FloorCell cell)
     {
-        return !(cell.currentFloor > -1 || cell.bridge); 
+        return !(cell.currentFloor > 0 || cell.bridge); 
     }
     int GetStepCost(FloorCell cell)
     {

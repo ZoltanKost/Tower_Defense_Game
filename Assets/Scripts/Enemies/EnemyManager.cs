@@ -305,12 +305,12 @@ public class EnemyManager : MonoBehaviour {
             if (!vertical)
             {
                 posX = UnityEngine.Random.Range(floor.edgeStartX, floor.edgeEndX + 1);
-                posY = (fixedAxisMinimum?floor.edgeStartY : floor.edgeEndY) - Mathf.FloorToInt(height)/2;
+                posY = (fixedAxisMinimum?floor.edgeStartY - Mathf.FloorToInt(height) / 2 : floor.edgeEndY + Mathf.FloorToInt(height) / 2) ;
             }
             else
             {
                 posY = UnityEngine.Random.Range(floor.edgeStartY, floor.edgeEndY + 1);
-                posX = (fixedAxisMinimum ? floor.edgeStartX : floor.edgeEndX) - Mathf.FloorToInt(width)/2;
+                posX = (fixedAxisMinimum ? floor.edgeStartX - Mathf.FloorToInt(width) / 2 : floor.edgeEndX + Mathf.FloorToInt(width) / 2) ;
             }
             //pathfinding.ships.Add(new Vector2Int(posX/10,posY/10));
             var path = new List<PathCell>(); 
