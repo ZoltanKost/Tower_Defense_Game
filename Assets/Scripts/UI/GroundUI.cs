@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
+using UnityEngine.UI;
 
 public class GroundUI : MonoBehaviour{
     private Action<int> onClick;
@@ -9,6 +10,7 @@ public class GroundUI : MonoBehaviour{
     [SerializeField] private Transform FloorsParent;
     [SerializeField] private TMP_Text text;
     [SerializeField] private int pixelPerUnit = 32;
+    [SerializeField] private Image coolDownImage;
     public int uiID{get;private set;}
     public void Init(int ID,Action<int> onClick, int width, int height){
         for (int i = 0; i < floors.Length; i++)
@@ -51,5 +53,10 @@ public class GroundUI : MonoBehaviour{
     public void OnGroundsChoosen(){
         DeactivateVisuals();
         onClick?.Invoke(uiID);
+    }
+    public void UpdateValue(float value)
+    {
+        coolDownImage.fillAmount = value;
+        if (coolDownImage.fillAmount >= 1f) coolDownImage.fillAmount = 0;
     }
 }

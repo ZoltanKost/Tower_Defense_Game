@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class PlayerInputManager : MonoBehaviour{
+    [SerializeField] private GameObject debugObjects;
+    bool debug = false;
     [SerializeField] private PlayerActionManager actionManager;
     [SerializeField] private float MinZoom, MaxZoom;
     [SerializeField] private float ZoomSpeed = .5f;
@@ -29,6 +31,11 @@ public class PlayerInputManager : MonoBehaviour{
     }
     public void Update(){
         if(active)Tick();
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            debug = !debug;
+            debugObjects.SetActive(debug);
+        }
         if (Input.GetMouseButtonDown(1))
         {
             actionManager.ResetMode();

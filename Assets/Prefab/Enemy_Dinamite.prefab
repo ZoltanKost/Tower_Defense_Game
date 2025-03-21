@@ -99,7 +99,7 @@ MonoBehaviour:
   index: 0
   speed: 0.75
   attackRange: 2
-  MaxHP: 100
+  MaxHP: 150
   attackPeriod: 2
   _killReward: 5
   time: 0

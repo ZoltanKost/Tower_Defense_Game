@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(DynamicItemPageUI))]
 public class PlayerInventoryModel : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private SpellSO[] defaultSpells;
     [SerializeField] private DynamicItemPageUI spellsUIView;
     [SerializeField] private PlayerActionManager playerActionManager;
@@ -33,10 +34,13 @@ public class PlayerInventoryModel : MonoBehaviour
         {
             var cd = cooldowns[i];
             cd.time -= dt;
+            spellsUIView.UpdateCooldown(cooldowns[i].spellID, cd.time/cd.maxTime);
+
             if (cd.time <= 0)
             {
                 Debug.Log("cooldownTime is up!");
                 spellsUIView.ActivateVisuals(cd.spellID);
+                //spellsUIView
                 isActiveList[cd.spellID] = true;
                 cooldowns[i] = cooldowns[--l];
                 cooldowns.RemoveAt(l);
@@ -67,10 +71,17 @@ public class PlayerInventoryModel : MonoBehaviour
         if (!isActiveList[uiID])
         {
             // play error sound
+            /*audioSource.Stop();
+            audioSource.pitch = Random.Range(0.5f, 1f);
+            audioSource.Play();*/
             return;
         }
         playerActionManager.ChooseSpell(spells[uiID]);
         spellsUIView.DeactivateVisuals(uiID);
+        // play button click sound
+        audioSource.Stop();
+        audioSource.pitch = Random.Range(0.5f, 1f);
+        audioSource.Play();
         playerActionManager.SetPlaceCallback(() =>
         {
             Debug.Log("place callback");
@@ -79,6 +90,7 @@ public class PlayerInventoryModel : MonoBehaviour
             cooldowns.Add(
                 new CooldownData()
                 {
+                    maxTime = spells[uiID].cooldown,
                     time = spells[uiID].cooldown,
                     spellID = uiID
                 });
@@ -95,6 +107,7 @@ public class PlayerInventoryModel : MonoBehaviour
 }
 public struct CooldownData
 {
+    public float maxTime;
     public float time;
     public int spellID;
 }

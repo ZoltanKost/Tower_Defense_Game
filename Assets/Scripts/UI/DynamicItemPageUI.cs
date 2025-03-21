@@ -1,18 +1,19 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class DynamicItemPageUI : MonoBehaviour
 {
-    [SerializeField] private BuildingButtonUI buttonPrefab;
-    private List<BuildingButtonUI> buttons;
+    [SerializeField] private SpellButtonUI buttonPrefab;
+    private List<SpellButtonUI> buttons;
     private Action<int> callback;
     int length;
     Resource resource;
     public void Init(Action<int> OnMagicBuyCallBack, Resource res)
     {
         resource = res;
-        buttons = new List<BuildingButtonUI>();
+        buttons = new List<SpellButtonUI>();
         callback = OnMagicBuyCallBack;
         length = 0;
     }
@@ -20,6 +21,10 @@ public class DynamicItemPageUI : MonoBehaviour
     public void UpdateVisual(int ID, Sprite sprite)
     {
         buttons[ID].SetSprite(sprite);
+    }
+    public void UpdateCooldown(int id, float value)
+    {
+        buttons[id].UpdateValue(1f-value);
     }
     public void ResetVisuals(Sprite[] sprites)
     {
@@ -52,7 +57,7 @@ public class DynamicItemPageUI : MonoBehaviour
     public void AddItem(SpellData item)
     {
         int id = length++;
-        BuildingButtonUI ui;
+        SpellButtonUI ui;
         if (id < buttons.Count)
         {
             ui = buttons[id];

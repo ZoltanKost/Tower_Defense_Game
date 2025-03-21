@@ -41,7 +41,7 @@ public class Pathfinding : MonoBehaviour
         offset = floor.offset;
         w = grid.GetLength(0);
         h = grid.GetLength(1);
-        debugGrid = new CustomGrid<GridVisual>(w, h, cellSize, new Vector2(offset.x, offset.y), CreateEmptyObject);
+        //debugGrid = new CustomGrid<GridVisual>(w, h, cellSize, new Vector2(offset.x, offset.y), CreateEmptyObject);
     }
     public void SetTargetPoint(int gridX, int gridY, int width, int height)
     {

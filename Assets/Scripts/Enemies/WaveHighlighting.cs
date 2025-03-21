@@ -49,26 +49,34 @@ public class WaveHighlighting : MonoBehaviour
     }
     public void SetWaves(List<Wave> waves, List<Ship> ships)
     {
-        /*for(int i = 0; i < waves.Count;i++)
+        foreach(var l in lines)
         {
-            if(i>=lines.Count)
+            l.gameObject.SetActive(false);
+        }
+        for (int i = 0; i < waves.Count; i++)
+        {
+            if (i >= lines.Count)
                 lines.Add(Instantiate(prefab, transform));
             var line = lines[i];
+            line.gameObject.SetActive(true);
             var path = waves[i].Path;
             int c = path.Count;
             var points = new Vector3[path.Count];
-            for (int l = 0; l < c; i++)
+            for (int l = 0; l < c; l++)
             {
                 points[l] = path[l].pos;
             }
             line.SetPositions(points);
-        }*/
-        for (int i = 0; i < ships.Count; i++)
+        }
+        int w = waves.Count;
+        for (int i = w; i < ships.Count; i++)
         {
-            if (i*2 >= lines.Count)
+            if (w >= lines.Count)
                 lines.Add(Instantiate(prefab, transform));
-            var line = lines[i*2];
-            var path = ships[i].path;
+            var line = lines[w];
+            line.gameObject.SetActive(true);
+            w++;
+            var path = ships[i - waves.Count].path;
             int c = path.Count;
             var points = new Vector3[c];
             line.positionCount = c;
@@ -76,11 +84,13 @@ public class WaveHighlighting : MonoBehaviour
             {
                 points[l] = path[l].pos;
             }
-            line.SetPositions(points); 
-            if (i * 2+1 >= lines.Count)
+            line.SetPositions(points);
+            if (w >= lines.Count)
                 lines.Add(Instantiate(prefab, transform));
-            line = lines[i*2+1];
-            path = ships[i].wave.Path;
+            line = lines[w];
+            line.gameObject.SetActive(true);
+            w++;
+            path = ships[i - waves.Count].wave.Path;
             c = path.Count;
             points = new Vector3[c];
             line.positionCount = c;

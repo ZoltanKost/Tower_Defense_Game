@@ -9,9 +9,10 @@ public class Shop : MonoBehaviour {
     [SerializeField] private PlayerInventoryModel playerInventoryModel;
     [SerializeField] private ShopUI shopUI;
     [SerializeField] private PlayerResourceManager playerResourceManager;
+    [SerializeField] private float GroundBuyCooldown = 5f;
     bool shown;
     public void Init(int groundsCount, int spellCount = 6){
-        groundPageModel.Init(groundsCount);
+        groundPageModel.Init(groundsCount, GroundBuyCooldown);
         magicPageModel.Init(spellCount);
         playerInventoryModel.Init();
         buildingPage.Init();

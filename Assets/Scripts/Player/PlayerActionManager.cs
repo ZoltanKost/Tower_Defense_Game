@@ -231,18 +231,18 @@ public class PlayerActionManager : MonoBehaviour{
         if (gameState_int % 2 != 0 || gameState_int == 4) return false;
         switch(mode){
             case ActionMode.Ground:
-                return gameState_int == BUILDING_STATE && floorManager.CheckGA(position, chosenGround);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckGA(position, chosenGround);
             case ActionMode.CastSpell:
                 // mana Check
-                return gameState_int == MAGIC_STATE;
+                return true/*gameState_int == MAGIC_STATE*/;
             case ActionMode.Road:
-                return gameState_int == BUILDING_STATE && floorManager.CheckRoad(position);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckRoad(position);
             case ActionMode.Building:
-                return gameState_int == BUILDING_STATE && floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
             case ActionMode.Bridge:
-                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeOrBridgeSpot(position);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);
             case ActionMode.BridgeSpot:
-                return gameState_int == BUILDING_STATE && floorManager.CheckBridgeOrBridgeSpot(position);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);
             case ActionMode.MassGround:
                 // mass building
                 break;

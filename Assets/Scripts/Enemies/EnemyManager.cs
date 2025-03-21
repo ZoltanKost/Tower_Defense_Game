@@ -12,8 +12,13 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Enemy[] enemyPrefabs;
     [SerializeField] private GameObject shipPrefab;
-    [SerializeField] private float waveDefaultPeriod;
+    [SerializeField] private float waveDefaultSpawnRate = 10f;
     [SerializeField] private float spawnRate;
+    private float shipSpawnRate;
+    float time;
+    public Vector3 shipLookRotation = new Vector3(0, 0.5f, -1f);
+    public Vector3 shipLookRotationOffset = new Vector3(0, 1f, -1f);
+    public float basicShipSpeed = 5f;
     Action onEnemyFinished;
     public Enemy[] enemies;
     public List<Wave> waves = new();
@@ -44,44 +49,24 @@ public class EnemyManager : MonoBehaviour {
         TickMovement(delta);
         TickDetection();
         AnimatorTick(delta);
-        if (lowestInactive == 0)
-        {
-            bool left = false;
-            foreach (Wave wave in waves)
-            {
-                if(wave.count > 0)
-                {
-                    left = true;
-                }
-                else
-                {
-                    wave.shipPrefabToDestroy.gameObject.SetActive(false);
-                }
-            }
-            foreach (var ship in ships)
-            {
-                left = true;
-                break;
-            }
-            if (left) return;
-            waves.Clear();
-            onEnemyFinished?.Invoke();
-            GenerateWave(++waveNumber);
-        }
     }
     public void TickShipMovement(float dt)
     {
         int c = ships.Count;
         for (int i = 0; i < c; i++)
         {
-            ships[i].visual.position += (ships[i].destination - ships[i].visual.position).normalized * dt * ships[i].speed;
+            if (!ships[i].active) continue;
+            ships[i].visual.position += (ships[i].destination - ships[i].visual.position).normalized * dt * basicShipSpeed;//ships[i].speed;
+            ships[i].visual.rotation = Quaternion.LookRotation((ships[i].destination - ships[i].visual.position), shipLookRotation);// ().normalized * dt * ships[i].speed;
             if ((ships[i].destination - ships[i].visual.position).magnitude <= .1f)
             {
                 if (ships[i].pathIndex > 1)
                 {
                     var ship = ships[i];
+                    var cell = floorManager.WorldToCell(ship.destination) + floorManager.offset;
+                    ship.gridPosition = new Vector2Int(cell.x,cell.y);
                     ship.pathIndex--;
-                    Debug.Log(ship.path.Count + " " + ship.pathIndex);
+                    //Debug.Log(ship.path.Count + " " + ship.pathIndex);
                     PathCell next = ship.path[ship.pathIndex];
                     ship.destination = next.pos;
                     ships[i] = ship;
@@ -91,6 +76,7 @@ public class EnemyManager : MonoBehaviour {
                     ships[i].wave.ID = waves.Count;
                     waves.Add(ships[i].wave);
                     ships.RemoveAt(i);
+                    waveHighlighting.SetWaves(waves, ships);
                     i--;
                     c--;
                 }
@@ -216,6 +202,9 @@ public class EnemyManager : MonoBehaviour {
                 enemy.gameObject.SetActive(false);
             }
         }
+        ships.Clear();
+        waves.Clear();
+        waveHighlighting.SetWaves(waves,ships);
     }
     public void SpawnEnemies() {
         Debug.Log(enemies.Length);
@@ -274,16 +263,16 @@ public class EnemyManager : MonoBehaviour {
     {
         GenerateWave(waveNumber);
     }*/
-    public void GenerateWave(int wave)
+    public void GenerateWave(int wave, bool active)
     {
         waveNumber = wave;
         //waveHighlighting.ClearWaves();
         //pathfinding.CreatePossibleStarts(wave/5 + 1);
         //pathfinding.UpdatePaths();
-        GenerateShips(wave);
+        GenerateShips(wave, active);
         waveHighlighting.SetWaves(waves,ships);
     }
-    public void GenerateShips(int wave)
+    public void GenerateShips(int wave, bool active)
     {
 
         /* 
@@ -330,21 +319,25 @@ public class EnemyManager : MonoBehaviour {
             {
                 visual = visual,
                 wave = new Wave(-1,
-                    (wave * 3 + wave) / count,
+                    (2 * waveNumber) / count,
                     enemyStart,
                     enemyPath, spawnRate, visual),
                 gridPosition = new Vector2Int(shipStart.gridX, shipStart.gridY),
                 //occupiedPositions;
                 path = path,
                 pathIndex = path.Count - 1,
-                speed = 10f,
-                destination = path[path.Count - 1].pos
+                speed = basicShipSpeed,
+                destination = path[path.Count - 1].pos,
+                active = active
             };
+            shipSpawnRate = 2 * waveNumber;
+
             ship.visual.transform.position = ship.destination;
             ships.Add(ship);
             Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
                 $"{floor.edgeStartY},{floor.edgeEndY}");
         }
+        time = 0;
     }
     void OnDrawGizmos()
     {
@@ -393,6 +386,7 @@ public class EnemyManager : MonoBehaviour {
         {
             var ship = ships[i];
             var pos = ship.gridPosition;
+            //Debug.Log(pos);
             var start = floorManager.floorCells[pos.x, pos.y];
             
             ship.wave.start = pathfinding.NeedMovePossibleStart(ship.wave.start,ship.wave.Path);
@@ -403,10 +397,6 @@ public class EnemyManager : MonoBehaviour {
             ship.pathIndex = ship.path.Count;
             ships[i] = ship;
         }
-        waveHighlighting.SetWaves(waves, ships);
-    }
-    /*public void UpdatePaths()
-    {
         for (int i = 0; i < waves.Count; i++)
         {
             waves[i].Path.Clear();
@@ -415,24 +405,57 @@ public class EnemyManager : MonoBehaviour {
             pathfinding.FindPath(cell, pathfinding.castlePosition, waves[i].Path);
         }
         waveHighlighting.SetWaves(waves, ships);
-    }*/
-    public void TickSpawn(float delta)
+    }
+    public void UpdatePaths()
     {
-        for(int i = 0; i < waves.Count; i++)
+        for (int i = 0; i < ships.Count; i++)
         {
-            if (waves[i].count <= 0) continue;
-            waves[i].time += delta;
-            if (waves[i].time >= waves[i].spawnRate )
-            {
-                SpawnEnemy(i);
-                waves[i].time = 0;
-            }
+            var wave = ships[i].wave;
+
+            wave.Path.Clear();
+            var start = wave.start.pos;
+            var cell = floorManager.floorCells[start.x, start.y];
+            pathfinding.FindPath(
+                cell, pathfinding.castlePosition, wave.Path);
+        }
+        for (int i = 0; i < waves.Count; i++)
+        {
+            waves[i].Path.Clear();
+            var start = waves[i].start;
+            var cell = floorManager.floorCells[start.pos.x, start.pos.y];
+            pathfinding.FindPath(cell, pathfinding.castlePosition, waves[i].Path);
         }
         waveHighlighting.SetWaves(waves, ships);
     }
+    public void TickSpawn(float delta)
+    {
+        if(ships.Count < 1 && waves.Count < 1 && lowestInactive < 1)
+        {
+            GenerateWave(++waveNumber, true);
+        }
+        else
+        {
+            for (int i = 0; i < waves.Count; i++)
+            {
+                if (waves[i].count <= 0)
+                {
+                    waves[i].shipPrefabToDestroy.gameObject.SetActive(false);
+                    waves[i] = waves[waves.Count - 1];
+                    waves.RemoveAt(waves.Count - 1);
+                    waveHighlighting.SetWaves(waves, ships);
+                    continue;
+                }
+                waves[i].time += delta;
+                if (waves[i].time >= waves[i].spawnRate)
+                {
+                    SpawnEnemy(i);
+                    waves[i].time = 0;
+                }
+            }
+        }
+    }
     public void SpawnEnemy(int ID)
     {
-        Debug.Log("EnemySpawned");
         Enemy enemy = enemies[lowestInactive++];
         enemy.Init(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)], ID, lowestInactive - 1, waves[ID].Path, RemoveEnemy, RegisterKill, playerManager.Damage);
         waves[ID].count--;
@@ -458,7 +481,6 @@ public class EnemyManager : MonoBehaviour {
         enemies[ID].index = ID;
         enemies[lowestInactive] = temp;
         temp.gameObject.SetActive(false);
-        Debug.Log("EnemyRemoved");
     }
 }
 [Serializable]
@@ -491,8 +513,9 @@ public struct Ship
     public Wave wave;
     public Vector2Int gridPosition;
     public Vector2Int[] occupiedPositions;
+    public Vector3 destination;
     public List<PathCell> path;
     public int pathIndex;
     public float speed;
-    public Vector3 destination;
+    public bool active;
 }

@@ -165,7 +165,7 @@ public class FloorManager : MonoBehaviour{
         }
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
-        enemyManager.UpdateShips();
+        enemyManager.UpdatePaths();
         audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
         audioSource.Play();
         return true;
@@ -989,7 +989,7 @@ public class FloorManager : MonoBehaviour{
             }
         }
         floors[targetFloor + 1].Animate();
-        enemyManager.UpdateShips();
+        //enemyManager.UpdateShips();
     }
     public void EraseFloor(Vector3 start, Vector3 end)
     {

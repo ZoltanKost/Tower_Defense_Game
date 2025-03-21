@@ -36,7 +36,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private PlayerManager playerManager; 
     [SerializeField] private MenuUIManager defeatMenuManager;
     [SerializeField] private MenuUIManager menuUIManager;
-    [SerializeField] private MenuUIManager winScreen;
+    //[SerializeField] private MenuUIManager winScreen;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private HealthBar playerHealthBar;
     [SerializeField] private HealthBar playerManaBar;
@@ -106,7 +106,7 @@ public class WorldManager : MonoBehaviour {
         menuUIManager.Init(
             new Action[]
             {
-                Unpause,Restart,Application.Quit,null, ResetWave, 
+                Unpause,Restart,Application.Quit,null, null, 
                 () => { gameLoadManager.ReadSaveData(); menuUIManager.gameObject.SetActive(false); },
                 ()=>{menuUIManager.gameObject.SetActive(false); gameSaveManager.gameObject.SetActive(true); }
             });
@@ -116,7 +116,6 @@ public class WorldManager : MonoBehaviour {
             playerHealthBar.gameObject.SetActive(false);
         };
         playerManager.Init(playerDefeat,playerHealthBar.Set, playerManaBar.Set);
-        winScreen.Init(new Action[]{Restart,Application.Quit});
         //playerHealthBar.gameObject.SetActive(false);
         floorManager.Init();
         enemyManager.SpawnEnemies();
@@ -140,11 +139,13 @@ public class WorldManager : MonoBehaviour {
         archerManager.SwitchAnimation(true);
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
-        enemyManager.GenerateWave(1);
+        enemyManager.GenerateWave(1,true);
+        //enemyManager.GenerateWave(1,false);
+        StartLevel();
         //pathfinding.CreatePossibleStart();
     }
     public void FinishWave(){
-        ResetWave();
+        //ResetWave();
         //playerShopUIManager.FinishLevel();
         /*winScreen.gameObject.SetActive(true);
         playerHealthBar.gameObject.SetActive(false);*/
@@ -161,7 +162,7 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Wave;
         playerActionManager.Switch(gameState);
         // playerHealthBar.Reset();
-        playerShopUIManager.StartLevel();
+        //playerShopUIManager.StartLevel();
     }
     public void StopLevel(){
         enemyManager.Switch(false);
@@ -170,7 +171,7 @@ public class WorldManager : MonoBehaviour {
         archerManager.SwitchAnimation(false);
         projectileManager.Switch(false);
     }
-    public void ResetWave(){
+    /*public void ResetWave(){
         if ((int)gameState >= 2)
         {
             playerShopUIManager.FinishLevel();
@@ -188,7 +189,7 @@ public class WorldManager : MonoBehaviour {
         gameState = GameState.Idle;
         playerActionManager.Switch(gameState);
         //musicManager.PlayMenuMusic();
-    }
+    }*/
     public void ResetLevel(){
         if ((int)gameState >= 2)
         {
@@ -215,10 +216,11 @@ public class WorldManager : MonoBehaviour {
     }
     public void Restart(){
         floorManager.ClearFloor();
+        pathfinding.Start();
         ResetLevel();
         defeatMenuManager.gameObject.SetActive(false);
         menuUIManager.gameObject.SetActive(false);
-        winScreen.gameObject.SetActive(false);
+        //winScreen.gameObject.SetActive(false);
         playerShopUIManager.CloseAll();
         Start();
     }
@@ -242,7 +244,7 @@ public class WorldManager : MonoBehaviour {
     }
     public void Load(LevelData data)
     {
-        ResetWave();
+        //ResetWave();
         pathfinding.ClearCastlePoint();
         pathfinding.SetTargetPoint(data.castlePositions[0].x, data.castlePositions[0].y,castle.width, castle.height);
         floorManager.LoadFloorCells(data.floorCells, data.offset, data.roads, data.ladders, data.bridgeStarts, data.bridges);

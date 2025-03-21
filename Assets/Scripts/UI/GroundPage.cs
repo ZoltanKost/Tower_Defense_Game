@@ -38,4 +38,8 @@ public class GroundPage : MonoBehaviour {
     {
         buttons[uiID].gameObject.SetActive(false);
     }
+    public void ActivateButton(int uiID)
+    {
+        buttons[uiID].gameObject.SetActive(true);
+    }
 }

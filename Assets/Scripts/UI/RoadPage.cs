@@ -19,19 +19,19 @@ public class RoadPage : MonoBehaviour {
     public void OnGroundChosenCallBack(int uiID){
         playerActionManager.CancelBuildingAction();
         playerActionManager.ChooseMode((ActionMode)uiID+1);
-        DeactivateVisuals(uiID);
-        playerActionManager.SetPlaceCallback(() => 
+        //DeactivateVisuals(uiID);
+        /*playerActionManager.SetPlaceCallback(() => 
             {
                 ActivateVisuals(uiID);
             }
-        );
+        );*/
         playerActionManager.SetCancelCallback(() => ActivateVisuals(uiID));
     }
     void ActivateVisuals(int id){
-
+        buttons[id].ActivateVisuals();
     }
     void DeactivateVisuals(int id){
-
+        buttons[id].DeactivateVisuals();
     }
 
 }
