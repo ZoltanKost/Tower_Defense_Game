@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 public class CustomAnimator : MonoBehaviour{
 
@@ -51,24 +50,48 @@ public class CustomAnimator : MonoBehaviour{
         //spriteRenderer.sprite = 
            // currentAnimation.data[currentDirAnimation].sprites[currentFrame];
     }
+    // TODO: rework keyframe updating;
     public void UpdateAnimator(float delta){
         time += delta;
         Sprite[] tempAnim;
         float interval;
-        if (currentAnimation.type != 0)
+        int currentData = 0;
+        if (currentAnimation.type != 0) currentData = currentDirAnimation;
+        interval = currentAnimation.interval;
+        tempAnim = currentAnimation.data[currentData].sprites;
+        spriteRenderer.flipX = currentAnimation.data[currentData].flipX;
+        
+        for (int i = 0; i < currentAnimation.keyFrames.Length; i++)
         {
-            tempAnim = currentAnimation.data[currentDirAnimation].sprites;
-            spriteRenderer.flipX = currentAnimation.data[currentDirAnimation].flipX;
-            interval = currentAnimation.duration / currentAnimation.length;
+            var keyFrame = currentAnimation.keyFrames[i];
+            if (time > keyFrame.frameTimings[keyFrame.currentFrame])
+            {
+                if (keyFrame.currentFrame >= keyFrame.length)
+                {
+                    keyFrame.currentFrame = 0;
+                }
+                else
+                {
+                    keyFrame.currentFrame++;
+                }
+            }
+            if (keyFrame.currentFrame < keyFrame.length)
+            {
+                float dt = keyFrame.frameTimings[keyFrame.currentFrame + 1]
+                    - keyFrame.frameTimings[keyFrame.currentFrame];
+                var start = keyFrame.framePositions[keyFrame.currentFrame];
+                var end = keyFrame.framePositions[keyFrame.currentFrame + 1];
+                var result = (end - start) * dt;
+                var startR = keyFrame.frameRotations[keyFrame.currentFrame];
+                var endR = keyFrame.frameRotations[keyFrame.currentFrame + 1];
+                var resultR = (endR - startR) * dt;
+                keyFrame.target.position = result;
+                keyFrame.target.LookAt(resultR);
+            }
         }
-        else
+
+        if (time >= interval * currentFrame)
         {
-            tempAnim = currentAnimation.data[0].sprites;
-            interval = currentAnimation.interval;
-        }
-        if (time >= interval)
-        {
-            time = 0;
             CheckEvents();
             spriteRenderer.sprite = tempAnim[currentFrame++];
             if (currentFrame >= currentAnimation.length)
@@ -76,6 +99,7 @@ public class CustomAnimator : MonoBehaviour{
                 currentFrame = 0;
             }
         }
+        
     }
     public void CheckEvents()
     {
@@ -92,30 +116,6 @@ public class CustomAnimator : MonoBehaviour{
         PlayAnimation(animation, value);
     }
     // TODO: remove this code to SetAnimation
-    public void SetDirectionAnimation(int dirID, Vector2 directionNormalized)
-    {
-        if (dirID >= currentAnimation.length) Debug.Log("dirID " + dirID + " is outside of array");
-        float degree = Vector2.SignedAngle(Vector2.right, directionNormalized);
-        if (degree < 0) degree += 360;
-        degree %= 360;
-
-
-        
-        /*//Debug.Log($"{degree}, {res}");
-        if (currentDirAnimation != dirID) {
-            currentFrame = 0;
-            time = 0;
-            currentDirAnimation = res;
-            spriteRenderer.sprite = currentAnimation.data[res].sprites[currentFrame];
-        }
-        else if (animID != res)
-        {
-            animID = res;
-            currentAnimation = animations[animID];
-            spriteRenderer.sprite = currentAnimation.data[res].sprites[currentFrame];
-        }
-        currentDirAnimation = dirID ;*/
-    }
     public void SetSortingParams(int order, int layer){
         spriteRenderer.sortingOrder = order;
         spriteRenderer.sortingLayerName = $"{layer}";
@@ -129,8 +129,12 @@ public struct AnimationData
 }
 public struct AnimationKeyframes
 {
+    public Transform target;
     public Vector3[] framePositions;
+    public Vector3[] frameRotations;
     public float[] frameTimings;
+    public int currentFrame;
+    public int length;
 }
 [Serializable]
 public struct DirectionAnimation

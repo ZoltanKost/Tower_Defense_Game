@@ -106,7 +106,9 @@ public class Enemy : MonoBehaviour, IDamagable
         animator.SetSortingParams(6 + 1000 / start.gridY,start.floor);
         hpBar.gameObject.SetActive(true);
         hpBar.Set(1);
-        animator.SetDirectionAnimation(0, (destination - start.pos).normalized);
+
+        //animator.SetDirectionAnimation(0, (destination - start.pos).normalized);
+        
     }
     
     public void UpdateAnimator(float delta)

@@ -114,8 +114,10 @@ public class ArcherManager : MonoBehaviour, IHandler {
                         y = Mathf.FloorToInt((archersList[i].target.transform.position.y + offset.y) / cellSize)
                     };
                     Vector2 direction = (enemyGridPosition - (archersList[i].gridPosition + archersList[i].buildingSize/2));
-                    
-                    archersList[i].animator.SetDirectionAnimation(1, direction);
+                    float degree = Vector2.SignedAngle(Vector2.right, direction);
+                    if (degree < 0) degree += 360;
+                    degree %= 360;
+                    archersList[i].animator.SetAnimation(1, degree);
                     break;
             }
         }

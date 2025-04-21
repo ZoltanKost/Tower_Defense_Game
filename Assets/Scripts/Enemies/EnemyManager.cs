@@ -99,13 +99,19 @@ public class EnemyManager : MonoBehaviour {
                 case CharState.Dead:
                     break;
                 case CharState.Moving:
-                    enemies[i].animator.SetDirectionAnimation(0, (enemies[i].destination - enemies[i].transform.position).normalized);
+                    float degree = Vector2.SignedAngle(Vector2.right, (enemies[i].destination - enemies[i].transform.position).normalized);
+                    if (degree < 0) degree += 360;
+                    degree %= 360;
+                    enemies[i].animator.SetAnimation(0,degree);
                     enemies[i].time += delta;
                     enemies[i].detectFlag = enemies[i].time > enemies[i].attackPeriod;
                     break;
                 case CharState.Attacking:
                     enemies[i].time = 0;
-                    enemies[i].animator.SetDirectionAnimation(1, (enemies[i].buildingTarget.position - enemies[i].transform.position).normalized);
+                    degree = Vector2.SignedAngle(Vector2.right, (enemies[i].buildingTarget.position - enemies[i].transform.position).normalized);
+                    if (degree < 0) degree += 360;
+                    degree %= 360;
+                    enemies[i].animator.SetAnimation(1, degree);
                     break;
                 default:
                     enemies[i].state = CharState.Moving;
@@ -174,7 +180,6 @@ public class EnemyManager : MonoBehaviour {
                 }
             }
         }
-        
     }
 
     public void AnimatorTick(float delta)

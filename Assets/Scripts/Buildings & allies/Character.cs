@@ -126,7 +126,10 @@ public class Character : MonoBehaviour, IDamagable
             transform.position = start.pos;
             destination = start.pos;
             animator.SetSortingParams(6 + 1000 / start.gridY, start.floor);
-            animator.SetDirectionAnimation(0, (destination - start.pos).normalized);
+            float degree = Vector2.SignedAngle(Vector2.right, (destination - start.pos).normalized);
+            if (degree < 0) degree += 360;
+            degree %= 360;
+            animator.SetAnimation(0, degree);
             hpBar.gameObject.SetActive(true);
             hpBar.Set(1);
         }
