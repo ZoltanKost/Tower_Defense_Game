@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 2034521805, guid: 6cde9791ffb2dab4b93a049e36c4c12b, type: 3}
+    - target: {fileID: 6432382468717452521, guid: 660612864ecbc89429c14891f1a13b75, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6472130833055067096, guid: 660612864ecbc89429c14891f1a13b75, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -79,6 +83,10 @@ PrefabInstance:
     - target: {fileID: 7819345110674616835, guid: 660612864ecbc89429c14891f1a13b75, type: 3}
       propertyPath: m_Color.r
       value: 0.96862745
+      objectReference: {fileID: 0}
+    - target: {fileID: 7819345110674616835, guid: 660612864ecbc89429c14891f1a13b75, type: 3}
+      propertyPath: m_Material
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8812695876487229098, guid: 660612864ecbc89429c14891f1a13b75, type: 3}
       propertyPath: m_AnchorMax.x

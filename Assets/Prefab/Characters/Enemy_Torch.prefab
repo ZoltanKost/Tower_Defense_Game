@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 647510513473006261}
   - component: {fileID: 1325746399686741614}
-  - component: {fileID: 7266588368055346098}
   - component: {fileID: 9071115895459296981}
+  - component: {fileID: 6695125684612708470}
   m_Layer: 0
   m_Name: Enemy_Torch
   m_TagString: Untagged
@@ -87,53 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7266588368055346098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189702414211034926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8f8f43165dc35c429bd6034883cf7c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
-  damageClip: {fileID: 8300000, guid: 02d08b1ab1717954f9fd9c325a0f526c, type: 3}
-  ProjectileFlag: 0
-  ProjectileData:
-    hitClip: {fileID: 0}
-    audioVolume: 1
-    spell: {fileID: 0}
-    targetPosition: {x: 0, y: 0, z: 0}
-    startPosition: {x: 0, y: 0, z: 0}
-    speed: 0
-    animations: []
-    damage: 0
-    behaviour: 0
-    ballistic: 0
-    flightTime: 0
-  _attackType: 0
-  projectilePrefab: {fileID: 0}
-  hpBar: {fileID: 2216191493300241889}
-  projectileSpeed: 0
-  state: 0
-  damage: 15
-  currentTarget: {fileID: 0}
-  animator: {fileID: 9071115895459296981}
-  currentPath: []
-  index: 0
-  speed: 1
-  attackRange: 1
-  MaxHP: 200
-  attackPeriod: 1.5
-  _killReward: 5
-  time: 0
-  destination: {x: 0, y: 0, z: 0}
-  detectFlag: 0
-  pointsLeft: 0
-  pathLength: 0
 --- !u!114 &9071115895459296981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,8 +205,8 @@ MonoBehaviour:
   actions:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7266588368055346098}
-        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+      - m_Target: {fileID: 6695125684612708470}
+        m_TargetAssemblyTypeName: Character, Assembly-CSharp
         m_MethodName: RemoveInvoke
         m_Mode: 1
         m_Arguments:
@@ -266,8 +219,8 @@ MonoBehaviour:
         m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7266588368055346098}
-        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+      - m_Target: {fileID: 6695125684612708470}
+        m_TargetAssemblyTypeName: Character, Assembly-CSharp
         m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
@@ -280,8 +233,8 @@ MonoBehaviour:
         m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7266588368055346098}
-        m_TargetAssemblyTypeName: Enemy, Assembly-CSharp
+      - m_Target: {fileID: 6695125684612708470}
+        m_TargetAssemblyTypeName: Character, Assembly-CSharp
         m_MethodName: ResetState
         m_Mode: 1
         m_Arguments:
@@ -292,6 +245,68 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6695125684612708470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189702414211034926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a63e9bab3a7534eb7a774c587f397b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrow: {fileID: 0}
+  damageClip: {fileID: 8300000, guid: 02d08b1ab1717954f9fd9c325a0f526c, type: 3}
+  projectilePrefab: {fileID: 0}
+  MaxHP: 200
+  attackRange: 1
+  moveSpeed: 1
+  attackPeriod: 1.5
+  _attackType: 0
+  projectileBehaviour: 0
+  characterType: 0
+  killReward: 5
+  animator: {fileID: 9071115895459296981}
+  audioSource: {fileID: 0}
+  hpBar: {fileID: 0}
+  active: 0
+  floor: 0
+  ProjectileFlag: 0
+  removeFlag: 0
+  detectFlag: 0
+  index: 0
+  shooting: 0
+  state: 0
+  movement: []
+  currentPath: []
+  projectileData:
+    hitClip: {fileID: 0}
+    audioVolume: 0
+    spell: {fileID: 0}
+    targetPosition: {x: 0, y: 0, z: 0}
+    startPosition: {x: 0, y: 0, z: 0}
+    speed: 0
+    animations: []
+    damage: 0
+    behaviour: 0
+    ballistic: 0
+    flightTime: 0
+  projectileSpeed: 5
+  ProjectileFlightTime: 0
+  damage: 15
+  target: {fileID: 0}
+  buildingSize: {x: 0, y: 0}
+  gridPosition: {x: 0, y: 0}
+  buildingID: 0
+  destination: {x: 0, y: 0, z: 0}
+  damageCastleFlag: 0
+  pointsLeft: 0
+  waveIndex: 0
+  castleDamage: 10
+  buildingTarget: {fileID: 0}
+  time: 0
 --- !u!1001 &6202763803768729538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -401,17 +416,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
---- !u!114 &2216191493300241889 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5248341437550848547, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}
-  m_PrefabInstance: {fileID: 6202763803768729538}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8ba5a23cfa53fb47b0c6bff92eb78ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2913669607987026299 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9114102308851037881, guid: 34aeb5e502ce8f4459026806b7b025fd, type: 3}

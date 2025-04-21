@@ -70,7 +70,7 @@ public class ProjectileManager : MonoBehaviour {
                     && !(projectile.target.HP > 0))
                 {
                     projectile.enable = true;
-                    projectile.animator.SetAnimation(1);
+                    projectile.animator.SetAnimation(1, angle);
                 }
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.Damage) != 0)
                 {
@@ -78,7 +78,7 @@ public class ProjectileManager : MonoBehaviour {
                 }
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.Animate) != 0)
                 {
-                    projectile.animator.SetAnimation(1);
+                    projectile.animator.SetAnimation(1, angle);
                     projectile.enable = true;
                 }
                 if ((projectile.behaviour & OnProjectileMeetTargetBehaviour.CastSpell) != 0)

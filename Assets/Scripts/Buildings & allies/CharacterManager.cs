@@ -20,7 +20,7 @@ public class CharacterManager : MonoBehaviour
 
     public void Spawn(Vector3 position, CharacterData characterData)
     {
-        characters[Count++].Init(position, Vector2Int.zero, characterData);
+        //characters[Count++].Init(position, Vector2Int.zero, characterData);
         if(Count >= characters.Length)
         {
             Resize();

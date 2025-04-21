@@ -409,7 +409,7 @@ public class FloorManager : MonoBehaviour{
                 floorCells[x,y].GetBuildingIDCallback = getIndex;
             }
         }
-        enemyManager.UpdateShips();
+        enemyManager.UpdatePaths();
     }
     public void PlaceBuilding_DontCheck(BuildingSaveData data)
     {

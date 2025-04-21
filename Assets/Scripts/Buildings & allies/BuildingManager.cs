@@ -54,7 +54,7 @@ public class BuildingManager : MonoBehaviour{
                 floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
                 1,data,
                 buildingData[data.AssetID], KillBuilding);
-            foreach (Archer archer in buildingObject.GetArchers())
+            foreach (Character archer in buildingObject.GetArchers())
             {
                 archer.gameObject.SetActive(false);
             }
@@ -87,9 +87,9 @@ public class BuildingManager : MonoBehaviour{
         }
         Debug.Log($"Array resized. new Length is {bs.Length}");
     }
-    public void InitArchers(Archer[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    public void InitArchers(Character[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
     {
-        foreach(Archer a in archers){
+        foreach(Character a in archers){
             archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID);
         }
     }
@@ -111,7 +111,7 @@ public class BuildingManager : MonoBehaviour{
         BuildingObject b = bs[index];
         bs[index] = bs[--Count];
         bs[index].index = index;
-        foreach(Archer a in bs[index].GetArchers())
+        foreach(Character a in bs[index].GetArchers())
         {
             a.buildingID = index;
         }

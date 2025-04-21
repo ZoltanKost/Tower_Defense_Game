@@ -8,7 +8,7 @@ public class Archer : MonoBehaviour{
     [SerializeField] private float projectileSpeed = 5f;
     [SerializeField] private float ProjectileFlightTime;
     //[SerializeField] private float moveSpeed = 5f;
-    public Enemy target;
+    public Character target;
     [SerializeField] private int damage;
     public Vector2Int buildingSize;
     public Vector2Int gridPosition;
@@ -45,7 +45,7 @@ public class Archer : MonoBehaviour{
         animator.UpdateAnimator(delta);
     }
     public void ResetAnimation(){
-        animator.SetAnimation(0);
+        animator.SetAnimation(0,0);
     }
     public void Attack(){
         ProjectileFlag = true;
@@ -58,7 +58,7 @@ public class Archer : MonoBehaviour{
             (target.transform.position - transform.position).magnitude / projectileData.speed;
         float enemyTimeToDest = 
             (target.destination - target.transform.position).magnitude 
-            / target.speed;
+            / target.moveSpeed;
         float time; Vector3 direction; Vector3 start;
         if (enemyTimeToDest < projectileData.flightTime && target.pointsLeft > 0)
         {
@@ -76,7 +76,7 @@ public class Archer : MonoBehaviour{
         projectileData.targetPosition =
             start +
             (direction).normalized *
-            target.speed * time;
+            target.moveSpeed * time;
     }
     public void Switch(bool active){
         _active = active;

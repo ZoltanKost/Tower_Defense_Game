@@ -7,7 +7,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     [SerializeField] private Transform archer;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private FloorManager floorManager;
-    public List<Archer> archersList = new List<Archer>();
+    public List<Character> archersList = new List<Character>();
     bool active;
     bool animate;
     float cellSize;
@@ -21,17 +21,19 @@ public class ArcherManager : MonoBehaviour, IHandler {
         _archer.transform.position = temp;
         //AddArcher(_archer);
     }
-    public void AddArcher(Archer archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    public void AddArcher(Character archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
     {
         offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
         archersList.Add(archer);
-        archer.Init(gridPosition, buildingWidth, buildingHeight, buildingID);
+        archer.Init(archer, buildingID, buildingWidth, 
+            buildingHeight,-1,archersList.Count - 1,gridPosition,
+            null,null,null, CharacterType.Friend);
     }
-    public void RemoveArchers(Archer[] archer) {
-        foreach (Archer a in archer) {
+    public void RemoveArchers(Character[] archer) {
+        foreach (Character a in archer) {
             archersList.Remove(a);
-            a.Deactivate();
+            a.gameObject.SetActive(false);
         }
     }
     void Update() {
@@ -50,7 +52,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
     }
     public void TickDetection()
     {
-        Enemy[] enemyList = enemyManager.enemies;
+        Character[] enemyList = enemyManager.enemies;
         float cellSize = floorManager.CellToWorld(Vector3.one).x;
         int count = archersList.Count;
         for (int i = 0; i < count; i++)
@@ -87,7 +89,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     archersList[i].target = enemyList[k];
                 }
             }
-            if (archersList[i].target == null) archersList[i].state = ArcherState.Idle;
+            if (archersList[i].target == null) archersList[i].state = CharState.Idle;
         }
     }
     public void TickState()
@@ -98,14 +100,14 @@ public class ArcherManager : MonoBehaviour, IHandler {
         {
             switch (archersList[i].state)
             {
-                case ArcherState.Idle:
-                    archersList[i].animator.SetAnimation(0);
+                case CharState.Idle:
+                    archersList[i].animator.SetAnimation(1,0);
                     if (archersList[i].target != null && archersList[i].target.index < lowestInactive && archersList[i].target.HP > 0)
                     {
-                        archersList[i].state = ArcherState.Shooting;
+                        archersList[i].state = CharState.Attacking;
                     }
                     break;
-                case ArcherState.Shooting:
+                case CharState.Attacking:
                     Vector2Int enemyGridPosition = new Vector2Int
                     {
                         x = Mathf.FloorToInt((archersList[i].target.transform.position.x + offset.x) / cellSize),
@@ -113,7 +115,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     };
                     Vector2 direction = (enemyGridPosition - (archersList[i].gridPosition + archersList[i].buildingSize/2));
                     
-                    archersList[i].animator.SetDirectionAnimation(0, direction);
+                    archersList[i].animator.SetDirectionAnimation(1, direction);
                     break;
             }
         }
@@ -123,7 +125,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
         if(!animate) return;
         int count = archersList.Count;
         for (int i = 0; i < count; i++){
-            archersList[i].TickAnimator(delta);
+            archersList[i].animator.UpdateAnimator(delta);
             if (archersList[i].ProjectileFlag)
             {
                 //archersList[i].audioSource.pitch = Random.Range(0.9f, 1.31f);
@@ -142,24 +144,24 @@ public class ArcherManager : MonoBehaviour, IHandler {
     }
     public void DeactivateEntities()
     {
-        foreach(Archer a in archersList){
-            a.Deactivate();
+        foreach(Character a in archersList){
+            a.gameObject.SetActive(false);
         }
     }
     public void ResetEntities()
     {
-        foreach(Archer a in archersList){
-            a.Reset();
+        foreach(Character a in archersList){
+            a.ResetState();
         }
     }
     public void ClearEntities()
     {
-        foreach(Archer archer in archersList){
+        foreach(Character archer in archersList){
             Destroy(archer.gameObject);
         }
         archersList.Clear();
     }
-    public bool TryHighlightEntity(Vector3 position, out Archer archer, float radius)
+    public bool TryHighlightEntity(Vector3 position, out Character archer, float radius)
     {
         archer = null;
         int count = archersList.Count;

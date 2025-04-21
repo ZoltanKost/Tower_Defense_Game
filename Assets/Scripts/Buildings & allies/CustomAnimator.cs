@@ -1,17 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using DG.Tweening;
+using UnityEngine.Rendering;
 
 public class CustomAnimator : MonoBehaviour{
 
     public SpriteRenderer spriteRenderer;
     public Animation[] animations;
-    public DirectionAnimation[] directionAnimations;
     public UnityEvent[] actions;
-    public Tween tween;
 
-    private int currentAnimation;
+    private Animation currentAnimation;
+    private int animID;
     private int currentDirAnimation;
     private int currentFrame;
     float time = 0;
@@ -20,49 +19,59 @@ public class CustomAnimator : MonoBehaviour{
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         PlayAnimation(0);
     }
+    // TODO: check if first animation s
     public void InitFromPrefab(CustomAnimator animator)
     {
         animations = animator.animations;
-        directionAnimations = animator.directionAnimations;
-        currentAnimation = 0;
-        currentDirAnimation = -1;
+        animID = 0;
+        currentAnimation = animations[animID];
+        currentDirAnimation = currentAnimation.type == 0? - 1 : 0;
         currentFrame = 0;
         time = 0;
     }
     public void InitFromAnimArray(Animation[] array)
     {
         animations = array;
-        currentAnimation = 0;
+        animID = 0;
+        currentAnimation = animations[animID];
         time = 0;
         currentFrame = 0;
         //spriteRenderer.sprite = animations[0].sprites[currentFrame];
-        currentDirAnimation = -1;
     }
-    public void PlayAnimation(int id){
-        currentAnimation = id;
+    public void PlayAnimation(int id, float value = 0f){
+        animID = id;
+        currentAnimation = animations[animID];
         time = 0;
         currentFrame = 0;
-        spriteRenderer.sprite = animations[id].sprites[currentFrame];
-        currentDirAnimation = -1;
+        value += currentAnimation.dirOffset;
+        currentDirAnimation =
+            currentAnimation.type == 0 ? 0 :
+            Mathf.FloorToInt((int)(value/ currentAnimation.dirStep));
+        
+        //spriteRenderer.sprite = 
+           // currentAnimation.data[currentDirAnimation].sprites[currentFrame];
     }
     public void UpdateAnimator(float delta){
         time += delta;
-        Animation tempAnim;
-        if (currentAnimation >= 10)
+        Sprite[] tempAnim;
+        float interval;
+        if (currentAnimation.type != 0)
         {
-            tempAnim = directionAnimations[currentDirAnimation].animations[currentAnimation - 10];
-            spriteRenderer.flipX = tempAnim.flipX;
+            tempAnim = currentAnimation.data[currentDirAnimation].sprites;
+            spriteRenderer.flipX = currentAnimation.data[currentDirAnimation].flipX;
+            interval = currentAnimation.duration / currentAnimation.length;
         }
         else
         {
-            tempAnim = animations[currentAnimation];
+            tempAnim = currentAnimation.data[0].sprites;
+            interval = currentAnimation.interval;
         }
-        if (time >= tempAnim.interval)
+        if (time >= interval)
         {
             time = 0;
             CheckEvents();
-            spriteRenderer.sprite = tempAnim.sprites[currentFrame++];
-            if (currentFrame >= tempAnim.sprites.Length)
+            spriteRenderer.sprite = tempAnim[currentFrame++];
+            if (currentFrame >= currentAnimation.length)
             {
                 currentFrame = 0;
             }
@@ -70,15 +79,7 @@ public class CustomAnimator : MonoBehaviour{
     }
     public void CheckEvents()
     {
-        AnimationEvent[] events;
-        if (currentAnimation >= 10)
-        {
-            events = directionAnimations[currentDirAnimation].animations[currentAnimation - 10].events;
-        }
-        else
-        {
-            events = animations[currentAnimation].events;
-        }
+        AnimationEvent[] events = currentAnimation.events;
         for (int i = 0; i < events.Length; i++)
         {
             if (events[i].frame == currentFrame) { 
@@ -86,32 +87,34 @@ public class CustomAnimator : MonoBehaviour{
             }
         }
     }
-    public void SetAnimation(int animation){
-        if(currentAnimation == animation) return;
-        PlayAnimation(animation);
+    public void SetAnimation(int animation, float value){
+        if(animID == animation && (currentAnimation.type == 0)) return;
+        PlayAnimation(animation, value);
     }
+    // TODO: remove this code to SetAnimation
     public void SetDirectionAnimation(int dirID, Vector2 directionNormalized)
     {
-        if (dirID >= directionAnimations.Length) Debug.Log("dirID is outside of array");
-        DirectionAnimation temp = directionAnimations[dirID];
+        if (dirID >= currentAnimation.length) Debug.Log("dirID " + dirID + " is outside of array");
         float degree = Vector2.SignedAngle(Vector2.right, directionNormalized);
-        degree += temp.offset;
         if (degree < 0) degree += 360;
         degree %= 360;
-        int res = (int)(degree / temp.step);
-        //Debug.Log($"{degree}, {res}");
+
+
+        
+        /*//Debug.Log($"{degree}, {res}");
         if (currentDirAnimation != dirID) {
             currentFrame = 0;
             time = 0;
-            currentAnimation = res + 10;
-            spriteRenderer.sprite = directionAnimations[dirID].animations[res].sprites[currentFrame];
+            currentDirAnimation = res;
+            spriteRenderer.sprite = currentAnimation.data[res].sprites[currentFrame];
         }
-        else if (currentAnimation != res)
+        else if (animID != res)
         {
-            currentAnimation = res + 10;
-            spriteRenderer.sprite = directionAnimations[dirID].animations[res].sprites[currentFrame];
+            animID = res;
+            currentAnimation = animations[animID];
+            spriteRenderer.sprite = currentAnimation.data[res].sprites[currentFrame];
         }
-        currentDirAnimation = dirID ;
+        currentDirAnimation = dirID ;*/
     }
     public void SetSortingParams(int order, int layer){
         spriteRenderer.sortingOrder = order;
@@ -119,23 +122,24 @@ public class CustomAnimator : MonoBehaviour{
     }
 }
 [Serializable]
-public struct Animation{
-    public AnimationEvent[] events;
+public struct AnimationData
+{
     public Sprite[] sprites;
-    public float duration;
     public bool flipX;
-    public float interval{
-        get{
-            return duration / sprites.Length;
-        }
-    }
+}
+public struct AnimationKeyframes
+{
+    public Vector3[] framePositions;
+    public float[] frameTimings;
 }
 [Serializable]
 public struct DirectionAnimation
 {
-    public Animation[] animations;
-    public readonly int length => animations.Length;
-    public readonly float step => 360f / length;
+    public AnimationEvent[] events;
+    public AnimationData[] data;
+    public float duration;
+    public int length;
+    public float step;
     public float offset;
 }
 [Serializable]
@@ -144,9 +148,21 @@ public struct AnimationEvent
     public int acitonID;
     public int frame;
 }
-/*[Serializable]
-public struct AnimationFrame
+public enum AnimationType
 {
-    public Sprite sprite;
+    Sprites,
+    KeyFrames
+}
+
+public struct Animation
+{
+    public AnimationType type;
+    public AnimationEvent[] events;
+    public AnimationData[] data;
+    public AnimationKeyframes[] keyFrames;
     public float duration;
-}*/
+    public float interval;
+    public int length;
+    public float dirStep;
+    public float dirOffset;
+}

@@ -6,58 +6,48 @@ using UnityEngine;
 public class WaveHighlighting : MonoBehaviour
 {
     [SerializeField] private EnemyManager enemyManager;
-    [SerializeField] private Canvas arrowParent;
     [SerializeField] private LineRenderer prefab;
 
-    List<LineRenderer> lines = new();
+    LineRenderer[] waveLines;
+    LineRenderer[] shipLines;
+
+    int waveCount = 0;
+    int shipCount = 0;
 
     [SerializeField] private WaveHighlightTemplate templatePrefab;
     [SerializeField] private Sprite templateDefaultSprite;
 
     [SerializeField] private Transform arrowPrefab;
-    
-    [SerializeField] private float arrowOffset = 0.2f;
-    [SerializeField] private Vector3 offset = Vector3.down * 0.2f;
-    [SerializeField] private float arrowSpeed = 1f;
-    [SerializeField] private float turnSpeed = 1f;
-    [SerializeField] private int arrowNumber = 3;
-    public bool needResize;
-    [SerializeField] private Ease moveEase = Ease.Linear;
-    [SerializeField] private Ease rotationEase = Ease.InSine;
 
-    private List<WaveHighlightTemplate> templates = new();
-    private Transform[] arrows;
-    private int[] arrowsIndexes;
-    private List<PathCell>[] arrowsPaths;
-
-    Wave currentWave;
-    int waveIndex;
-    int pathIndex;
-
-    int arrowCount;
-
-    public void Awake()
+    private void Awake()
     {
-        arrows = new Transform[16];
-        arrowsIndexes = new int[16];
-        arrowsPaths = new List<PathCell>[16];
-        for (int i = 0; i < 16; i++)
+        waveLines = new LineRenderer[8];
+        for (int i = 0; i < 8; i++)
         {
-            arrows[i] = Instantiate(arrowPrefab, arrowParent.transform);
-            arrows[i].gameObject.SetActive(false);
+            waveLines[i] = Instantiate(prefab,transform);
+            waveLines[i].gameObject.SetActive(false);
+        }
+        shipLines = new LineRenderer[8];
+        for (int i = 0; i < 8; i++)
+        {
+            shipLines[i] = Instantiate(prefab, transform);
+            shipLines[i].gameObject.SetActive(false);
         }
     }
-    public void SetWaves(List<Wave> waves, List<Ship> ships)
+    public void SetHighlighting(List<Wave> waves, List<Ship> ships)
     {
-        foreach(var l in lines)
+        SetWaves(waves);
+        SetShips(ships);
+    }
+    // fix
+    public void SetWaves(List<Wave> waves)
+    {
+        int count = waves.Count;
+        waveCount = count;
+        if (waveLines.Length < count) ResizeWaves();
+        for (int i = 0; i < count; i++)
         {
-            l.gameObject.SetActive(false);
-        }
-        for (int i = 0; i < waves.Count; i++)
-        {
-            if (i >= lines.Count)
-                lines.Add(Instantiate(prefab, transform));
-            var line = lines[i];
+            var line = waveLines[i];
             line.gameObject.SetActive(true);
             var path = waves[i].Path;
             int c = path.Count;
@@ -66,130 +56,86 @@ public class WaveHighlighting : MonoBehaviour
             {
                 points[l] = path[l].pos;
             }
+            line.positionCount = c;
             line.SetPositions(points);
         }
-        int w = waves.Count;
-        for (int i = w; i < ships.Count; i++)
+        for (int i = count; i < waveLines.Length; i++)
         {
-            if (w >= lines.Count)
-                lines.Add(Instantiate(prefab, transform));
-            var line = lines[w];
+            waveLines[i].gameObject.SetActive(false);
+        }
+    }
+    // fix
+    public void AddWaveLine(Wave wave)
+    {
+        waveCount++;
+        if (waveCount >= waveLines.Length) ResizeWaves();
+        var line = waveLines[waveCount];
+        line.gameObject.SetActive(true);
+        var path = wave.Path;
+        int c = path.Count;
+        var points = new Vector3[path.Count];
+        for (int l = 0; l < c; l++)
+        {
+            points[l] = path[l].pos;
+        }
+        line.positionCount = c;
+        line.SetPositions(points);
+    }
+    // fix
+    public void SetShips(List<Ship> ships)
+    {
+        int count = ships.Count;
+        shipCount = count;
+        if (shipLines.Length < count) ResizeShips();
+        for (int i = 0; i < count; i++)
+        {
+            var line = shipLines[i];
             line.gameObject.SetActive(true);
-            w++;
-            var path = ships[i - waves.Count].path;
+            var path = ships[i].path;
             int c = path.Count;
-            var points = new Vector3[c];
-            line.positionCount = c;
+            var points = new Vector3[path.Count];
             for (int l = 0; l < c; l++)
             {
                 points[l] = path[l].pos;
             }
-            line.SetPositions(points);
-            if (w >= lines.Count)
-                lines.Add(Instantiate(prefab, transform));
-            line = lines[w];
-            line.gameObject.SetActive(true);
-            w++;
-            path = ships[i - waves.Count].wave.Path;
-            c = path.Count;
-            points = new Vector3[c];
             line.positionCount = c;
-            for (int l = 0; l < c; l++)
-            {
-                points[l] = path[l].pos;
-            }
             line.SetPositions(points);
+            AddWaveLine(ships[i].wave); 
+        }
+        for (int i = count; i < waveCount; i++)
+        {
+            shipLines[i].gameObject.SetActive(false);
         }
     }
-    public void ClearWaves()
+    // fix
+    public void ResizeWaves()
     {
-        arrowCount = 0;
-        foreach (var t in templates)
+        int oldL = waveLines.Length;
+        int newL = waveLines.Length * 2;
+        Array.Resize(ref waveLines, newL);
+        for (int i = oldL; i < newL; i++)
         {
-            t.gameObject.SetActive(false);
+            waveLines[i] = Instantiate(prefab,transform);
+            waveLines[i].gameObject.SetActive(false);
         }
     }
-    void Update()
+    // fix
+    public void ResizeShips()
     {
-        if (arrowCount <= 0 && currentWave != null && currentWave.Path != null)
+        int oldL = shipLines.Length;
+        int newL = shipLines.Length * 2;
+        Array.Resize(ref shipLines, newL);
+        for (int i = oldL; i < newL; i++)
         {
-            waveIndex++;
-            if (waveIndex >= enemyManager.waves.Count)
-            {
-                waveIndex = 0;
-            }
-            currentWave = enemyManager.waves[waveIndex];
-            SendArrows();
-        }
-    }
-    private void FixedUpdate()
-    {
-        UpdateArrows(Time.fixedDeltaTime);
-    }
-    public void SendArrows()
-    {
-        //Debug.Log("Sending arrows: " + currentWave.Path.Count * arrowNumber);
-        //string s = "";
-        var path = currentWave.Path;
-        {
-            if (arrowCount + arrowNumber >= arrows.Length) 
-            {
-                //s += $"count: {arrowCount}; availible: {arrows.Length};";
-                Resize(); 
-            }
-            Vector3 position = path[path.Count - 1].pos;
-            for (int i = arrowCount; i < arrowCount + arrowNumber; i++)
-            {
-                arrowsIndexes[i] = path.Count - 1;
-                arrowsPaths[i] = path; 
-                arrows[i].gameObject.SetActive(true);
-                float z = 90f;
-                //s += $"{i}: {position} ";
-                arrows[i].SetPositionAndRotation(position, Quaternion.Euler(0, 0, z));
-                position += offset;
-            }
-            arrowCount += arrowNumber;
-            //s+= "\n";
-        }
-        //Debug.Log(s);
-    }
-    public void UpdateArrows(float dt)
-    {
-        for (int i = 0; i < arrowCount; i++)
-        {
-            List<PathCell> paths = arrowsPaths[i];
-            int index = arrowsIndexes[i];
-            Vector3 moveDirection = paths[index].pos - arrows[i].position;
-            Vector3 totalMove = default;
-            if (index < paths.Count - 1) { totalMove = paths[index].pos - paths[index + 1].pos; }
-            moveDirection.z = 0;
-            Vector3 turnDirection = paths[index - 1].pos - paths[index].pos;
-            turnDirection = Vector3.right - turnDirection;
-            float z = -90f * turnDirection.y;
-            if (turnDirection.x > 1) z += 180;
-            Vector3 move = dt * arrowSpeed * moveDirection.normalized;
-            float ease = totalMove.magnitude - moveDirection.magnitude;
-            //Debug.Log($"{z} : {turnDirection} , move: {moveDirection.magnitude},ease: {ease} total:{totalMove} nextPoint: {paths[index].pos}; move:{move}");
-            arrows[i].position = arrows[i].position + move;
-            arrows[i].rotation = 
-                Quaternion.Lerp(arrows[i].rotation, Quaternion.Euler(0,0,z), 
-                index < paths.Count - 1?InExpo(ease) :1f);
-            if ((moveDirection).magnitude < 0.1f)
-            {
-                arrowsIndexes[i]--;
-            }
-            if(arrowsIndexes[i] < 1)
-            {
-                RemoveArrow(i);
-                i--;
-            }
+            shipLines[i] = Instantiate(prefab, transform);
+            shipLines[i].gameObject.SetActive(false);
         }
     }
     float InExpo(float x)
     {
         return x == 0 ? 0f : (float)Math.Pow(4f, 10f * x - 8f);
     }
-    public void RemoveArrow(int index)
+/*    public void RemoveLine(int index)
     {
         var temp = arrows[index];
         arrows[index] = arrows[--arrowCount];
@@ -197,16 +143,5 @@ public class WaveHighlighting : MonoBehaviour
         temp.gameObject.SetActive(false);
         arrowsIndexes[index] = arrowsIndexes[arrowCount];
         arrowsPaths[index] = arrowsPaths[arrowCount];
-    }
-    public void Resize()
-    {
-        Array.Resize(ref arrows, arrows.Length * 2);
-        Array.Resize(ref arrowsIndexes, arrows.Length);
-        Array.Resize(ref arrowsPaths, arrows.Length);
-        for (int i = arrowCount; i< arrows.Length; i++)
-        {
-            arrows[i] = Instantiate(arrowPrefab, arrowParent.transform);
-            arrows[i].gameObject.SetActive(false);
-        }
-    }
+    }*/
 }

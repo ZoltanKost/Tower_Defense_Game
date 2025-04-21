@@ -38,15 +38,13 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] public int attackRange = 3;
     [SerializeField] private int MaxHP = 100;
     [SerializeField] public float attackPeriod = 5f;
-    [SerializeField] private int _killReward = 5;
-    public int killReward { get => _killReward; }
+    [SerializeField] public int killReward = 5;
     public float time;
     int currentHP;
     public Vector3 destination;
     int waveIndex;
     public bool detectFlag;
     public int pointsLeft;
-    public int pathLength;
 
     void Awake()
     {
@@ -98,7 +96,7 @@ public class Enemy : MonoBehaviour, IDamagable
         damage = prefab.damage;
         attackRange = prefab.attackRange;
         attackPeriod = prefab.attackPeriod;
-        _killReward = prefab.killReward;
+        killReward = prefab.killReward;
         projectileSpeed = prefab.projectileSpeed;
         _attackType = prefab.attackType;
         ProjectileData = prefab.ProjectileData;
@@ -146,7 +144,7 @@ public class Enemy : MonoBehaviour, IDamagable
         time = 0;
     }
 
-    //CALLED BY CUSTOMANIMATOR(IN UNITY)
+    // UNITY EDITOR CALLBACK
     public void ResetState()
     {
         state = EnemyState.idle;

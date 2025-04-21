@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(GroundPage))]
@@ -20,6 +21,13 @@ public class GroundPageModel : MonoBehaviour {
         groundPage.Init(groundArrays,groundsCount,OnGroundChosenCallBack, dims, dims);
         ResetGroundArrays();
         defaultCooldown = cooldown;
+    }
+    public void Init()
+    {
+        _groundArrays = new GroundArray[maxGrounds];
+        int dims = Mathf.ClosestPowerOfTwo(groundArrayGenerator.maxDimensions) + 1;
+        groundPage.Init(groundArrays, maxGrounds, OnGroundChosenCallBack, dims, dims);
+        ResetGroundArrays();
     }
     private void Update()
     {

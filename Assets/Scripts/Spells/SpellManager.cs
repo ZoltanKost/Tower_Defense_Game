@@ -156,7 +156,7 @@ public class SpellManager : MonoBehaviour {
             }
             if (spellAnimators[i].spawnProjectile)
             {
-                Enemy[] targets = enemyManager.enemies;
+                Character[] targets = enemyManager.enemies;
                 int l = targets.Length;
                 for (int k =0; k < l; k++)
                 {

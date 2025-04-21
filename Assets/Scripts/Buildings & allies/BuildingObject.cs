@@ -8,8 +8,8 @@ public class BuildingObject : MonoBehaviour, IDamagable
     [SerializeField] private TweenAnimator tweenAnimator;
     [SerializeField] private int maxHP = 100;
     public int AssetID = -1;
-    public SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}    
-    Archer[] archers;
+    public SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}
+    Character[] archers;
     public int index;
     public Vector2Int gridPosition{get;private set;}
     public int w{get;private set;}
@@ -29,7 +29,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         set{_active = value;}
     }
     void Awake(){
-        archers = GetComponentsInChildren<Archer>();
+        archers = GetComponentsInChildren<Character>();
         animator = GetComponent<CustomAnimator>();
         tweenAnimator = GetComponent<TweenAnimator>();
     }
@@ -46,7 +46,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         h = b.height;
         spriteRenderer.sprite = b.sprite;
         gridPosition = new Vector2Int(gridX, gridY);
-        animator.animations[0].sprites[0] = b.sprite;
+        animator.animations[0].data[0].sprites[0] = b.sprite;
         animator.PlayAnimation(0);
         animator.SetSortingParams(sortingOrder + 1000/gridY, sortingLayer);
         onKillEvent = OnKill;
@@ -67,7 +67,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         h = b.height;
         spriteRenderer.sprite = b.sprite;
         gridPosition = new Vector2Int(data.gridPosition.x, data.gridPosition.y);
-        animator.animations[0].sprites[0] = b.sprite;
+        animator.animations[0].data[0].sprites[0] = b.sprite;
         animator.PlayAnimation(animationToPlay);
         animator.SetSortingParams(sortingOrder + 1000 / gridPosition.y, sortingLayer);
         onKillEvent = OnKill;
@@ -76,11 +76,11 @@ public class BuildingObject : MonoBehaviour, IDamagable
     }
     public void Activate(){
         gameObject.SetActive(true);
-        foreach(Archer a in archers){
-            a.Activate();
+        foreach(Character a in archers){
+            a.gameObject.SetActive(true);
         }
     }
-    public Archer[] GetArchers(){
+    public Character[] GetArchers(){
         return archers;
     }
     public void TickUpdate(float delta){
@@ -115,8 +115,8 @@ public class BuildingObject : MonoBehaviour, IDamagable
     }
     public void SetColor(Color color){
         spriteRenderer.color = color;
-        foreach(Archer archer in archers){
-            archer.SetColor(color);
+        foreach(Character archer in archers){
+            archer.animator.spriteRenderer.color = color;
         }
     }
     public int GetIndex()

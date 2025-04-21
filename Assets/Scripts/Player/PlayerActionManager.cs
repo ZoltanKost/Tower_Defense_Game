@@ -21,6 +21,7 @@ public class PlayerActionManager : MonoBehaviour{
     [SerializeField] ActionMode mode;
     byte gameState_int;
     Vector3 startPosition;
+    public bool locked;
     public void Init(Action buildingFailedCb, TemporalFloor tp, Func<Resource, int, bool> canBuyCb, Func<float,bool> _manaCallback, Action<Resource, int> buyCb, Action<int> highlightBuildingCb, Action<int> destroyBuildingCb){
         actionFailedCallback = buildingFailedCb;
         temporalFloor = tp;
@@ -228,10 +229,9 @@ public class PlayerActionManager : MonoBehaviour{
         }
     }
     public bool CanBuild(Vector3 position){
-        if (gameState_int % 2 != 0 || gameState_int == 4) return false;
         switch(mode){
             case ActionMode.Ground:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckGA(position, chosenGround);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckGA(position, chosenGround) && !locked;
             case ActionMode.CastSpell:
                 // mana Check
                 return true/*gameState_int == MAGIC_STATE*/;
@@ -240,9 +240,9 @@ public class PlayerActionManager : MonoBehaviour{
             case ActionMode.Building:
                 return /*gameState_int == BUILDING_STATE && */floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
             case ActionMode.Bridge:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position) && !locked;
             case ActionMode.BridgeSpot:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position) && !locked;
             case ActionMode.MassGround:
                 // mass building
                 break;

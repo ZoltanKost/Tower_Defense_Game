@@ -23,16 +23,16 @@ public class EntitiyHighlighter : MonoBehaviour
             tempFloor.SetHighlightedCharacter(archer.gridPosition, archer.buildingSize, archer.attackRange);
             entity = HighlightedEntity.Building;
         }
-        else if (archerManager.TryHighlightEntity(position,out archer,1f))
+        /*else if (archerManager.TryHighlightEntity(position,out archer,1f))
         {
             ui.SetEntity(archer.GetSprite(), 100, archer.projectileData.damage, 0);
             entity = HighlightedEntity.Archer;
-        }
-        else if (enemyManager.TryHighlightEntity(position, out Enemy enemy, 1f))
+        }*/
+        /*else if (enemyManager.TryHighlightEntity(position, out Character enemy, 1f))
         {
             ui.SetEntity(enemy.GetSprite(), 100, enemy.ProjectileData.damage, 0);
             entity = HighlightedEntity.Enemy;
-        }
+        }*/
         else
         {
             ui.Close();
@@ -51,11 +51,11 @@ public class EntitiyHighlighter : MonoBehaviour
                 {
 
                 }
-                else if (enemyManager.TryHighlightEntity(position, out Enemy enemy, 1f))
+                /*else if (enemyManager.TryHighlightEntity(position, out Enemy enemy, 1f))
                 {
                     ui.SetEntity(enemy.GetSprite(), 100, enemy.ProjectileData.damage, 0);
                     entity = HighlightedEntity.Enemy;
-                }
+                }*/
                 //archer.SetMovement(pathfinding.DijkstraSearch(archer.position, position));
                 break;
             default: break;
