@@ -19,7 +19,7 @@ public class Character : MonoBehaviour, IDamagable
 
     [HeaderAttribute("MonoBeh Dependencies")]
     // Monobehs 
-    [SerializeField] public CustomAnimator animator;
+    [SerializeField] public Animator animator;
     [SerializeField] public AudioSource audioSource;
     [SerializeField] private HealthBar hpBar;
 
@@ -109,14 +109,14 @@ public class Character : MonoBehaviour, IDamagable
         buildingID = friendBuildingID;
         buildingSize = new(friendBuildingWidth, friendBuildingHeight);
         gridPosition = _gridPosition;
-        animator.Init();
+        //animator.Init();
         
         projectileData.startPosition = transform.position;
         projectileData.speed = prefab.projectileSpeed;
         projectileData.damage = prefab.damage;
         characterType = type;
         projectileData.behaviour = prefab.projectileBehaviour;
-        animator.InitFromPrefab(prefab.animator);
+        animator.Play(0);
 
         if (characterType == CharacterType.Enemy)
         {
@@ -125,11 +125,11 @@ public class Character : MonoBehaviour, IDamagable
             pointsLeft = path.Count;
             transform.position = start.pos;
             destination = start.pos;
-            animator.SetSortingParams(6 + 1000 / start.gridY, start.floor);
+            animator.runtimeAnimatorController = prefab.animator.runtimeAnimatorController;
             float degree = Vector2.SignedAngle(Vector2.right, (destination - start.pos).normalized);
             if (degree < 0) degree += 360;
             degree %= 360;
-            animator.SetAnimation(0, degree);
+            animator.Play(0);
             hpBar.gameObject.SetActive(true);
             hpBar.Set(1);
         }
@@ -208,7 +208,7 @@ public class Character : MonoBehaviour, IDamagable
     {
         state = CharState.Dead;
         hpBar.gameObject.SetActive(false);
-        animator.PlayAnimation(0);
+        animator.Play(0);
         onKillEvent?.Invoke(index);
     }
     public void RemoveInvoke()

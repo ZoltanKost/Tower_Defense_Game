@@ -113,12 +113,12 @@ public class BuildingObject : MonoBehaviour, IDamagable
     public void Animate(){
         tweenAnimator.JellyAnimation();
     }
-    public void SetColor(Color color){
+/*    public void SetColor(Color color){
         spriteRenderer.color = color;
         foreach(Character archer in archers){
             archer.animator.spriteRenderer.color = color;
         }
-    }
+    }*/
     public int GetIndex()
     {
         return index;

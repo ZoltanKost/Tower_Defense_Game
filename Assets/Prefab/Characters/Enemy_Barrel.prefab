@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 647510513473006261}
-  - component: {fileID: 9071115895459296981}
   - component: {fileID: 6639582566830661153}
   - component: {fileID: 5369689936261242769}
   m_Layer: 0
@@ -37,62 +36,6 @@ Transform:
   - {fileID: 4016267620584128299}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9071115895459296981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189702414211034926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 1967038702955971644}
-  actions:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5369689936261242769}
-        m_TargetAssemblyTypeName: Character, Assembly-CSharp
-        m_MethodName: RemoveInvoke
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5369689936261242769}
-        m_TargetAssemblyTypeName: Character, Assembly-CSharp
-        m_MethodName: Attack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5369689936261242769}
-        m_TargetAssemblyTypeName: Character, Assembly-CSharp
-        m_MethodName: ResetState
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!82 &6639582566830661153
 AudioSource:
   m_ObjectHideFlags: 0
@@ -212,7 +155,7 @@ MonoBehaviour:
   projectileBehaviour: 0
   characterType: 0
   killReward: 5
-  animator: {fileID: 9071115895459296981}
+  animator: {fileID: 4783324115709140975}
   audioSource: {fileID: 6639582566830661153}
   hpBar: {fileID: 3715045914147068556}
   active: 0
@@ -311,6 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2291836625637382702}
   - component: {fileID: 1967038702955971644}
+  - component: {fileID: 4783324115709140975}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -385,6 +329,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4783324115709140975
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7431884561865880560}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7706665255754347768
 GameObject:
   m_ObjectHideFlags: 0

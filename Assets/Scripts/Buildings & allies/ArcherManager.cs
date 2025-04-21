@@ -101,7 +101,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
             switch (archersList[i].state)
             {
                 case CharState.Idle:
-                    archersList[i].animator.SetAnimation(1,0);
+                    archersList[i].animator.Play(1,0);
                     if (archersList[i].target != null && archersList[i].target.index < lowestInactive && archersList[i].target.HP > 0)
                     {
                         archersList[i].state = CharState.Attacking;
@@ -117,7 +117,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     float degree = Vector2.SignedAngle(Vector2.right, direction);
                     if (degree < 0) degree += 360;
                     degree %= 360;
-                    archersList[i].animator.SetAnimation(1, degree);
+                    archersList[i].animator.Play(1);
                     break;
             }
         }
@@ -127,7 +127,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
         if(!animate) return;
         int count = archersList.Count;
         for (int i = 0; i < count; i++){
-            archersList[i].animator.UpdateAnimator(delta);
+            //archersList[i].animator.UpdateAnimator(delta);
             if (archersList[i].ProjectileFlag)
             {
                 //archersList[i].audioSource.pitch = Random.Range(0.9f, 1.31f);

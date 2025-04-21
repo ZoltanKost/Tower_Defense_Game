@@ -102,7 +102,7 @@ public class EnemyManager : MonoBehaviour {
                     float degree = Vector2.SignedAngle(Vector2.right, (enemies[i].destination - enemies[i].transform.position).normalized);
                     if (degree < 0) degree += 360;
                     degree %= 360;
-                    enemies[i].animator.SetAnimation(0,degree);
+                    enemies[i].animator.Play(0);
                     enemies[i].time += delta;
                     enemies[i].detectFlag = enemies[i].time > enemies[i].attackPeriod;
                     break;
@@ -111,7 +111,7 @@ public class EnemyManager : MonoBehaviour {
                     degree = Vector2.SignedAngle(Vector2.right, (enemies[i].buildingTarget.position - enemies[i].transform.position).normalized);
                     if (degree < 0) degree += 360;
                     degree %= 360;
-                    enemies[i].animator.SetAnimation(1, degree);
+                    enemies[i].animator.Play(1);
                     break;
                 default:
                     enemies[i].state = CharState.Moving;
@@ -170,7 +170,7 @@ public class EnemyManager : MonoBehaviour {
                     enemies[i].pointsLeft--;
                     PathCell next = enemies[i].currentPath[enemies[i].pointsLeft];
                     enemies[i].destination = next.pos;
-                    enemies[i].animator.SetSortingParams(6 + 1000 / next.gridY, next.floor);
+                    //enemies[i].animator.SetSortingParams(6 + 1000 / next.gridY, next.floor);
                 }
                 else 
                 {
@@ -185,7 +185,7 @@ public class EnemyManager : MonoBehaviour {
     public void AnimatorTick(float delta)
     {
         for(int x = 0; x < lowestInactive; x++){
-            enemies[x].animator.UpdateAnimator(delta);
+            //enemies[x].animator.UpdateAnimator(delta);
             if (enemies[x].ProjectileFlag)
             {
                 projectileManager.SendProjectile(enemies[x].projectileData);
