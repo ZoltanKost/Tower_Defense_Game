@@ -53,47 +53,44 @@ public class CustomAnimator : MonoBehaviour{
     // TODO: rework keyframe updating;
     public void UpdateAnimator(float delta){
         time += delta;
-        Sprite[] tempAnim;
+        //Sprite[] tempAnim;
         float interval;
         int currentData = 0;
         if (currentAnimation.type != 0) currentData = currentDirAnimation;
         interval = currentAnimation.interval;
-        tempAnim = currentAnimation.data[currentData].sprites;
+        //tempAnim = currentAnimation.data[currentData].frames[];
         spriteRenderer.flipX = currentAnimation.data[currentData].flipX;
         
-        for (int i = 0; i < currentAnimation.keyFrames.Length; i++)
+        AnimationData data = currentAnimation.data[currentData];
+        if (time > data.frames[currentFrame].time)
         {
-            var keyFrame = currentAnimation.keyFrames[i];
-            if (time > keyFrame.frameTimings[keyFrame.currentFrame])
+            if (currentFrame >= data.length)
             {
-                if (keyFrame.currentFrame >= keyFrame.length)
-                {
-                    keyFrame.currentFrame = 0;
-                }
-                else
-                {
-                    keyFrame.currentFrame++;
-                }
+                currentFrame = 0;
             }
-            if (keyFrame.currentFrame < keyFrame.length)
+            else
             {
-                float dt = keyFrame.frameTimings[keyFrame.currentFrame + 1]
-                    - keyFrame.frameTimings[keyFrame.currentFrame];
-                var start = keyFrame.framePositions[keyFrame.currentFrame];
-                var end = keyFrame.framePositions[keyFrame.currentFrame + 1];
-                var result = (end - start) * dt;
-                var startR = keyFrame.frameRotations[keyFrame.currentFrame];
-                var endR = keyFrame.frameRotations[keyFrame.currentFrame + 1];
-                var resultR = (endR - startR) * dt;
-                keyFrame.target.position = result;
-                keyFrame.target.LookAt(resultR);
+                currentFrame++;
             }
         }
+        /*if (currentFrame < data.length)
+        {
+            float dt = keyFrame.frameTimings[keyFrame.currentFrame + 1]
+                - keyFrame.frameTimings[keyFrame.currentFrame];
+            var start = keyFrame.framePositions[keyFrame.currentFrame];
+            var end = keyFrame.framePositions[keyFrame.currentFrame + 1];
+            var result = (end - start) * dt;
+            var startR = keyFrame.frameRotations[keyFrame.currentFrame];
+            var endR = keyFrame.frameRotations[keyFrame.currentFrame + 1];
+            var resultR = (endR - startR) * dt;
+            keyFrame.target.position = result;
+            keyFrame.target.LookAt(keyFrame.target.position + resultR);
+        }*/
 
         if (time >= interval * currentFrame)
         {
             CheckEvents();
-            spriteRenderer.sprite = tempAnim[currentFrame++];
+            spriteRenderer.sprite = data.frames[currentFrame++].sprite;
             if (currentFrame >= currentAnimation.length)
             {
                 currentFrame = 0;
@@ -121,30 +118,31 @@ public class CustomAnimator : MonoBehaviour{
         spriteRenderer.sortingLayerName = $"{layer}";
     }
 }
-[Serializable]
 public struct AnimationData
 {
-    public Sprite[] sprites;
-    public bool flipX;
-}
-public struct AnimationKeyframes
-{
     public Transform target;
-    public Vector3[] framePositions;
-    public Vector3[] frameRotations;
-    public float[] frameTimings;
+    public SpriteRenderer rendererTarget;
+    public KeyFrame[] frames;
     public int currentFrame;
     public int length;
+    public bool flipX;
 }
-[Serializable]
-public struct DirectionAnimation
+public struct KeyFrame
 {
-    public AnimationEvent[] events;
-    public AnimationData[] data;
-    public float duration;
-    public int length;
-    public float step;
-    public float offset;
+    public FrameType type;
+    public Sprite sprite;
+    public Vector3 position;
+    public Vector3 rotation;
+    public int eventID;
+    public float time;
+}
+[Flags]
+public enum FrameType
+{
+    Sprite = 0,
+    Position = 1,
+    Rotation = 2,
+    Event = 4
 }
 [Serializable]
 public struct AnimationEvent
@@ -154,19 +152,26 @@ public struct AnimationEvent
 }
 public enum AnimationType
 {
-    Sprites,
-    KeyFrames
+    Default,
+    Direction
 }
-
 public struct Animation
 {
     public AnimationType type;
     public AnimationEvent[] events;
     public AnimationData[] data;
-    public AnimationKeyframes[] keyFrames;
     public float duration;
     public float interval;
-    public int length;
     public float dirStep;
     public float dirOffset;
+    public int length;
 }
+/*
+ * 1. Set Movement keyframes on individual transforms
+ * 2. Set Rotation Keyframes on individual transforms
+ * 3. Set Sprite Keyframes on Sprite Renderers
+ * 4. Set child Sprite and Movement Keyframes
+ * 5. Update everything with easing
+ 
+ 
+ */
