@@ -44,6 +44,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         h = b.height;
         gridPosition = new Vector2Int(gridX, gridY);
         //animator.animations[0].data[0].sprites[0][0] = b.sprite;
+        animator.InitFromAnimArray(b.animations);
         animator.PlayAnimation(0);
         animator.SetSortingParams(sortingOrder + 1000/gridY, sortingLayer);
         onKillEvent = OnKill;

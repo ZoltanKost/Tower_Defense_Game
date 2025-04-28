@@ -19,4 +19,27 @@ MonoBehaviour:
   resource: 0
   price: 25
   attackRange: 4
-  animations: []
+  animations:
+  - name: 
+    type: 0
+    events: []
+    data:
+    - sprites:
+      - {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}
+      flipX: 0
+    duration: 1
+    dirStep: 0
+    dirOffset: 0
+  - name: 
+    type: 0
+    events:
+    - name: 
+      acitonID: 0
+      time: 0
+    data:
+    - sprites:
+      - {fileID: 21300000, guid: 63adccf17e98dc447b8a4f3ebe6db23a, type: 3}
+      flipX: 0
+    duration: 1
+    dirStep: 0
+    dirOffset: 0

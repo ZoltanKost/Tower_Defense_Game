@@ -4,7 +4,6 @@ using UnityEngine.Events;
 
 public class CustomAnimator : MonoBehaviour{
     public SpriteRenderer spriteRenderer;
-    public CustomAnimator[] children;
     public Animation[] animations;
     public UnityEvent[] actions;
 
@@ -18,47 +17,22 @@ public class CustomAnimator : MonoBehaviour{
     public void Init(){
         time = 0; animID = 0;
         lastPlayedEvent = 0;
-        if (animations == null || animations.Length == 0) 
-        {
-            gameObject.SetActive(false);
-        }
-        gameObject.SetActive(true);
-        for (int i = 0; i < children.Length; i++)
-        {
-            children[i].Init();
-        }
         PlayAnimation(0);
     }
     // TODO: check if first animation s
     public void InitFromPrefab(CustomAnimator animator)
     {
         animations = animator.animations;
-        for (int i = 0; i < children.Length; i++)
-        {
-            children[i].InitFromPrefab(animator.children[i]);
-        }
         animID = 0;
         time = 0;
         lastPlayedEvent = 0;
-        if (animations == null || animations.Length == 0)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-        gameObject.SetActive(true);
         currentAnimation = animations[animID];
         currentDirAnimation = currentAnimation.type == 0? - 1 : 0;
         lastPlayedEvent = 0;
     }
     public void InitFromAnimArray(Animation[] array)
     {
-
         animations = array;
-        if (animations == null || animations.Length == 0)
-        {
-            gameObject.SetActive(false);
-        }
-        gameObject.SetActive(true);
         animID = 0;
         currentAnimation = animations[animID];
         time = 0;
@@ -76,11 +50,6 @@ public class CustomAnimator : MonoBehaviour{
         currentDirAnimation =
             currentAnimation.type == 0 ? 0 :
             Mathf.FloorToInt((int)(value/ currentAnimation.dirStep));
-        Debug.Log(currentAnimation.dirOffset + ": " + value + " / " + currentAnimation.dirStep + " = "
-            + currentDirAnimation);
-        
-        //spriteRenderer.sprite = 
-           // currentAnimation.data[currentDirAnimation].sprites[currentFrame];
     }
     // TODO: wrong time;
     public void UpdateAnimator(float delta){
@@ -104,40 +73,11 @@ public class CustomAnimator : MonoBehaviour{
             lastPlayedEvent = 0;
         }
         AnimationData data = currentAnimation.data[currentData];
-        KeyFrame[] frames = data.frames;
-        //KeyFrame[] frames = data.frames[i];
-        int targetFrame = 0;
-        for (; targetFrame < frames.Length; targetFrame++)
-        {
-            if (time < frames[targetFrame].time) break;
-        }
-        if (targetFrame < frames.Length) 
-        {
-            float deltaFrame = frames[targetFrame].time - frames[targetFrame - 1].time;
-            float deltaTime = time - frames[targetFrame - 1].time;
-            transform.localPosition =
-                Vector3.Lerp(
-                    frames[targetFrame - 1].position,
-                    frames[targetFrame].position,
-                    deltaTime / deltaFrame);
-            Vector3 rotation = Vector3.Lerp(
-                    frames[targetFrame - 1].rotation,
-                    frames[targetFrame].rotation,
-                    deltaTime / deltaFrame);
-            transform.rotation =
-                Quaternion.Euler(rotation);
-        }
 
         int spriteNum = (int)(time / currentAnimation.duration * data.sprites.Length);
         //Debug.Log($"sprite: {spriteNum} l:{data.sprites.Length} t: {time} dur: {currentAnimation.duration}");
         spriteRenderer.sprite = data.sprites[spriteNum];
         spriteRenderer.flipX = currentAnimation.data[currentData].flipX;
-
-        
-        foreach(var c in children)
-        {
-            c.UpdateAnimator(delta);
-        }
     }
     public void SetAnimation(int animation, float value){
         if(animID == animation && (currentAnimation.type == 0)) return;
@@ -153,15 +93,7 @@ public class CustomAnimator : MonoBehaviour{
 public struct AnimationData
 {
     public Sprite[] sprites;
-    public KeyFrame[] frames;
     public bool flipX;
-}
-[Serializable]
-public struct KeyFrame
-{
-    public Vector3 position;
-    public Vector3 rotation;
-    public float time;
 }
 [Serializable]
 public struct AnimationEvent

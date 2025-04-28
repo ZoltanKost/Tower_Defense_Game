@@ -28,23 +28,21 @@ MonoBehaviour:
   animationTime: 1
   amplitude_overshoot: 1.2
   animations:
-  - events:
-    - acitonID: 1
-      frame: 1
-    - acitonID: 0
-      frame: 8
-    sprites:
-    - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+  - name: 
+    type: 0
+    events:
+    - name: 
+      acitonID: 1
+      time: 0
+    - name: 
+      acitonID: 0
+      time: 0
+    data:
+    - sprites: []
+      flipX: 0
     duration: 0.8
-    flipX: 0
+    dirStep: 0
+    dirOffset: 0
   spawnData:
     spell: {fileID: 11400000, guid: a4274ac766b5dbf408189b766d6b0374, type: 2}
     projectile:
@@ -55,25 +53,33 @@ MonoBehaviour:
       startPosition: {x: 0, y: 0, z: 0}
       speed: 5
       animations:
-      - events: []
-        sprites:
-        - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+      - name: 
+        type: 0
+        events: []
+        data: []
         duration: 0.1
-        flipX: 0
-      - events:
-        - acitonID: 0
-          frame: 0
-        sprites:
-        - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+        dirStep: 0
+        dirOffset: 0
+      - name: 
+        type: 0
+        events:
+        - name: 
+          acitonID: 0
+          time: 0
+        data: []
         duration: 1
-        flipX: 0
-      - events:
-        - acitonID: 0
-          frame: 0
-        sprites:
-        - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
+        dirStep: 0
+        dirOffset: 0
+      - name: 
+        type: 0
+        events:
+        - name: 
+          acitonID: 0
+          time: 0
+        data: []
         duration: 0.1
-        flipX: 0
+        dirStep: 0
+        dirOffset: 0
       damage: 50
       behaviour: 10
       ballistic: 1
