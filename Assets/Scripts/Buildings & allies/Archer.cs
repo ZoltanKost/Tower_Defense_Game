@@ -92,13 +92,6 @@ public class Archer : MonoBehaviour{
         gameObject.SetActive(true);
         _active = true;
     }
-    public void SetColor(Color color){
-        animator.spriteRenderer.color = color;
-    }
-    public Sprite GetSprite()
-    {
-        return animator.spriteRenderer.sprite;
-    }
 }
 public enum ArcherState
 {

@@ -101,8 +101,7 @@ public class EnemyManager : MonoBehaviour {
                 case CharState.Moving:
                     float degree = Vector2.SignedAngle(Vector2.right, (enemies[i].destination - enemies[i].transform.position).normalized);
                     if (degree < 0) degree += 360;
-                    degree %= 360;
-                    enemies[i].animator.SetAnimation(0,degree);
+                    enemies[i].animator.SetAnimation(1,degree);
                     enemies[i].time += delta;
                     enemies[i].detectFlag = enemies[i].time > enemies[i].attackPeriod;
                     break;
@@ -110,8 +109,7 @@ public class EnemyManager : MonoBehaviour {
                     enemies[i].time = 0;
                     degree = Vector2.SignedAngle(Vector2.right, (enemies[i].buildingTarget.position - enemies[i].transform.position).normalized);
                     if (degree < 0) degree += 360;
-                    degree %= 360;
-                    enemies[i].animator.SetAnimation(1, degree);
+                    enemies[i].animator.SetAnimation(2, degree);
                     break;
                 default:
                     enemies[i].state = CharState.Moving;

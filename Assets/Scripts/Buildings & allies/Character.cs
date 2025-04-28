@@ -91,7 +91,6 @@ public class Character : MonoBehaviour, IDamagable
         this.onRemoveEvent = onRemoveEvent;
         this.waveIndex = waveIndex;
         this.index = index;
-        
         state = CharState.Idle;
         MaxHP = prefab.MaxHP;
         currentHP = prefab.MaxHP;
@@ -102,6 +101,7 @@ public class Character : MonoBehaviour, IDamagable
         killReward = prefab.killReward;
         projectileSpeed = prefab.projectileSpeed;
         _attackType = prefab.attackType;
+        //Debug.Log("_Projectile's 1st animations data length: " + prefab.projectileData.animations[1].data.Length);
         projectileData = prefab.projectileData;
         damageClip = prefab.damageClip;
         buildingTarget = null;
@@ -128,7 +128,6 @@ public class Character : MonoBehaviour, IDamagable
             animator.SetSortingParams(6 + 1000 / start.gridY, start.floor);
             float degree = Vector2.SignedAngle(Vector2.right, (destination - start.pos).normalized);
             if (degree < 0) degree += 360;
-            degree %= 360;
             animator.SetAnimation(0, degree);
             hpBar.gameObject.SetActive(true);
             hpBar.Set(1);

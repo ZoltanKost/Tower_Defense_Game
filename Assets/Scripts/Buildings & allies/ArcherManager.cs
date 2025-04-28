@@ -101,7 +101,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
             switch (archersList[i].state)
             {
                 case CharState.Idle:
-                    archersList[i].animator.SetAnimation(1,0);
+                    archersList[i].animator.SetAnimation(0,0);
                     if (archersList[i].target != null && archersList[i].target.index < lowestInactive && archersList[i].target.HP > 0)
                     {
                         archersList[i].state = CharState.Attacking;
@@ -116,7 +116,6 @@ public class ArcherManager : MonoBehaviour, IHandler {
                     Vector2 direction = (enemyGridPosition - (archersList[i].gridPosition + archersList[i].buildingSize/2));
                     float degree = Vector2.SignedAngle(Vector2.right, direction);
                     if (degree < 0) degree += 360;
-                    degree %= 360;
                     archersList[i].animator.SetAnimation(1, degree);
                     break;
             }

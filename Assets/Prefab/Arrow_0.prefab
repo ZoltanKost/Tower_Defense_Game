@@ -45,24 +45,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 7526665107615126383}
+  children: []
   animations:
-  - events: []
-    sprites:
-    - {fileID: 0}
+  - name: 
+    type: 0
+    events: []
+    data: []
     duration: 0.1
-    flipX: 0
-  - events: []
-    sprites:
-    - {fileID: 0}
+    dirStep: 0
+    dirOffset: 0
+  - name: 
+    type: 0
+    events: []
+    data: []
     duration: 0.01
-    flipX: 0
-  - events: []
-    sprites:
-    - {fileID: 0}
+    dirStep: 0
+    dirOffset: 0
+  - name: 
+    type: 0
+    events: []
+    data: []
     duration: 0.1
-    flipX: 0
-  directionAnimations: []
+    dirStep: 0
+    dirOffset: 0
   actions:
   - m_PersistentCalls:
       m_Calls:
@@ -177,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visuals: {fileID: 8399754741217680444}
-  animator: {fileID: 0}
+  animator: {fileID: 252996329830891800}
   audioSource: {fileID: 4738397895301572313}
   spellSO: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}

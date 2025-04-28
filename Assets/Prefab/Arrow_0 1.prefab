@@ -97,37 +97,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90f933712775dc48abb11af30b563a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 704569826120457826}
+  children: []
   animations:
-  - events: []
-    sprites:
-    - {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    - {fileID: -315356772, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    - {fileID: 1045102975, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    - {fileID: 394637170, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    - {fileID: 1265161102, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    - {fileID: -1867172308, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
-    currentFrame: 0
-    duration: 0.25
-  - events: []
-    sprites:
-    - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
-    currentFrame: 0
-    duration: 0.75
-  - events: []
-    sprites:
-    - {fileID: 0}
-    - {fileID: 0}
-    currentFrame: 0
-    duration: 0.1
+  - name: Fly
+    type: 0
+    events: []
+    data:
+    - sprites:
+      - {fileID: -406150738, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: -315356772, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 1045102975, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 394637170, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: 1265161102, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      - {fileID: -1867172308, guid: 44074e9c3dee5d24486dd6cbfb976414, type: 3}
+      frames: []
+      flipX: 0
+    duration: 0.6
+    dirStep: 0
+    dirOffset: 0
+  - name: Explode
+    type: 0
+    events:
+    - name: Deactivate
+      acitonID: 0
+      time: 0.9
+    data:
+    - sprites:
+      - {fileID: -156495325, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1836414598, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1266966031, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1543716445, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 1905345568, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -2144184869, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -391935944, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: -342795812, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      - {fileID: 2024685682, guid: fe5c01e2d40f4be47b3a1c37c6956745, type: 3}
+      frames: []
+      flipX: 0
+    duration: 0.9
+    dirStep: 0
+    dirOffset: 0
+  actions: []
 --- !u!1 &3189570932686458792
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,8 +186,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visuals: {fileID: 6056175986238031692}
   animator: {fileID: 5877313773062140966}
+  audioSource: {fileID: 0}
+  spellSO: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
+  moveVector: {x: 0, y: 0, z: 0}
+  damage: 0
   meetTarget: 0
   behaviour: 0
   HitAnimation: 2
   active: 0
   enable: 0
+  time: 0
+  maxTime: 0
+  ballistic: 0

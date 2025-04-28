@@ -152,18 +152,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 2376744582839917419}
+  childAnimators: []
   animations:
-  - events: []
-    sprites:
-    - {fileID: 21300000, guid: ef41a8603c7bd0c4ab568da8c0d3ef12, type: 3}
+  - type: 0
+    events: []
+    data:
+    - sprites:
+      - {fileID: 21300000, guid: ef41a8603c7bd0c4ab568da8c0d3ef12, type: 3}
+      frames: []
+      duration: 0
+      flipX: 0
     duration: 10
-    flipX: 0
-  - events: []
-    sprites:
-    - {fileID: 21300000, guid: ef41a8603c7bd0c4ab568da8c0d3ef12, type: 3}
+    interval: 0
+    dirStep: 0
+    dirOffset: 0
+    targetNumber: 0
+    length: 0
+  - type: 0
+    events: []
+    data: []
     duration: 0
-    flipX: 0
-  directionAnimations: []
+    interval: 0
+    dirStep: 0
+    dirOffset: 0
+    targetNumber: 0
+    length: 0
   actions: []
 --- !u!114 &5545868267077985805
 MonoBehaviour:

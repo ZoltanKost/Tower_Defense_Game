@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour{
         startPosition = data.startPosition;
         target = data.target;
         animator.animations = data.animations;
+        Debug.Log("Projectile's 1st animations data length: " + animator.animations[1].data.Length);
         animator.PlayAnimation(0);
         startPosition = data.startPosition;
         damage = data.damage;

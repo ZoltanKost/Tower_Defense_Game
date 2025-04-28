@@ -16,7 +16,7 @@ public class EntitiyHighlighter : MonoBehaviour
         if(floorManager.HasBuilding(position, out int ID))
         {
             BuildingObject b = buildingManager.bs[ID];
-            ui.SetEntity(b.spriteRenderer.sprite,b.HP,15,0);
+            //ui.SetEntity(b.spriteRenderer.sprite,b.HP,15,0);
             tempFloor.SetMode(ActionMode.Command);
             tempFloor.SetArrows(b.gridPosition,new Vector3Int(b.w,b.h));
             var archer = b.GetArchers()[0];

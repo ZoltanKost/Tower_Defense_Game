@@ -21473,13 +21473,12 @@ MonoBehaviour:
   - {fileID: 5369689936261242769, guid: 20041db3599da9741b63db7b7b5aec70, type: 3}
   - {fileID: 8718285108593216687, guid: 6b7f7d0c8e1918e4c9d313fc3ac81175, type: 3}
   - {fileID: 6695125684612708470, guid: 0fa9062cfb6713c4d99a6fd11bea0240, type: 3}
-  - {fileID: 7610136831519683803, guid: 96bb38e4506f2b94dbeeb60191fdfaa7, type: 3}
   shipPrefab: {fileID: 292394304}
   waveDefaultSpawnRate: 20
   spawnRate: 2
   shipLookRotation: {x: 0, y: 0.5, z: -1}
   shipLookRotationOffset: {x: 0, y: 1, z: -1}
-  basicShipSpeed: 2
+  basicShipSpeed: 10
   enemies: []
   waves: []
   lowestInactive: 0

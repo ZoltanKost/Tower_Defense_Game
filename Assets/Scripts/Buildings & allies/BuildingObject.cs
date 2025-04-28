@@ -3,12 +3,12 @@ using UnityEngine;
 public class BuildingObject : MonoBehaviour, IDamagable
 {
     OnKillEvent onKillEvent;
+    [SerializeField] CustomAnimator animator;
     [SerializeField] private HealthBar hpBar;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private TweenAnimator tweenAnimator;
     [SerializeField] private int maxHP = 100;
     public int AssetID = -1;
-    public SpriteRenderer spriteRenderer {get {return animator.spriteRenderer;}}
     Character[] archers;
     public int index;
     public Vector2Int gridPosition{get;private set;}
@@ -16,7 +16,6 @@ public class BuildingObject : MonoBehaviour, IDamagable
     public int h{get;private set;}
     bool _active;
     private int currentHP;
-    CustomAnimator animator;
     public int HP { 
         get {return currentHP;} 
         set {currentHP = value;} 
@@ -30,7 +29,6 @@ public class BuildingObject : MonoBehaviour, IDamagable
     }
     void Awake(){
         archers = GetComponentsInChildren<Character>();
-        animator = GetComponent<CustomAnimator>();
         tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, Building b, OnKillEvent OnKill){
@@ -44,9 +42,8 @@ public class BuildingObject : MonoBehaviour, IDamagable
         this.index = index;
         w = b.width;
         h = b.height;
-        spriteRenderer.sprite = b.sprite;
         gridPosition = new Vector2Int(gridX, gridY);
-        animator.animations[0].data[0].sprites[0] = b.sprite;
+        //animator.animations[0].data[0].sprites[0][0] = b.sprite;
         animator.PlayAnimation(0);
         animator.SetSortingParams(sortingOrder + 1000/gridY, sortingLayer);
         onKillEvent = OnKill;
@@ -65,9 +62,8 @@ public class BuildingObject : MonoBehaviour, IDamagable
         index = data.index;
         w = b.width;
         h = b.height;
-        spriteRenderer.sprite = b.sprite;
         gridPosition = new Vector2Int(data.gridPosition.x, data.gridPosition.y);
-        animator.animations[0].data[0].sprites[0] = b.sprite;
+        //animator.animations[0].data[0].sprites[0][0] = b.sprite;
         animator.PlayAnimation(animationToPlay);
         animator.SetSortingParams(sortingOrder + 1000 / gridPosition.y, sortingLayer);
         onKillEvent = OnKill;
@@ -112,12 +108,6 @@ public class BuildingObject : MonoBehaviour, IDamagable
     }
     public void Animate(){
         tweenAnimator.JellyAnimation();
-    }
-    public void SetColor(Color color){
-        spriteRenderer.color = color;
-        foreach(Character archer in archers){
-            archer.animator.spriteRenderer.color = color;
-        }
     }
     public int GetIndex()
     {
