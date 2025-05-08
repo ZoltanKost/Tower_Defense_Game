@@ -33,6 +33,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         tweenAnimator = GetComponent<TweenAnimator>();
     }
     public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, Building b, OnKillEvent OnKill){
+        maxHP = b.health;
         currentHP = maxHP;
         if(index != 0 && hpBar != null)
         {

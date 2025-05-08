@@ -1,6 +1,7 @@
 using UnityEngine;
 [CreateAssetMenu(menuName = "Buildings")]
 public class Building : ScriptableObject{
+    public int health = 100;
     public int width = 2;
     public int height = 2;
     public BuildingObject prefab;

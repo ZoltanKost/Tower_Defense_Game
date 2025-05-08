@@ -337,6 +337,7 @@ public class EnemyManager : MonoBehaviour {
                 floor.floorCells[enemyStart.pos.x, enemyStart.pos.y],
                 path);
             var visual = Instantiate(enemyShip);
+            visual.gameObject.SetActive(true);    
             int enemyCount = (2 * waveNumber) / waveCount;
             var ship = new Ship
             {
