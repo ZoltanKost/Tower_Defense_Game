@@ -32,7 +32,7 @@ public class BuildingManager : MonoBehaviour{
             if (building == buildingData[i]) buildingObject.AssetID = i;
         }
         buildingObject.Init(6, floor, Count, gridX, gridY, building, KillBuilding);
-        InitArchers(buildingObject.GetArchers(), buildingObject.gridPosition, buildingObject.w, buildingObject.h, buildingObject.index);
+        InitArchers(buildingObject.GetArchers(), buildingObject.gridPosition, buildingObject.w, buildingObject.h, buildingObject.index, buildingObject.attackRangeBonus);
         buildingObject.transform.position = worldPosition + WidthAlignmentOffset;
         buildingObject.gameObject.SetActive(true);
         getID = bs[Count].GetIndex;
@@ -61,11 +61,11 @@ public class BuildingManager : MonoBehaviour{
         }
         else
         {
-            InitArchers(buildingObject.GetArchers(), data.gridPosition, buildingData[data.AssetID].width, buildingData[data.AssetID].height, data.index);
             buildingObject.Init(6,
                 floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
-                0,data,
+                0, data,
                 buildingData[data.AssetID], KillBuilding);
+            InitArchers(buildingObject.GetArchers(), data.gridPosition, buildingData[data.AssetID].width, buildingData[data.AssetID].height, data.index, buildingObject.attackRangeBonus);
         }
         buildingObject.transform.position = data.position;
         buildingObject.gameObject.SetActive(true);
@@ -87,10 +87,10 @@ public class BuildingManager : MonoBehaviour{
         }
         Debug.Log($"Array resized. new Length is {bs.Length}");
     }
-    public void InitArchers(Character[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    public void InitArchers(Character[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus)
     {
         foreach(Character a in archers){
-            archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID);
+            archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID, attackRangeBonus);
         }
     }
     void FixedUpdate(){

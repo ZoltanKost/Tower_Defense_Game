@@ -15,39 +15,46 @@ MonoBehaviour:
   spellData:
     manaCost: 25
     goldCost: 25
-    globalRadius: 3
-    radius: 3
+    globalRadius: 2
+    radius: 2
     damage: 100
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 1703118694, guid: 73b31793a3997de4a96acdc91600fcd1, type: 3}
-  cooldown: 2
+  cooldown: 3
   tweenAnimation: 0
   ease: 0
   targetDeltaPosition: {x: 0, y: 0, z: 0}
   animationTime: 0
   amplitude_overshoot: 0
   animations:
-  - events:
-    - acitonID: 1
-      frame: 5
-    - acitonID: 0
-      frame: 10
-    sprites:
-    - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: -533503148, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 2140119943, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 771251994, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: -448887172, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 1473750787, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: -1567760858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 1336804858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 1201027298, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: 1037483818, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    - {fileID: -1497425469, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
-    duration: 0.8
-    flipX: 0
+  - name: 
+    type: 0
+    events:
+    - name: Damage
+      acitonID: 1
+      time: 0.5
+    - name: Remove
+      acitonID: 0
+      time: 1.2
+    data:
+    - sprites:
+      - {fileID: -35722303, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1055625984, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -533503148, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 2140119943, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 771251994, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -448887172, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1473750787, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1567760858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1336804858, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1201027298, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: 1037483818, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      - {fileID: -1497425469, guid: b37da51fc3c6f3f4c858a7dc18a5e557, type: 3}
+      flipX: 0
+    duration: 1.2
+    dirStep: 0
+    dirOffset: 0
   spawnData:
     spell: {fileID: 0}
     projectile:

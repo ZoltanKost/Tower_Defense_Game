@@ -11,6 +11,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
     public int AssetID = -1;
     Character[] archers;
     public int index;
+    public int attackRangeBonus;
     public Vector2Int gridPosition{get;private set;}
     public int w{get;private set;}
     public int h{get;private set;}
@@ -48,6 +49,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         animator.PlayAnimation(0);
         animator.SetSortingParams(sortingOrder + 1000/gridY, sortingLayer);
         onKillEvent = OnKill;
+        attackRangeBonus = b.attackRange;
         active = true;
         Animate();
     }

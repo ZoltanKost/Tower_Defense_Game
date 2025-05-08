@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private PlayerResourceManager playerResourceManager;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Character[] enemyPrefabs;
-    [SerializeField] private GameObject shipPrefab;
+    [SerializeField] private EnemyShip enemyShip;
     [SerializeField] private float waveDefaultSpawnRate = 10f;
     [SerializeField] private float spawnRate;
     private int shipSpawnRate;
@@ -59,9 +59,13 @@ public class EnemyManager : MonoBehaviour {
         for (int i = 0; i < c; i++)
         {
             if (!ships[i].active) continue;
-            ships[i].visual.position += (ships[i].destination - ships[i].visual.position).normalized * dt * basicShipSpeed;//ships[i].speed;
-            ships[i].visual.rotation = Quaternion.LookRotation((ships[i].destination - ships[i].visual.position), shipLookRotation);// ().normalized * dt * ships[i].speed;
-            if ((ships[i].destination - ships[i].visual.position).magnitude <= .1f)
+            var shipPos = ships[i].visual.transform.position;
+            float z = shipPos.z;
+            shipPos.z = 0;
+
+            shipPos += (ships[i].destination - shipPos).normalized * dt * basicShipSpeed;//ships[i].speed;
+            ships[i].visual.SetDirection(ships[i].destination - shipPos);
+            if ((ships[i].destination - shipPos).magnitude <= .1f)
             {
                 if (ships[i].pathIndex > 1)
                 {
@@ -84,6 +88,11 @@ public class EnemyManager : MonoBehaviour {
                     i--;
                     c--;
                 }
+            }
+            if(i >= 0)
+            {
+                shipPos.z = z;
+                ships[i].visual.transform.position = shipPos;
             }
         }
     }
@@ -327,7 +336,7 @@ public class EnemyManager : MonoBehaviour {
                 shipStart,
                 floor.floorCells[enemyStart.pos.x, enemyStart.pos.y],
                 path);
-            var visual = Instantiate(shipPrefab).transform;
+            var visual = Instantiate(enemyShip);
             int enemyCount = (2 * waveNumber) / waveCount;
             var ship = new Ship
             {
@@ -335,7 +344,7 @@ public class EnemyManager : MonoBehaviour {
                 wave = new Wave(-1,
                     enemyCount,
                     enemyStart,
-                    enemyPath, spawnRate, visual),
+                    enemyPath, spawnRate, visual.transform),
                 gridPosition = new Vector2Int(shipStart.gridX, shipStart.gridY),
                 //occupiedPositions;
                 path = path,
@@ -347,7 +356,11 @@ public class EnemyManager : MonoBehaviour {
             int value = enemyCount + path.Count * 2 / 3 ;
             if (value > maxHalfTime) maxHalfTime = value;
             Debug.Log("maxHalfTime is " + maxHalfTime);
-            ship.visual.transform.position = ship.destination;
+            Vector3 pos = ship.visual.transform.position;
+            float z = pos.z;
+            pos = ship.destination;
+            pos.z = z;
+            ship.visual.transform.position = pos;
             ships.Add(ship);
             Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
                 $"{floor.edgeStartY},{floor.edgeEndY}");
@@ -540,7 +553,7 @@ public class Wave
 }
 public struct Ship
 {
-    public Transform visual;
+    public EnemyShip visual;
     public Wave wave;
     public Vector2Int gridPosition;
     public Vector2Int[] occupiedPositions;

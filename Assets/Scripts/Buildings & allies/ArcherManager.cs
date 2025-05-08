@@ -21,7 +21,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
         _archer.transform.position = temp;
         //AddArcher(_archer);
     }
-    public void AddArcher(Character archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID)
+    public void AddArcher(Character archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus)
     {
         offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
@@ -29,6 +29,7 @@ public class ArcherManager : MonoBehaviour, IHandler {
         archer.Init(archer, buildingID, buildingWidth, 
             buildingHeight,-1,archersList.Count - 1,gridPosition,
             null,null,null, CharacterType.Friend);
+        archer.attackRange = attackRangeBonus;
     }
     public void RemoveArchers(Character[] archer) {
         foreach (Character a in archer) {

@@ -21,7 +21,7 @@ MonoBehaviour:
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}
-  cooldown: 2
+  cooldown: 5
   tweenAnimation: 0
   ease: 23
   targetDeltaPosition: {x: -1, y: -3, z: 0}
@@ -31,16 +31,25 @@ MonoBehaviour:
   - name: 
     type: 0
     events:
-    - name: 
+    - name: Damage
       acitonID: 1
-      time: 0
-    - name: 
+      time: 0.1
+    - name: Remove
       acitonID: 0
-      time: 0
+      time: 0.9
     data:
-    - sprites: []
+    - sprites:
+      - {fileID: -156495325, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: 1836414598, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: 1266966031, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: 1543716445, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: 1905345568, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: -2144184869, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: -391935944, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: -342795812, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
+      - {fileID: 2024685682, guid: 7e9be229bcbfc794b8fad19ed7090e8f, type: 3}
       flipX: 0
-    duration: 0.8
+    duration: 0.9
     dirStep: 0
     dirOffset: 0
   spawnData:

@@ -18,16 +18,19 @@ MonoBehaviour:
   sprite: {fileID: -1854142357, guid: 6917b337f23e4234a979d3829ac6c7d7, type: 3}
   resource: 0
   price: 10
-  attackRange: 3
+  attackRange: 2
   animations:
   - name: 
     type: 0
     events: []
     data:
     - sprites:
-      - {fileID: 21300000, guid: 6ecbfddfecdd02945a2c0069b2f0a7e0, type: 3}
+      - {fileID: -1854142357, guid: 6917b337f23e4234a979d3829ac6c7d7, type: 3}
+      - {fileID: 1586474401, guid: 6917b337f23e4234a979d3829ac6c7d7, type: 3}
+      - {fileID: -1741361472, guid: 6917b337f23e4234a979d3829ac6c7d7, type: 3}
+      - {fileID: -1426568889, guid: 6917b337f23e4234a979d3829ac6c7d7, type: 3}
       flipX: 0
-    duration: 1
+    duration: 0.4
     dirStep: 0
     dirOffset: 0
   - name: 
