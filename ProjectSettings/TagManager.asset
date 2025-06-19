@@ -50,6 +50,9 @@ TagManager:
   - name: 3
     uniqueID: 1868381673
     locked: 0
+  - name: Ship
+    uniqueID: 3931103553
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

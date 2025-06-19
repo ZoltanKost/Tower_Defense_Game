@@ -181,7 +181,6 @@ MonoBehaviour:
       data:
       - sprites:
         - {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
-        frames: []
         flipX: 0
       duration: 1
       dirStep: 0
@@ -195,7 +194,6 @@ MonoBehaviour:
       data:
       - sprites:
         - {fileID: 1767628052, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
-        frames: []
         flipX: 0
       duration: 1
       dirStep: 0
@@ -257,7 +255,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3207043800624459487}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -398,7 +396,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 5803977340589067958}
-  children: []
   animations:
   - name: Idle
     type: 0
@@ -411,7 +408,6 @@ MonoBehaviour:
       - {fileID: -1407827486, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: 85997867, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: -307928747, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      frames: []
       flipX: 0
     duration: 0.6
     dirStep: 0
@@ -432,7 +428,6 @@ MonoBehaviour:
       - {fileID: -865249479, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: 1978467794, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      frames: []
       flipX: 0
     - sprites:
       - {fileID: 1292448663, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
@@ -443,7 +438,6 @@ MonoBehaviour:
       - {fileID: -865249479, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: 1978467794, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
       - {fileID: 1603486841, guid: 45c2019abf8207c40bb7e31002a2c3a9, type: 3}
-      frames: []
       flipX: 1
     duration: 0.8
     dirStep: 180

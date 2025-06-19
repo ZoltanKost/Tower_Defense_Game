@@ -21,7 +21,8 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private EnemyShip enemyShip;
     [SerializeField] private float waveDefaultSpawnRate = 10f;
     [SerializeField] private float spawnRate;
-    private int shipSpawnRate;
+    [SerializeField] private float waveMultiplier = 2;
+    [SerializeField] private float waveAddition = 2;
     public Vector3 shipLookRotation = new Vector3(0, 0.5f, -1f);
     public Vector3 shipLookRotationOffset = new Vector3(0, 1f, -1f);
     public float basicShipSpeed = 5f;
@@ -302,7 +303,6 @@ public class EnemyManager : MonoBehaviour {
         3. Construct a path of ship to that possible start
         */
         int waveCount = wave / 10 + 1;
-        int maxHalfTime = 0;
         for(int i = 0; i < waveCount; i++)
         {
             Camera cam = Camera.main;
@@ -338,7 +338,7 @@ public class EnemyManager : MonoBehaviour {
                 path);
             var visual = Instantiate(enemyShip);
             visual.gameObject.SetActive(true);    
-            int enemyCount = (2 * waveNumber) / waveCount;
+            int enemyCount = (int)(waveMultiplier * waveNumber + waveAddition) / waveCount;
             var ship = new Ship
             {
                 visual = visual,
@@ -354,9 +354,6 @@ public class EnemyManager : MonoBehaviour {
                 destination = path[path.Count - 1].pos,
                 active = active
             };
-            int value = enemyCount + path.Count * 2 / 3 ;
-            if (value > maxHalfTime) maxHalfTime = value;
-            Debug.Log("maxHalfTime is " + maxHalfTime);
             Vector3 pos = ship.visual.transform.position;
             float z = pos.z;
             pos = ship.destination;
@@ -366,50 +363,7 @@ public class EnemyManager : MonoBehaviour {
             Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
                 $"{floor.edgeStartY},{floor.edgeEndY}");
         }
-        shipSpawnRate = maxHalfTime;
-        Debug.Log(shipSpawnRate);
     }
-    /*void OnDrawGizmos()
-    {
-        if (ships != null && ships.Count > 0)
-        {
-            foreach (var shipStruct in ships)
-            {
-                var ship = shipStruct.path;
-                var offset = new Vector3(0, 0, 5);
-                if (ship.Count < 1) continue;
-                Vector3 prevCell = ship[0].pos;
-                foreach (var nextCell in ship)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
-                    prevCell = nextCell.pos;
-                }
-                foreach (var nextCell in shipStruct.wave.Path)
-                {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
-                    prevCell = nextCell.pos;
-                }
-            }
-        }
-        if (waves != null && waves.Count > 0)
-        {
-            foreach (var wave in waves)
-            {
-                var path = wave.Path;
-                var offset = new Vector3(0, 0, 5);
-                if (path.Count < 1) continue;
-                Vector3 prevCell = path[0].pos;
-                foreach (var nextCell in path)
-                {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawLine(prevCell + offset, nextCell.pos + offset);
-                    prevCell = nextCell.pos;
-                }
-            }
-        }
-    }*/
     public void UpdateShips()
     {
         for (int i = 0; i < ships.Count; i++)
@@ -424,7 +378,7 @@ public class EnemyManager : MonoBehaviour {
             ship.path.Clear();
             pathfinding.FindPathBoat(
                 start, floorManager.floorCells[pos.x,pos.y],ship.path);
-            ship.pathIndex = ship.path.Count;
+            ship.pathIndex = ship.path.Count - 1;
             ships[i] = ship;
         }
         for (int i = 0; i < waves.Count; i++)
@@ -502,7 +456,6 @@ public class EnemyManager : MonoBehaviour {
             -1,-1,-1,ID, lowestInactive - 1, new Vector2Int(-1,-1), 
             waves[ID].Path, RemoveEnemy, RegisterKill,
             CharacterType.Enemy);
-        waves[ID].count--;
         enemy.gameObject.SetActive(true);
         if (lowestInactive >= enemies.Length)
         {
@@ -520,7 +473,7 @@ public class EnemyManager : MonoBehaviour {
     }
     public void RemoveEnemy(int ID, int waveID)
     {
-        Debug.Log("removed");
+        //Debug.Log("removed");
         Character temp = enemies[ID];
         enemies[ID] = enemies[--lowestInactive];
         enemies[ID].index = ID;

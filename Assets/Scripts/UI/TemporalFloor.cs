@@ -147,7 +147,7 @@ public class TemporalFloor : Floor
         mode = ActionMode.CastSpell;
         snap = false;
         ClearAllTiles();
-        Debug.Log("Activated, spell");
+        //Debug.Log("Activated, spell");
         foreach (var ar in arrows)
         {
             ar.gameObject.SetActive(false);

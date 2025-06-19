@@ -24,6 +24,11 @@ public class Shop : MonoBehaviour {
         magicPageModel.ResetSpells();
         //playerInventoryModel.ResetInventory();
     }
+    public void Update()
+    {
+        float dt = Time.deltaTime;
+        groundPageModel.Tick(dt);
+    }
     public void Show(){
         if(shown) return;
         shopUI.ShowUI();

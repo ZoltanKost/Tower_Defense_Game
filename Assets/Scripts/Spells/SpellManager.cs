@@ -36,7 +36,7 @@ public class SpellManager : MonoBehaviour {
             case SpellAction.Damage:
                 { 
                     int i = count++;
-                    Debug.Log("Simple spell casting " + i);
+                    //Debug.Log("Simple spell casting " + i);
                     if (count >= spellAnimators.Length) Resize();
                     position.z = 0;
                     spellAnimators[i].Init(spell.animations, i, position, data);
@@ -45,7 +45,7 @@ public class SpellManager : MonoBehaviour {
             case SpellAction.SpawnSpells:
                 { 
                     int i = count++;
-                    Debug.Log("Multiple spell's Parent casting " + i);
+                    //Debug.Log("Multiple spell's Parent casting " + i);
                     if (count >= spellAnimators.Length) Resize();
                     position.z = 0;
                     spellAnimators[i].Init(spell.animations, i, position,data, spell.spawnData);
@@ -54,7 +54,7 @@ public class SpellManager : MonoBehaviour {
             case SpellAction.SpawnProjectiles:
                 {
                     int i = count++;
-                    Debug.Log(i);
+                    //Debug.Log(i);
                     if (count >= spellAnimators.Length) Resize();
                     position.z = 0;
                     spellAnimators[i].Init(spell.animations, i, position,data, spell.spawnData);

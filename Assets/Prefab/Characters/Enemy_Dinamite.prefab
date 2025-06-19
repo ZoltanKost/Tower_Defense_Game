@@ -279,7 +279,7 @@ MonoBehaviour:
       flipX: 1
     duration: 0.6
     dirStep: 180
-    dirOffset: 0
+    dirOffset: 90
   - name: Attack
     type: 1
     events:

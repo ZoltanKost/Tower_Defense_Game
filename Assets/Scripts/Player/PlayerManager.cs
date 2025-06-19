@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour {
     {
         if (count > currentMana) return false;
         currentMana -= count;
-        Debug.Log(currentMana);
+        //Debug.Log(currentMana);
         onManaChange?.Invoke(currentHp/MaxHP);
         return true;
     }

@@ -1,23 +1,24 @@
-using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class WaveHighlighting : MonoBehaviour
 {
-    [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private LineRenderer prefab;
+    [SerializeField] private Transform templateParent;
 
     LineRenderer[] waveLines;
     LineRenderer[] shipLines;
 
+    WaveHighlightTemplate[] templates;
+    
     int waveCount = 0;
     int shipCount = 0;
 
     [SerializeField] private WaveHighlightTemplate templatePrefab;
     [SerializeField] private Sprite templateDefaultSprite;
 
-    [SerializeField] private Transform arrowPrefab;
 
     private void Awake()
     {
@@ -32,6 +33,12 @@ public class WaveHighlighting : MonoBehaviour
         {
             shipLines[i] = Instantiate(prefab, transform);
             shipLines[i].gameObject.SetActive(false);
+        }
+        templates = new WaveHighlightTemplate[8];
+        for (int i = 0; i < 8; i++)
+        {
+            templates[i] = Instantiate(templatePrefab, transform);
+            templates[i].gameObject.SetActive(false);
         }
     }
     public void SetHighlighting(List<Wave> waves, List<Ship> ships)
@@ -58,6 +65,7 @@ public class WaveHighlighting : MonoBehaviour
             }
             line.positionCount = c;
             line.SetPositions(points);
+            AddWaveTemplate(waves[i].count, waves[i].Path[0].pos);
         }
         for (int i = count; i < waveLines.Length; i++)
         {
@@ -100,26 +108,41 @@ public class WaveHighlighting : MonoBehaviour
             }
             line.positionCount = c;
             line.SetPositions(points);
-            AddWaveLine(ships[i].wave); 
+            path = ships[i].wave.Path;
+            AddWaveLine(ships[i].wave);
+            AddWaveTemplate(ships[i].wave.count, ships[i].visual.transform, path[^1].pos);
         }
         for (int i = count; i < waveCount; i++)
         {
             shipLines[i].gameObject.SetActive(false);
         }
     }
-    // fix
+    public void AddWaveTemplate(int count, Transform target,Vector3 destination)
+    {
+        var template = templates[waveCount];
+        template.gameObject.SetActive(true);
+        template.SetWaveData(count,target,destination);
+    }
+    public void AddWaveTemplate(int count, Vector3 position)
+    {
+        var template = templates[waveCount];
+        template.gameObject.SetActive(true);
+        template.SetWaveData(count, position);
+    }
     public void ResizeWaves()
     {
         int oldL = waveLines.Length;
         int newL = waveLines.Length * 2;
         Array.Resize(ref waveLines, newL);
+        Array.Resize(ref templates, newL);
         for (int i = oldL; i < newL; i++)
         {
+            templates[i] = Instantiate(templatePrefab, transform);
+            templates[i].gameObject.SetActive(false);
             waveLines[i] = Instantiate(prefab,transform);
             waveLines[i].gameObject.SetActive(false);
         }
     }
-    // fix
     public void ResizeShips()
     {
         int oldL = shipLines.Length;
@@ -131,17 +154,4 @@ public class WaveHighlighting : MonoBehaviour
             shipLines[i].gameObject.SetActive(false);
         }
     }
-    float InExpo(float x)
-    {
-        return x == 0 ? 0f : (float)Math.Pow(4f, 10f * x - 8f);
-    }
-/*    public void RemoveLine(int index)
-    {
-        var temp = arrows[index];
-        arrows[index] = arrows[--arrowCount];
-        arrows[arrowCount] = temp;
-        temp.gameObject.SetActive(false);
-        arrowsIndexes[index] = arrowsIndexes[arrowCount];
-        arrowsPaths[index] = arrowsPaths[arrowCount];
-    }*/
 }

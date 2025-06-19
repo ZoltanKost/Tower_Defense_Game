@@ -21,7 +21,7 @@ MonoBehaviour:
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}
-  cooldown: 5
+  cooldown: 7.5
   tweenAnimation: 0
   ease: 23
   targetDeltaPosition: {x: -1, y: -3, z: 0}

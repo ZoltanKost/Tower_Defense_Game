@@ -317,7 +317,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -325553725
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 26
   m_Sprite: {fileID: 1700940551, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -375,14 +375,16 @@ MonoBehaviour:
     events: []
     data:
     - sprites:
+      - {fileID: 1029585560, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -580767837, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 1109160980, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       flipX: 0
     - sprites:
+      - {fileID: 1029585560, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: -580767837, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       - {fileID: 1109160980, guid: 86d460d6b1f08e94ca94e1e7045a4956, type: 3}
       flipX: 1
-    duration: 0.2
+    duration: 0.3
     dirStep: 180
     dirOffset: 90
   actions:
@@ -467,7 +469,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7706665255754347768}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -476,8 +478,8 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 0.4377358, g: 0.71233004, b: 1, a: 1}
-  m_Intensity: 0
+  m_Color: {r: 0.14377002, g: 0.2627321, b: 0.38679248, a: 1}
+  m_Intensity: 0.5
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 2ffd7d6dc37198ecd10e831be93d5d6f000000005f7b0f24e3ce3989f1da9417
@@ -498,8 +500,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.95
-  m_PointLightOuterRadius: 1.69
+  m_PointLightInnerRadius: 0.3
+  m_PointLightOuterRadius: 0.7
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1

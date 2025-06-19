@@ -109,7 +109,7 @@ public class PlayerActionManager : MonoBehaviour{
                 if(floorManager.HasBuilding(position, out int ID)) destroyBuildingCallback?.Invoke(ID);
             break;
             case ActionMode.DestroyRoad:
-                if(floorManager.HasRoad(position,out Vector3Int pos)) floorManager.DestroyRoad(pos);
+                if(!locked && floorManager.HasRoad(position,out Vector3Int pos)) floorManager.DestroyRoad(pos);
             break;
             case ActionMode.MassGround:
                 startPosition = position;
@@ -141,7 +141,7 @@ public class PlayerActionManager : MonoBehaviour{
                 //floorManager.DestroyGround(position);
                 break;
             case ActionMode.DestroyRoad:
-                if (floorManager.HasRoad(position, out Vector3Int pos)) 
+                if (!locked && floorManager.HasRoad(position, out Vector3Int pos)) 
                 { 
                     floorManager.DestroyRoad(pos);
                     temporalFloor.JellyAnimation();
@@ -231,7 +231,7 @@ public class PlayerActionManager : MonoBehaviour{
     public bool CanBuild(Vector3 position){
         switch(mode){
             case ActionMode.Ground:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckGA(position, chosenGround) && !locked;
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckGA(position, chosenGround);// && !locked;
             case ActionMode.CastSpell:
                 // mana Check
                 return true/*gameState_int == MAGIC_STATE*/;
@@ -240,9 +240,9 @@ public class PlayerActionManager : MonoBehaviour{
             case ActionMode.Building:
                 return /*gameState_int == BUILDING_STATE && */floorManager.CheckBuilding(position, chosenBuilding.width, chosenBuilding.height);
             case ActionMode.Bridge:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position) && !locked;
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);// && !locked;
             case ActionMode.BridgeSpot:
-                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position) && !locked;
+                return /*gameState_int == BUILDING_STATE && */floorManager.CheckBridgeOrBridgeSpot(position);// && !locked;
             case ActionMode.MassGround:
                 // mass building
                 break;

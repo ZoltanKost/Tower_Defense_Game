@@ -29,7 +29,7 @@ public class GroundPageModel : MonoBehaviour {
         groundPage.Init(groundArrays, maxGrounds, OnGroundChosenCallBack, dims, dims);
         ResetGroundArrays();
     }
-    private void Update()
+    public void Tick(float delta)
     {
         float dt = Time.deltaTime;
         int l = cooldowns.Count;

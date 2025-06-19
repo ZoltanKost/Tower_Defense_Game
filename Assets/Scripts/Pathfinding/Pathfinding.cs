@@ -593,7 +593,9 @@ public class Pathfinding : MonoBehaviour
         if(!cell.walkable) return false;
         FloorCell up = grid[cell.gridX, cell.gridY + 1];
         bool isArock = up.currentFloor == cell.currentFloor + 1;
-        return cell.currentFloor > 0 && (!isArock || isArock && cell.road) || (cell.bridge && (cameFrom.bridge || cell.bridgeData.start));
+        if (cameFrom.bridge && !cameFrom.bridgeData.start && !(cell.bridge || cell.bridgeData.start)) return false;
+        return cell.currentFloor > 0 && (!isArock || isArock && cell.road) 
+            || (cell.bridge && (cameFrom.bridge || cell.bridgeData.start));
     }
     bool IsWalkableBoat(FloorCell cell)
     {

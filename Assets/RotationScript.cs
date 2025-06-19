@@ -16,10 +16,11 @@ public class RotationScript : MonoBehaviour
         }
         if (save)
         {
+            save = false;
             var png = ImageConversion.EncodeToPNG(texture);
             File.WriteAllBytes(Application.dataPath + "/Ship.png", png);
             Camera.main.targetTexture = null;
-            Destroy(texture);
+            DestroyImmediate(texture);
         }
         if (!update) return;
         update = false;
