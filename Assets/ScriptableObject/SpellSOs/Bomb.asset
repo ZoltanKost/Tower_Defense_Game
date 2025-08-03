@@ -21,6 +21,7 @@ MonoBehaviour:
     targeted: 0
     spellAction: 0
     UIicon: {fileID: 21300000, guid: a22bf4676ffb1cb408e0a68dcbfe34c0, type: 3}
+  audioClip: {fileID: 8300000, guid: 23722edbfc0394d4ea1012109f28aa8c, type: 3}
   cooldown: 7.5
   tweenAnimation: 0
   ease: 23

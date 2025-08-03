@@ -1,0 +1,724 @@
+fileFormatVersion: 2
+guid: 5f427803ec05a914f940bb19831ea387
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: Spider_Frame_0
+    originalName: 
+    pivot: {x: 0.4888889, y: -0.65476197}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 200
+      width: 90
+      height: 84
+    spriteID: ac044ca8c7762e244a0dda69d7e4f156
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 200, y: 200}
+  - name: Spider_Frame_1
+    originalName: 
+    pivot: {x: 0.4888889, y: -0.6626506}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 384
+      width: 90
+      height: 83
+    spriteID: eeb6b0051d174bb42a6f5141e3c9e80b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 384}
+  - name: Spider_Frame_2
+    originalName: 
+    pivot: {x: 0.49450552, y: -0.6962025}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 404
+      y: 294
+      width: 91
+      height: 79
+    spriteID: 09464e9d58b128b44b47bc6a619f28bb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 404, y: 294}
+  - name: Spider_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: -0.68750006}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 304
+      y: 294
+      width: 92
+      height: 80
+    spriteID: c051ec0f9802d2a4db1d29ae7725caf3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 304, y: 294}
+  - name: Spider_Frame_4
+    originalName: 
+    pivot: {x: 0.4888889, y: -0.6470589}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 352
+      y: 4
+      width: 90
+      height: 85
+    spriteID: 21dfa9b25382e004cb35f3ef08c65728
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 352, y: 4}
+  - name: Spider_Frame_5
+    originalName: 
+    pivot: {x: 0.5, y: -0.6707317}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 294
+      width: 92
+      height: 82
+    spriteID: f7b36ef417cefef4791a0ed2fd6b483d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 294}
+  - name: Spider_Frame_6
+    originalName: 
+    pivot: {x: 0.49450552, y: -0.6626506}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 298
+      y: 200
+      width: 91
+      height: 83
+    spriteID: 8d5d7b83234a4104e89adf69c86e3687
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 298, y: 200}
+  - name: Spider_Frame_7
+    originalName: 
+    pivot: {x: 0.49450552, y: -0.6626506}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 397
+      y: 200
+      width: 91
+      height: 83
+    spriteID: eb5986e66e2677246a10dcb4241ba35c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 397, y: 200}
+  - name: Spider_Frame_8
+    originalName: 
+    pivot: {x: 0.51086956, y: -0.6829268}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 104
+      y: 294
+      width: 92
+      height: 82
+    spriteID: 24288fd1b0863324c9c79ff26add9b15
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 104, y: 294}
+  - name: Spider_Frame_9
+    originalName: 
+    pivot: {x: 0.5106383, y: -0.75}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 200
+      y: 384
+      width: 94
+      height: 76
+    spriteID: 1ffd9bd12433a0a459e749629e7edc49
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 200, y: 384}
+  - name: Spider_Frame_10
+    originalName: 
+    pivot: {x: 0.48314607, y: -0.63953495}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 200
+      width: 89
+      height: 86
+    spriteID: bcb047b611025764dba5cc17bf253078
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 200}
+  - name: Spider_Frame_11
+    originalName: 
+    pivot: {x: 0.48387095, y: -0.67469877}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 251
+      y: 4
+      width: 93
+      height: 83
+    spriteID: 54a242c10307eed45adc51a47d0ba9e0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 251, y: 4}
+  - name: Spider_Frame_12
+    originalName: 
+    pivot: {x: 0.51648355, y: -0.6666667}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 101
+      y: 200
+      width: 91
+      height: 84
+    spriteID: fcf887100ca3a6b4fadd6c8bd6ab817c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 101, y: 200}
+  - name: Spider_Frame_13
+    originalName: 
+    pivot: {x: 0.4888889, y: -0.6626506}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 102
+      y: 384
+      width: 90
+      height: 83
+    spriteID: f6c132d42c1afb44cb57cd90625166e9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 102, y: 384}
+  - name: Spider_Frame_14
+    originalName: 
+    pivot: {x: 0.5217391, y: -0.57894737}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 208
+      y: 97
+      width: 92
+      height: 95
+    spriteID: 675bfa86a5c2ce14f82056050cfe2b1b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 208, y: 97}
+  - name: Spider_Frame_15
+    originalName: 
+    pivot: {x: 0.53191495, y: -0.57894737}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 97
+      width: 94
+      height: 95
+    spriteID: f1b70c73924265a43b590dbedbd403a8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 97}
+  - name: Spider_Frame_16
+    originalName: 
+    pivot: {x: 0.53191495, y: -0.57894737}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 106
+      y: 97
+      width: 94
+      height: 95
+    spriteID: 184e65d921701cb4c9b95b7e14632bf0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 106, y: 97}
+  - name: Spider_Frame_17
+    originalName: 
+    pivot: {x: 0.31896555, y: -0.7534247}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 308
+      y: 97
+      width: 116
+      height: 73
+    spriteID: 709275b489e9fce4384ccc71bcb5e0ef
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 308, y: 97}
+  - name: Spider_Frame_18
+    originalName: 
+    pivot: {x: 0.31034485, y: -0.6470589}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 116
+      height: 85
+    spriteID: 358eab150e826c04ead3554d82d2d412
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: Spider_Frame_19
+    originalName: 
+    pivot: {x: 0.31304348, y: -0.68750006}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 128
+      y: 4
+      width: 115
+      height: 80
+    spriteID: daa463606d782ee48b28daee10107fa4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 128, y: 4}
+  - name: Spider_Frame_20
+    originalName: 
+    pivot: {x: 0.41304344, y: -0.6707317}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 204
+      y: 294
+      width: 92
+      height: 82
+    spriteID: ca185a5aa39d6d5419f4cc3d0f7affe4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 204, y: 294}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 1565671221
+    name: Spider
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: Spider_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 52
+        y: 55
+        width: 90
+        height: 84
+      spriteId: ac044ca8c7762e244a0dda69d7e4f156
+    - name: Spider_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 52
+        y: 55
+        width: 90
+        height: 83
+      spriteId: eeb6b0051d174bb42a6f5141e3c9e80b
+    - name: Spider_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 51
+        y: 55
+        width: 91
+        height: 79
+      spriteId: 09464e9d58b128b44b47bc6a619f28bb
+    - name: Spider_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 50
+        y: 55
+        width: 92
+        height: 80
+      spriteId: c051ec0f9802d2a4db1d29ae7725caf3
+    - name: Spider_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 52
+        y: 55
+        width: 90
+        height: 85
+      spriteId: 21dfa9b25382e004cb35f3ef08c65728
+    - name: Spider_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 50
+        y: 55
+        width: 92
+        height: 82
+      spriteId: f7b36ef417cefef4791a0ed2fd6b483d
+    - name: Spider_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 51
+        y: 55
+        width: 91
+        height: 83
+      spriteId: 8d5d7b83234a4104e89adf69c86e3687
+    - name: Spider_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 51
+        y: 55
+        width: 91
+        height: 83
+      spriteId: eb5986e66e2677246a10dcb4241ba35c
+    - name: Spider_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 49
+        y: 56
+        width: 92
+        height: 82
+      spriteId: 24288fd1b0863324c9c79ff26add9b15
+    - name: Spider_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 48
+        y: 57
+        width: 94
+        height: 76
+      spriteId: 1ffd9bd12433a0a459e749629e7edc49
+    - name: Spider_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 53
+        y: 55
+        width: 89
+        height: 86
+      spriteId: bcb047b611025764dba5cc17bf253078
+    - name: Spider_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 51
+        y: 56
+        width: 93
+        height: 83
+      spriteId: 54a242c10307eed45adc51a47d0ba9e0
+    - name: Spider_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 49
+        y: 56
+        width: 91
+        height: 84
+      spriteId: fcf887100ca3a6b4fadd6c8bd6ab817c
+    - name: Spider_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 52
+        y: 55
+        width: 90
+        height: 83
+      spriteId: f6c132d42c1afb44cb57cd90625166e9
+    - name: Spider_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 48
+        y: 55
+        width: 92
+        height: 95
+      spriteId: 675bfa86a5c2ce14f82056050cfe2b1b
+    - name: Spider_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 46
+        y: 55
+        width: 94
+        height: 95
+      spriteId: f1b70c73924265a43b590dbedbd403a8
+    - name: Spider_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 46
+        y: 55
+        width: 94
+        height: 95
+      spriteId: 184e65d921701cb4c9b95b7e14632bf0
+    - name: Spider_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 59
+        y: 55
+        width: 116
+        height: 73
+      spriteId: 709275b489e9fce4384ccc71bcb5e0ef
+    - name: Spider_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 60
+        y: 55
+        width: 116
+        height: 85
+      spriteId: 358eab150e826c04ead3554d82d2d412
+    - name: Spider_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 60
+        y: 55
+        width: 115
+        height: 80
+      spriteId: daa463606d782ee48b28daee10107fa4
+    - name: Spider_Frame_20
+      frameIndex: 20
+      cellRect:
+        x: 58
+        y: 55
+        width: 92
+        height: 82
+      spriteId: ca185a5aa39d6d5419f4cc3d0f7affe4
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 192, y: 192}

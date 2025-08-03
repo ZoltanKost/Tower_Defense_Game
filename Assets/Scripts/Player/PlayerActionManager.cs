@@ -12,6 +12,7 @@ public class PlayerActionManager : MonoBehaviour{
     Action placeCallback;
     Action<int> highlightBuildingCallback;
     Action<Resource, int> buyCallback;
+    public Action<ActionMode> buildingFinishedCallback;
     Func<Resource,int, bool> canBuyCallBack;
     Action<int> destroyBuildingCallback;
     Func<float,bool> manaCallback;
@@ -40,11 +41,11 @@ public class PlayerActionManager : MonoBehaviour{
         highlighter.HighlighterCallback(position);
     }
     public void ClickBuild(Vector3 position){
-        switch(mode){
+        var appliedMode = mode;
+        switch (mode){
             case ActionMode.Ground:
                 if(canBuyCallBack(Resource.Gold,chosenGround.price))
                 {
-                    mode = 0;
                     floorManager.CreateGroundArray_DontCheck(position,chosenGround);
                     buyCallback?.Invoke(Resource.Gold,chosenGround.price);
                     FinishBuildingAction();
@@ -52,8 +53,9 @@ public class PlayerActionManager : MonoBehaviour{
                 else
                 {
                     actionFailedCallback?.Invoke();
+                    return;
                 }
-            break;
+                break;
             case ActionMode.CastSpell:
                 //mode = 0;
                 if (manaCallback.Invoke(chosenSpell.spellData.manaCost)) 
@@ -64,6 +66,7 @@ public class PlayerActionManager : MonoBehaviour{
                 else
                 {
                     actionFailedCallback?.Invoke();
+                    return;
                 }
 
                 break;
@@ -84,8 +87,9 @@ public class PlayerActionManager : MonoBehaviour{
                 else
                 {
                     actionFailedCallback?.Invoke();
+                    return;
                 }
-            break;
+                break;
             case ActionMode.Bridge:
                 if (!floorManager.PlaceBridge_DontCheck(position))
                 {
@@ -116,6 +120,7 @@ public class PlayerActionManager : MonoBehaviour{
                 temporalFloor.StartFlood(position);
                 break;
         }
+        buildingFinishedCallback?.Invoke(appliedMode);
     }
     public void HoldBuild(Vector3 position){
         switch(mode){

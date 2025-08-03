@@ -1,0 +1,696 @@
+fileFormatVersion: 2
+guid: ce83971550c95974999dc7cc45089441
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: Paddle Fish_Frame_0
+    originalName: 
+    pivot: {x: 0.38834953, y: -0.81690145}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 238
+      width: 103
+      height: 71
+    spriteID: 0c9056da943a4644aaa24a5a964ddc8e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 238}
+  - name: Paddle Fish_Frame_1
+    originalName: 
+    pivot: {x: 0.38834953, y: -0.8285715}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 338
+      y: 238
+      width: 103
+      height: 70
+    spriteID: 47ffeed02192069408e746525708e7a2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 338, y: 238}
+  - name: Paddle Fish_Frame_2
+    originalName: 
+    pivot: {x: 0.38834953, y: -0.81428576}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 317
+      width: 103
+      height: 70
+    spriteID: d38745ad2511f7d49b73abacc0105e89
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 317}
+  - name: Paddle Fish_Frame_3
+    originalName: 
+    pivot: {x: 0.39047617, y: -0.8}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 219
+      y: 130
+      width: 105
+      height: 70
+    spriteID: ccad76ca92b0e214dbacdb500bf00cb2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 219, y: 130}
+  - name: Paddle Fish_Frame_4
+    originalName: 
+    pivot: {x: 0.39047617, y: -0.8115942}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 115
+      y: 238
+      width: 105
+      height: 69
+    spriteID: 1bf930630988dd74dba9fa84b536e03f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 115, y: 238}
+  - name: Paddle Fish_Frame_5
+    originalName: 
+    pivot: {x: 0.39215687, y: -0.81428576}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 115
+      y: 317
+      width: 102
+      height: 70
+    spriteID: ceb3842b98f1c9646ac24d44634774b4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 115, y: 317}
+  - name: Paddle Fish_Frame_6
+    originalName: 
+    pivot: {x: 0.39603963, y: -0.8285715}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 335
+      y: 317
+      width: 101
+      height: 70
+    spriteID: c2b826b5b3921a146b75445329a48944
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 335, y: 317}
+  - name: Paddle Fish_Frame_7
+    originalName: 
+    pivot: {x: 0.39215687, y: -0.7916667}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 332
+      y: 130
+      width: 102
+      height: 72
+    spriteID: d17710e974918674b8210867466c19f0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 332, y: 130}
+  - name: Paddle Fish_Frame_8
+    originalName: 
+    pivot: {x: 0.39, y: -0.8235294}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 215
+      y: 395
+      width: 100
+      height: 68
+    spriteID: d94a08fb9b513e44b91bdb4254c1104a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 215, y: 395}
+  - name: Paddle Fish_Frame_9
+    originalName: 
+    pivot: {x: 0.3854167, y: -0.81690145}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 111
+      y: 395
+      width: 96
+      height: 71
+    spriteID: 9d8eb193a73231545b3717b47b24f526
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 111, y: 395}
+  - name: Paddle Fish_Frame_10
+    originalName: 
+    pivot: {x: 0.3939394, y: -0.8285715}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 395
+      width: 99
+      height: 70
+    spriteID: e47145fa9d0b72a4c93b6df5635c4226
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 395}
+  - name: Paddle Fish_Frame_11
+    originalName: 
+    pivot: {x: 0.3762376, y: -0.87878793}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 323
+      y: 395
+      width: 101
+      height: 66
+    spriteID: 434c15550ebd5974099d9e9d7e3bfd7b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 323, y: 395}
+  - name: Paddle Fish_Frame_12
+    originalName: 
+    pivot: {x: 0.372549, y: -0.81690145}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 228
+      y: 238
+      width: 102
+      height: 71
+    spriteID: 705f35f41af406f4dbd0657fc1aad9c3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 228, y: 238}
+  - name: Paddle Fish_Frame_13
+    originalName: 
+    pivot: {x: 0.40196076, y: -0.8285715}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 225
+      y: 317
+      width: 102
+      height: 70
+    spriteID: 72f13c0fa3eab344f9933c018c20e74b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 225, y: 317}
+  - name: Paddle Fish_Frame_14
+    originalName: 
+    pivot: {x: 0.4578313, y: -0.58}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 130
+      width: 83
+      height: 100
+    spriteID: c0d52b38f279f6843a1845f9735f0b39
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 130}
+  - name: Paddle Fish_Frame_15
+    originalName: 
+    pivot: {x: 0.5961539, y: -0.5686275}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 283
+      y: 4
+      width: 104
+      height: 102
+    spriteID: 9a0de02a8282d6b439095651ade44c15
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 283, y: 4}
+  - name: Paddle Fish_Frame_16
+    originalName: 
+    pivot: {x: 0.6185567, y: -0.57425743}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 395
+      y: 4
+      width: 97
+      height: 101
+    spriteID: 03adb47a39ff42c4f945d846683e266e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 395, y: 4}
+  - name: Paddle Fish_Frame_17
+    originalName: 
+    pivot: {x: 0.31851855, y: -0.4915254}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 135
+      height: 118
+    spriteID: b5e89c8d889e6784c9c5799b09f47bee
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: Paddle Fish_Frame_18
+    originalName: 
+    pivot: {x: 0.3046875, y: -0.552381}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 147
+      y: 4
+      width: 128
+      height: 105
+    spriteID: 997a3ea7adb2a924b8fff83ff336ca46
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 147, y: 4}
+  - name: Paddle Fish_Frame_19
+    originalName: 
+    pivot: {x: 0.37931034, y: -0.87878793}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 95
+      y: 130
+      width: 116
+      height: 66
+    spriteID: 29426e47f5a36d446a99d844762f6616
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 95, y: 130}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: -231497444
+    name: Paddle Fish
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: Paddle Fish_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 56
+        y: 58
+        width: 103
+        height: 71
+      spriteId: 0c9056da943a4644aaa24a5a964ddc8e
+    - name: Paddle Fish_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 56
+        y: 58
+        width: 103
+        height: 70
+      spriteId: 47ffeed02192069408e746525708e7a2
+    - name: Paddle Fish_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 56
+        y: 57
+        width: 103
+        height: 70
+      spriteId: d38745ad2511f7d49b73abacc0105e89
+    - name: Paddle Fish_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 55
+        y: 56
+        width: 105
+        height: 70
+      spriteId: ccad76ca92b0e214dbacdb500bf00cb2
+    - name: Paddle Fish_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 55
+        y: 56
+        width: 105
+        height: 69
+      spriteId: 1bf930630988dd74dba9fa84b536e03f
+    - name: Paddle Fish_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 56
+        y: 57
+        width: 102
+        height: 70
+      spriteId: ceb3842b98f1c9646ac24d44634774b4
+    - name: Paddle Fish_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 56
+        y: 58
+        width: 101
+        height: 70
+      spriteId: c2b826b5b3921a146b75445329a48944
+    - name: Paddle Fish_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 56
+        y: 57
+        width: 102
+        height: 72
+      spriteId: d17710e974918674b8210867466c19f0
+    - name: Paddle Fish_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 57
+        y: 56
+        width: 100
+        height: 68
+      spriteId: d94a08fb9b513e44b91bdb4254c1104a
+    - name: Paddle Fish_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 59
+        y: 58
+        width: 96
+        height: 71
+      spriteId: 9d8eb193a73231545b3717b47b24f526
+    - name: Paddle Fish_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 57
+        y: 58
+        width: 99
+        height: 70
+      spriteId: e47145fa9d0b72a4c93b6df5635c4226
+    - name: Paddle Fish_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 58
+        y: 58
+        width: 101
+        height: 66
+      spriteId: 434c15550ebd5974099d9e9d7e3bfd7b
+    - name: Paddle Fish_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 58
+        y: 58
+        width: 102
+        height: 71
+      spriteId: 705f35f41af406f4dbd0657fc1aad9c3
+    - name: Paddle Fish_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 55
+        y: 58
+        width: 102
+        height: 70
+      spriteId: 72f13c0fa3eab344f9933c018c20e74b
+    - name: Paddle Fish_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 58
+        y: 58
+        width: 83
+        height: 100
+      spriteId: c0d52b38f279f6843a1845f9735f0b39
+    - name: Paddle Fish_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 34
+        y: 58
+        width: 104
+        height: 102
+      spriteId: 9a0de02a8282d6b439095651ade44c15
+    - name: Paddle Fish_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 36
+        y: 58
+        width: 97
+        height: 101
+      spriteId: 03adb47a39ff42c4f945d846683e266e
+    - name: Paddle Fish_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 53
+        y: 58
+        width: 135
+        height: 118
+      spriteId: b5e89c8d889e6784c9c5799b09f47bee
+    - name: Paddle Fish_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 57
+        y: 58
+        width: 128
+        height: 105
+      spriteId: 997a3ea7adb2a924b8fff83ff336ca46
+    - name: Paddle Fish_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 52
+        y: 58
+        width: 116
+        height: 66
+      spriteId: 29426e47f5a36d446a99d844762f6616
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 192, y: 192}

@@ -14,6 +14,7 @@ public class BuildingPage : MonoBehaviour {
             buttons.Add(ui);
         }
     }
+    // TODO: don't deactivate visual, Highlight instead.
     public void OnGroundChosenCallBack(int uiID){
         playerActionManager.CancelBuildingAction();
         playerActionManager.ChooseBuilding(buildings[uiID]);

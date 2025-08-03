@@ -35,11 +35,9 @@ public class BuildingObject : MonoBehaviour, IDamagable
     public void Init(int sortingOrder, int sortingLayer, int index,int gridX,int gridY, Building b, OnKillEvent OnKill){
         maxHP = b.health;
         currentHP = maxHP;
-        if(index != 0 && hpBar != null)
-        {
-            hpBar?.gameObject.SetActive(true);
-            hpBar?.Reset();
-        }
+        animator.spriteRenderer.sprite = b.sprite;
+        hpBar?.gameObject.SetActive(index > 0);
+        hpBar?.Reset();
         Activate();
         this.index = index;
         w = b.width;
@@ -48,7 +46,7 @@ public class BuildingObject : MonoBehaviour, IDamagable
         //animator.animations[0].data[0].sprites[0][0] = b.sprite;
         animator.InitFromAnimArray(b.animations);
         animator.PlayAnimation(0);
-        animator.SetSortingParams(sortingOrder + 1000/gridY, sortingLayer);
+        animator.SetSortingParams(sortingOrder, sortingLayer);
         onKillEvent = OnKill;
         attackRangeBonus = b.attackRange;
         active = true;

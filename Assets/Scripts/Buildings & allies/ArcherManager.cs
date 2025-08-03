@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArcherManager : MonoBehaviour, IHandler {
+public class ArcherManager : MonoBehaviour{
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private Transform archer;
@@ -21,14 +21,14 @@ public class ArcherManager : MonoBehaviour, IHandler {
         _archer.transform.position = temp;
         //AddArcher(_archer);
     }
-    public void AddArcher(Character archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus)
+    public void AddArcher(Character archer, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus, int sortingOrder,int layer)
     {
         offset = floorManager.offset;
         cellSize = floorManager.CellToWorld(Vector3.one).x;
         archersList.Add(archer);
         archer.Init(archer, buildingID, buildingWidth, 
             buildingHeight,-1,archersList.Count - 1,gridPosition,
-            null,null,null, CharacterType.Friend);
+            null,null,null, CharacterType.Friend,sortingOrder,layer);
         archer.attackRange = attackRangeBonus;
     }
     public void RemoveArchers(Character[] archer) {
@@ -37,19 +37,11 @@ public class ArcherManager : MonoBehaviour, IHandler {
             a.gameObject.SetActive(false);
         }
     }
-    void Update() {
-        float delta = Time.deltaTime;
-        Tick(delta);
-    }
     void FixedUpdate()
     {
         TickDetection();
         TickState();
         AnimatorTick(Time.fixedDeltaTime);
-    }
-    public void Tick(float delta)
-    {
-        if(!active) return;
     }
     public void TickDetection()
     {

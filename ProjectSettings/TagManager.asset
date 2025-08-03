@@ -71,3 +71,6 @@ TagManager:
   - name: UI
     uniqueID: 2451173867
     locked: 0
+  - name: TutorialHighlighting
+    uniqueID: 2162402805
+    locked: 0

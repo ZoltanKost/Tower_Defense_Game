@@ -11,6 +11,7 @@ public class GroundUI : MonoBehaviour{
     [SerializeField] private TMP_Text text;
     [SerializeField] private int pixelPerUnit = 32;
     [SerializeField] private Image coolDownImage;
+    [SerializeField] private Color highlightColor;
     public int uiID{get;private set;}
     public void Init(int ID,Action<int> onClick, int width, int height){
         for (int i = 0; i < floors.Length; i++)
@@ -51,12 +52,22 @@ public class GroundUI : MonoBehaviour{
         foreach (UIFloor floor in floors) floor.Deactivate();
     }
     public void OnGroundsChoosen(){
-        DeactivateVisuals();
+        //DeactivateVisuals();
         onClick?.Invoke(uiID);
     }
     public void UpdateValue(float value)
     {
         coolDownImage.fillAmount = value;
         if (coolDownImage.fillAmount >= 1f) coolDownImage.fillAmount = 0;
+    }
+    public void Highlight()
+    {
+        coolDownImage.color = highlightColor;
+        Debug.Log("highlighted");
+    }
+    public void Dehighlight()
+    {
+        Debug.Log("dehighlighted");
+        coolDownImage.color = new Color(0,0,0,0);
     }
 }

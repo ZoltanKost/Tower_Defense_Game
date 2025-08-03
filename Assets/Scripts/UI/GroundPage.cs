@@ -28,11 +28,11 @@ public class GroundPage : MonoBehaviour {
             buttons[i].SetGroundArray(grounds[i]);
         }
     }
-    public void ActivateVisuals(int uiID){
-        buttons[uiID].ActivateVisuals();
+    public void Dehighlight(int uiID){
+        buttons[uiID].Dehighlight();
     }
-    public void DeactivateVisuals(int uiID){
-        buttons[uiID].DeactivateVisuals();
+    public void Highlight(int uiID){
+        buttons[uiID].Highlight();
     }
     public void DeactivateButton(int uiID)
     {

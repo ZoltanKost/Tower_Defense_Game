@@ -31,8 +31,12 @@ public class BuildingManager : MonoBehaviour{
         {
             if (building == buildingData[i]) buildingObject.AssetID = i;
         }
-        buildingObject.Init(6, floor, Count, gridX, gridY, building, KillBuilding);
-        InitArchers(buildingObject.GetArchers(), buildingObject.gridPosition, buildingObject.w, buildingObject.h, buildingObject.index, buildingObject.attackRangeBonus);
+        int sortingOrder = 6 + 1000 / gridY;
+        buildingObject.Init(sortingOrder, floor, Count, gridX, gridY, building, KillBuilding);
+        InitArchers(
+            buildingObject.GetArchers(), buildingObject.gridPosition, 
+            buildingObject.w, buildingObject.h, buildingObject.index, 
+            buildingObject.attackRangeBonus, sortingOrder + 1, floor);
         buildingObject.transform.position = worldPosition + WidthAlignmentOffset;
         buildingObject.gameObject.SetActive(true);
         getID = bs[Count].GetIndex;
@@ -46,6 +50,7 @@ public class BuildingManager : MonoBehaviour{
     }
     public void Build(BuildingSaveData data, out Func<int> getID)
     {
+        Debug.LogError("Saving is not implemented");
         BuildingObject buildingObject = bs[Count];
         buildingObject.AssetID = data.AssetID;
         if (data.currentHP <= 0)
@@ -61,11 +66,15 @@ public class BuildingManager : MonoBehaviour{
         }
         else
         {
-            buildingObject.Init(6,
-                floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor,
-                0, data,
+            int layer = 
+                floorManager.floorCells[data.gridPosition.x, data.gridPosition.y].currentFloor;
+            buildingObject.Init(6, layer, 0, data,
                 buildingData[data.AssetID], KillBuilding);
-            InitArchers(buildingObject.GetArchers(), data.gridPosition, buildingData[data.AssetID].width, buildingData[data.AssetID].height, data.index, buildingObject.attackRangeBonus);
+            InitArchers(
+                buildingObject.GetArchers(), data.gridPosition, 
+                buildingData[data.AssetID].width, buildingData[data.AssetID].height, 
+                data.index, buildingObject.attackRangeBonus,
+                6, layer);
         }
         buildingObject.transform.position = data.position;
         buildingObject.gameObject.SetActive(true);
@@ -87,10 +96,10 @@ public class BuildingManager : MonoBehaviour{
         }
         Debug.Log($"Array resized. new Length is {bs.Length}");
     }
-    public void InitArchers(Character[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus)
+    public void InitArchers(Character[] archers, Vector2Int gridPosition, int buildingWidth, int buildingHeight, int buildingID, int attackRangeBonus, int sortingOrder,int layer)
     {
         foreach(Character a in archers){
-            archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID, attackRangeBonus);
+            archerManager.AddArcher(a, gridPosition, buildingWidth, buildingHeight, buildingID, attackRangeBonus, sortingOrder,layer);
         }
     }
     void FixedUpdate(){

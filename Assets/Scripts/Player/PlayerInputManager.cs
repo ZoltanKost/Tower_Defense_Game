@@ -38,11 +38,10 @@ public class PlayerInputManager : MonoBehaviour{
         }
         if (Input.GetMouseButtonDown(1))
         {
-            actionManager.ResetMode();
-
+            actionManager.CancelBuildingAction();
             //actionManager.HighlightedAction(mCamera.ScreenToWorldPoint(Input.mousePosition));
         }
-        if(Input.GetMouseButtonDown(2)){
+        if (Input.GetMouseButtonDown(2)){
             lastCameraPosition = Input.mousePosition;
         }else if(Input.GetMouseButton(2)){
             Vector3 temp = Input.mousePosition;
@@ -85,16 +84,23 @@ public class PlayerInputManager : MonoBehaviour{
         bool canBuild = actionManager.CanBuild(input);
         temporalFloor.MoveTempFloor(input,canBuild);
         bool overUI = currentEventSystem.IsPointerOverGameObject();
+        bool lmbInput = Input.GetMouseButtonDown(0);
+        bool lmbUp = Input.GetMouseButtonUp(0);
+        if (overUI && (lmbInput))
+        {
+            actionManager.CancelBuildingAction();
+            return;
+        }
         if (canBuild)
         {
-            if (Input.GetMouseButtonDown(0) && !overUI)
+            if (lmbInput)
             {
                 actionManager.ClickBuild(input);
             }
             else if (Input.GetMouseButton(0))
             {
                 actionManager.HoldBuild(input);
-            }else if (Input.GetMouseButtonUp(0) && !overUI)
+            }else if (lmbUp && !overUI)
             {
                 actionManager.UpBuild(input);
             }

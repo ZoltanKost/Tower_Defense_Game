@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrow: {fileID: 1348012135, guid: b6d3326e630f6c247850eba8aba8bf68, type: 3}
-  damageClip: {fileID: 8300000, guid: 58f2e95d2125d9343993fcc789b7109b, type: 3}
+  damageClip: {fileID: 8300000, guid: 830f0240ac51c894781c31091897a9a9, type: 3}
   projectilePrefab: {fileID: 5307833470203409925, guid: bb54e6a665422ce4daf3195172ce4f38, type: 3}
   MaxHP: 100
   attackRange: 3
@@ -168,7 +168,7 @@ MonoBehaviour:
   movement: []
   currentPath: []
   projectileData:
-    hitClip: {fileID: 8300000, guid: 58f2e95d2125d9343993fcc789b7109b, type: 3}
+    hitClip: {fileID: 8300000, guid: 830f0240ac51c894781c31091897a9a9, type: 3}
     audioVolume: 0.3
     spell: {fileID: 0}
     targetPosition: {x: 0, y: 0, z: 0}

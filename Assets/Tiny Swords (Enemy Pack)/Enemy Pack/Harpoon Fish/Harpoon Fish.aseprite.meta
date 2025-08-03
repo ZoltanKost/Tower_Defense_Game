@@ -1,0 +1,780 @@
+fileFormatVersion: 2
+guid: 2e43938017489394a80f693ee675aaab
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: Harpoon Fish_Frame_0
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7567567}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 394
+      width: 60
+      height: 74
+    spriteID: 217739b1078fa9b4ba2e00435fe3721c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 394}
+  - name: Harpoon Fish_Frame_1
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7671233}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 250
+      width: 60
+      height: 73
+    spriteID: f1f4b9f32234fdd4aae459cedbc998d6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 250}
+  - name: Harpoon Fish_Frame_2
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7671233}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 331
+      width: 60
+      height: 73
+    spriteID: 5d85ff7c9cb2e5f4d9a575df3cd91fdb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 331}
+  - name: Harpoon Fish_Frame_3
+    originalName: 
+    pivot: {x: 0.57377046, y: -0.78873235}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 262
+      y: 164
+      width: 61
+      height: 71
+    spriteID: f2182b8ae20b6a84588e04ddd1609379
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 262, y: 164}
+  - name: Harpoon Fish_Frame_4
+    originalName: 
+    pivot: {x: 0.59016395, y: -0.7777778}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 262
+      y: 4
+      width: 61
+      height: 72
+    spriteID: b3110f5715cc3ea48a9c3c9c2a672c3d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 262, y: 4}
+  - name: Harpoon Fish_Frame_5
+    originalName: 
+    pivot: {x: 0.59016395, y: -0.7777778}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 262
+      y: 84
+      width: 61
+      height: 72
+    spriteID: b892ebeb15f3866449218bd336b26f56
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 262, y: 84}
+  - name: Harpoon Fish_Frame_6
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7671233}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 412
+      width: 60
+      height: 73
+    spriteID: a4a1603720ab2ba4aa14f281806237c6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 412}
+  - name: Harpoon Fish_Frame_7
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7567567}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 4
+      width: 60
+      height: 74
+    spriteID: 4ec872ee3cc094b46908e80f75864dc8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 4}
+  - name: Harpoon Fish_Frame_8
+    originalName: 
+    pivot: {x: 0.56451607, y: -0.76388896}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 234
+      width: 62
+      height: 72
+    spriteID: 0e5ee23785df6994c83171d07614e9f1
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 234}
+  - name: Harpoon Fish_Frame_9
+    originalName: 
+    pivot: {x: 0.530303, y: -0.7534247}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 264
+      width: 66
+      height: 73
+    spriteID: e5d66974f55c47740a0e4e0efb233f71
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 264}
+  - name: Harpoon Fish_Frame_10
+    originalName: 
+    pivot: {x: 0.546875, y: -0.7432432}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 423
+      width: 64
+      height: 74
+    spriteID: 35f8bb11a7e299046852b813fe93694f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 423}
+  - name: Harpoon Fish_Frame_11
+    originalName: 
+    pivot: {x: 0.56451607, y: -0.76388896}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 314
+      width: 62
+      height: 72
+    spriteID: 21975f27277955a488f68ba12c2a87e7
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 314}
+  - name: Harpoon Fish_Frame_12
+    originalName: 
+    pivot: {x: 0.5932203, y: -0.7534247}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 262
+      y: 243
+      width: 59
+      height: 73
+    spriteID: 991ab53d6555d9e4c8dd9a0e3eff38f6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 262, y: 243}
+  - name: Harpoon Fish_Frame_13
+    originalName: 
+    pivot: {x: 0.5833333, y: -0.7432432}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 86
+      width: 60
+      height: 74
+    spriteID: 668fb33da3c92704ba604c3da89b6d61
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 86}
+  - name: Harpoon Fish_Frame_14
+    originalName: 
+    pivot: {x: 0.72499996, y: -0.7088607}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 100
+      width: 80
+      height: 79
+    spriteID: d859095bf6e50a24a914b78af3ae8b98
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 100}
+  - name: Harpoon Fish_Frame_15
+    originalName: 
+    pivot: {x: 0.7160493, y: -0.6363636}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 81
+      height: 88
+    spriteID: 3a008e200ed46704a88a4d89807a9e7f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: Harpoon Fish_Frame_16
+    originalName: 
+    pivot: {x: 0.68888897, y: -0.8235294}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 79
+      width: 90
+      height: 68
+    spriteID: 64ca8f29a5d264d4095f515221fb8668
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 79}
+  - name: Harpoon Fish_Frame_17
+    originalName: 
+    pivot: {x: 0.688172, y: -0.83582085}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 4
+      width: 93
+      height: 67
+    spriteID: ebd4ffec6f2bd214aba18ebb2450d316
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 4}
+  - name: Harpoon Fish_Frame_18
+    originalName: 
+    pivot: {x: 0.5466666, y: -0.8115942}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 187
+      width: 75
+      height: 69
+    spriteID: 25283da144cd5604280282c6a65333b2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 187}
+  - name: Harpoon Fish_Frame_19
+    originalName: 
+    pivot: {x: 0.5147059, y: -0.8}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 345
+      width: 68
+      height: 70
+    spriteID: e0e7d025e9efbd84eba74e7269210466
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 345}
+  - name: Harpoon Fish_Frame_20
+    originalName: 
+    pivot: {x: 0.5555555, y: -0.78873235}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 155
+      width: 63
+      height: 71
+    spriteID: 416bae1900186c343b0788f11a9fc98e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 155}
+  - name: Harpoon Fish_Frame_21
+    originalName: 
+    pivot: {x: 0.5666667, y: -0.7567567}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 194
+      y: 168
+      width: 60
+      height: 74
+    spriteID: 742810ec1bd42ab48a1ff2d24feed5b9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 194, y: 168}
+  - name: Harpoon Fish_Frame_22
+    originalName: 
+    pivot: {x: 0.49999997, y: -1.048387}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 262
+      y: 324
+      width: 58
+      height: 62
+    spriteID: 7fd7b6046da43ca49869d673de439063
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 262, y: 324}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 458367145
+    name: Harpoon Fish
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: Harpoon Fish_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 61
+        y: 56
+        width: 60
+        height: 74
+      spriteId: 217739b1078fa9b4ba2e00435fe3721c
+    - name: Harpoon Fish_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 61
+        y: 56
+        width: 60
+        height: 73
+      spriteId: f1f4b9f32234fdd4aae459cedbc998d6
+    - name: Harpoon Fish_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 61
+        y: 56
+        width: 60
+        height: 73
+      spriteId: 5d85ff7c9cb2e5f4d9a575df3cd91fdb
+    - name: Harpoon Fish_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 61
+        y: 56
+        width: 61
+        height: 71
+      spriteId: f2182b8ae20b6a84588e04ddd1609379
+    - name: Harpoon Fish_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 60
+        y: 56
+        width: 61
+        height: 72
+      spriteId: b3110f5715cc3ea48a9c3c9c2a672c3d
+    - name: Harpoon Fish_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 60
+        y: 56
+        width: 61
+        height: 72
+      spriteId: b892ebeb15f3866449218bd336b26f56
+    - name: Harpoon Fish_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 61
+        y: 56
+        width: 60
+        height: 73
+      spriteId: a4a1603720ab2ba4aa14f281806237c6
+    - name: Harpoon Fish_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 61
+        y: 56
+        width: 60
+        height: 74
+      spriteId: 4ec872ee3cc094b46908e80f75864dc8
+    - name: Harpoon Fish_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 61
+        y: 55
+        width: 62
+        height: 72
+      spriteId: 0e5ee23785df6994c83171d07614e9f1
+    - name: Harpoon Fish_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 61
+        y: 55
+        width: 66
+        height: 73
+      spriteId: e5d66974f55c47740a0e4e0efb233f71
+    - name: Harpoon Fish_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 61
+        y: 55
+        width: 64
+        height: 74
+      spriteId: 35f8bb11a7e299046852b813fe93694f
+    - name: Harpoon Fish_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 61
+        y: 55
+        width: 62
+        height: 72
+      spriteId: 21975f27277955a488f68ba12c2a87e7
+    - name: Harpoon Fish_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 61
+        y: 55
+        width: 59
+        height: 73
+      spriteId: 991ab53d6555d9e4c8dd9a0e3eff38f6
+    - name: Harpoon Fish_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 61
+        y: 55
+        width: 60
+        height: 74
+      spriteId: 668fb33da3c92704ba604c3da89b6d61
+    - name: Harpoon Fish_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 38
+        y: 56
+        width: 80
+        height: 79
+      spriteId: d859095bf6e50a24a914b78af3ae8b98
+    - name: Harpoon Fish_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 38
+        y: 56
+        width: 81
+        height: 88
+      spriteId: 3a008e200ed46704a88a4d89807a9e7f
+    - name: Harpoon Fish_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 34
+        y: 56
+        width: 90
+        height: 68
+      spriteId: 64ca8f29a5d264d4095f515221fb8668
+    - name: Harpoon Fish_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 32
+        y: 56
+        width: 93
+        height: 67
+      spriteId: ebd4ffec6f2bd214aba18ebb2450d316
+    - name: Harpoon Fish_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 55
+        y: 56
+        width: 75
+        height: 69
+      spriteId: 25283da144cd5604280282c6a65333b2
+    - name: Harpoon Fish_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 61
+        y: 56
+        width: 68
+        height: 70
+      spriteId: e0e7d025e9efbd84eba74e7269210466
+    - name: Harpoon Fish_Frame_20
+      frameIndex: 20
+      cellRect:
+        x: 61
+        y: 56
+        width: 63
+        height: 71
+      spriteId: 416bae1900186c343b0788f11a9fc98e
+    - name: Harpoon Fish_Frame_21
+      frameIndex: 21
+      cellRect:
+        x: 62
+        y: 56
+        width: 60
+        height: 74
+      spriteId: 742810ec1bd42ab48a1ff2d24feed5b9
+    - name: Harpoon Fish_Frame_22
+      frameIndex: 22
+      cellRect:
+        x: 67
+        y: 65
+        width: 58
+        height: 62
+      spriteId: 7fd7b6046da43ca49869d673de439063
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 192, y: 192}

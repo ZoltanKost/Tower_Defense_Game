@@ -6,12 +6,16 @@ using System;
 public class BuildingButtonUI : EventSubscribeButton {
     [SerializeField] private Image image;
     [SerializeField] private TMP_Text text;
+    [SerializeField] private bool nativeSize = false;
+    [SerializeField] private float scaleFactor = 1f;
     int ID;
     public void Init(Action<int> onPageUIClick, Sprite icon, int cost, int id){
         image.sprite = icon;
         text.text = cost.ToString();
         ID = id;
         Init(() => onPageUIClick?.Invoke(ID));
+        image.rectTransform.localScale *= scaleFactor;
+        if (nativeSize) image.SetNativeSize();
     }
     public void SetSprite(Sprite sprite)
     {

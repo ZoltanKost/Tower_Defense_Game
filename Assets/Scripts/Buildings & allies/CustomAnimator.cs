@@ -85,6 +85,7 @@ public class CustomAnimator : MonoBehaviour{
     }
     // TODO: remove this code to SetAnimation
     public void SetSortingParams(int order, int layer){
+        //Debug.Log($"SortingParams: {order}");
         spriteRenderer.sortingOrder = order;
         spriteRenderer.sortingLayerName = $"{layer}";
     }

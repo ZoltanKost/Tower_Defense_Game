@@ -85,7 +85,7 @@ public class Character : MonoBehaviour, IDamagable
         int friendBuildingWidth, int friendBuildingHeight, int waveIndex, 
         int index, Vector2Int _gridPosition, List<PathCell> path, 
         Action<int, int> onRemoveEvent, Action<int> onKillEvent,
-        CharacterType type)
+        CharacterType type, int sortingOrder,int layer)
     {
         this.onKillEvent = onKillEvent;
         this.onRemoveEvent = onRemoveEvent;
@@ -117,6 +117,7 @@ public class Character : MonoBehaviour, IDamagable
         characterType = type;
         projectileData.behaviour = prefab.projectileBehaviour;
         animator.InitFromPrefab(prefab.animator);
+        animator.SetSortingParams(sortingOrder, layer);
 
         if (characterType == CharacterType.Enemy)
         {

@@ -39,7 +39,7 @@ public class PlayerShopUIManager : MonoBehaviour {
     }
     public void CloseAll()
     {
-        ShowButtons();
+        //ShowButtons();
         CloseShop();
         CloseInventory();
     }

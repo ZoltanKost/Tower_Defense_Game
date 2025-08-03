@@ -11,6 +11,9 @@ public class FloorManager : MonoBehaviour{
     [SerializeField] Pathfinding pathfinding;
     [SerializeField] EnemyManager enemyManager;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioPooling audioPooling;
+    [SerializeField] private AudioClip roadPopClip;
+
     List<Floor> floors;
     public FloorCell[,] floorCells{get;private set;}
     public float cellSize;
@@ -148,6 +151,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[x, y].ladder = false;
         }
         floors[currentFloor].Animate();
+        audioSource.Stop();
         audioSource.pitch = UnityEngine.Random.Range(0.3f,0.6f);
         audioSource.Play();
         //pathfinding.CheckIfNeedMovePossibleStarts();
@@ -166,8 +170,7 @@ public class FloorManager : MonoBehaviour{
         else floors[floor].PlaceRoad(pos);
         floorCells[posX, posY].road = true;
         enemyManager.UpdatePaths();
-        audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
-        audioSource.Play();
+        audioPooling.PlaySound(roadPopClip);
         return true;
     }
     /*public bool CheckSquareRoad(int gridX, int gridY)
@@ -275,8 +278,7 @@ public class FloorManager : MonoBehaviour{
             floorCells[posX, posY].bridgeData = new BridgeData { start = start, bridgeDirection = bridgeDirection, floor = floor };
             floors[floor].SetBridgeSpot(pos);
             enemyManager.UpdateShips();
-            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
-            audioSource.Play();
+            audioPooling.PlaySound(roadPopClip);
             return true;
         }
         //if (resultFloor == floorCells[posX, posY].currentFloor) return false;
@@ -293,8 +295,7 @@ public class FloorManager : MonoBehaviour{
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
             enemyManager.UpdateShips();
-            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
-            audioSource.Play();
+            audioPooling.PlaySound(roadPopClip);
             return true;
         }
         return false;
@@ -371,8 +372,7 @@ public class FloorManager : MonoBehaviour{
             int placeFloor = floorCells[posX, posY].currentFloor >= 0 ? floorCells[posX, posY].currentFloor : 0;
             floors[placeFloor].PlaceBridgeShadow(pos + offset);
             enemyManager.UpdateShips();
-            audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
-            audioSource.Play();
+            audioPooling.PlaySound(roadPopClip);
             return true;
         }
         return false;
@@ -732,7 +732,9 @@ public class FloorManager : MonoBehaviour{
         int posX = pos.x + offset.x;
         int posY = pos.y + offset.y;
         int floor = floorCells[posX,posY].currentFloor;
-        if(floor < 0 || (floor == 0 && floorCells[posX, posY + 1].currentFloor != floor + 1) || floor > floors.Count || floorCells[posX,posY].occupied){ 
+        if(floor <= 0 || 
+            //(floor == 0 && floorCells[posX, posY + 1].currentFloor != floor + 1) ||
+            floor > floors.Count || floorCells[posX,posY].occupied){ 
             /*if(floorCells[posX, posY].road && floorCells[posX, posY + 1].currentFloor == floor + 1){
                 floors[floor + 1].PlaceStairs(pos);
                 return true;
@@ -839,8 +841,7 @@ public class FloorManager : MonoBehaviour{
             //floorCells[gridX, gridY].currentFloor--;
         }
         enemyManager.UpdateShips();
-        audioSource.pitch = UnityEngine.Random.Range(0.3f, 0.6f);
-        audioSource.Play();
+        audioPooling.PlaySound(roadPopClip);
     }
     public void DestroyBuilding(int gridX, int gridY, int w, int h){
         for(int x = gridX; x < gridX + w; x++){

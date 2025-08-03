@@ -35,7 +35,8 @@ public class EntitiyHighlighter : MonoBehaviour
         }*/
         else
         {
-            ui.Close();
+            tempFloor.DeactivateFloor();
+            //ui.Close();
             entity = HighlightedEntity.None;
         }
     }

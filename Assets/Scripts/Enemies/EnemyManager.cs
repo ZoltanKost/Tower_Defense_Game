@@ -23,6 +23,7 @@ public class EnemyManager : MonoBehaviour {
     [SerializeField] private float spawnRate;
     [SerializeField] private float waveMultiplier = 2;
     [SerializeField] private float waveAddition = 2;
+    public Action onWaveFinishedTutorialCallback;
     public Vector3 shipLookRotation = new Vector3(0, 0.5f, -1f);
     public Vector3 shipLookRotationOffset = new Vector3(0, 1f, -1f);
     public float basicShipSpeed = 5f;
@@ -83,18 +84,20 @@ public class EnemyManager : MonoBehaviour {
                 {
                     ships[i].wave.ID = waves.Count;
                     waves.Add(ships[i].wave);
-                    ships.RemoveAt(i);
+                    ships[i] = ships[--c];
+                    ships.RemoveAt(c);
                     waveHighlighting.SetHighlighting(waves, ships);
                     playerActionManager.locked = true;
                     i--;
-                    c--;
+                    continue;
                 }
             }
-            if(i >= 0)
-            {
-                shipPos.z = z;
-                ships[i].visual.transform.position = shipPos;
-            }
+            shipPos.z = z;
+            ships[i].visual.transform.position = shipPos;
+            /* if(i >= 0)
+             {
+
+             }*/
         }
     }
     public void RegisterKill(int index){
@@ -223,7 +226,15 @@ public class EnemyManager : MonoBehaviour {
                 enemy.gameObject.SetActive(false);
             }
         }
+        foreach(Ship ship in ships)
+        {
+            Destroy(ship.visual.gameObject);
+        }
         ships.Clear();
+        foreach(Wave wave in waves)
+        {
+            Destroy(wave.shipPrefabToDestroy.gameObject);
+        }
         waves.Clear();
         waveHighlighting.SetHighlighting(waves,ships);
     }
@@ -331,7 +342,7 @@ public class EnemyManager : MonoBehaviour {
             posX = Mathf.Clamp(posX,0,99);
             posY = Mathf.Clamp(posY,0,99);
             var shipStart = floorManager.floorCells[posX, posY];
-            Debug.Log($"{path.Count}, {enemyStart.pos}:{shipStart.gridX}:{shipStart.gridY}");
+            //Debug.Log($"{path.Count}, {enemyStart.pos}:{shipStart.gridX}:{shipStart.gridY}");
             pathfinding.FindPathBoat(
                 shipStart,
                 floor.floorCells[enemyStart.pos.x, enemyStart.pos.y],
@@ -360,8 +371,8 @@ public class EnemyManager : MonoBehaviour {
             pos.z = z;
             ship.visual.transform.position = pos;
             ships.Add(ship);
-            Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
-                $"{floor.edgeStartY},{floor.edgeEndY}");
+            //Debug.Log($"{path.Count}; {posX},{posY}: {width},{height}: {floor.edgeStartX},{floor.edgeEndX}: " +
+                //$"{floor.edgeStartY},{floor.edgeEndY}");
         }
     }
     public void UpdateShips()
@@ -428,6 +439,7 @@ public class EnemyManager : MonoBehaviour {
         if(ships.Count < 1 && waves.Count < 1 && lowestInactive == 0)
         {
             playerActionManager.locked = false;
+            onWaveFinishedTutorialCallback?.Invoke();
             GenerateWave(++waveNumber,true);
         }
         for (int i = 0; i < waves.Count; i++)
@@ -455,7 +467,7 @@ public class EnemyManager : MonoBehaviour {
             enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)],
             -1,-1,-1,ID, lowestInactive - 1, new Vector2Int(-1,-1), 
             waves[ID].Path, RemoveEnemy, RegisterKill,
-            CharacterType.Enemy);
+            CharacterType.Enemy,0,1);
         enemy.gameObject.SetActive(true);
         if (lowestInactive >= enemies.Length)
         {

@@ -70,11 +70,12 @@ public class GroundPageModel : MonoBehaviour {
         }
         groundPage.ResetGroundArrays(_groundArrays);
     }
+    // TODO: Don't deactivate visuals, highlight instead
     public void OnGroundChosenCallBack(int uiID){
         Debug.Log("OnGroundChosenCallback");
         playerActionManager.CancelBuildingAction();
         playerActionManager.ChooseGround(_groundArrays[uiID]);
-        groundPage.DeactivateVisuals(uiID);
+        groundPage.Highlight(uiID);
         playerActionManager.SetPlaceCallback(() => 
             {
                 RemoveGroundArray(uiID);
@@ -88,10 +89,10 @@ public class GroundPageModel : MonoBehaviour {
                         spellID = uiID
                     });
                 //CreateGroundArray(uiID);
-                //groundPage.ActivateVisuals(uiID);
+                groundPage.Dehighlight(uiID);
                 playerActionManager.ClearCancelCallback();
             }
         );
-        playerActionManager.SetCancelCallback(() => groundPage.ActivateVisuals(uiID));
+        playerActionManager.SetCancelCallback(() => groundPage.Dehighlight(uiID));
     }
 }

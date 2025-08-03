@@ -12,6 +12,7 @@ public class SpellManager : MonoBehaviour {
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private ProjectileManager projectileManager;
     [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private AudioPooling audioPooling;
     //[SerializeField] private AnimationManager animationManager;
     //List<CustomAnimator> spells = new List<CustomAnimator>();
     public SpellObject[] spellAnimators;
@@ -61,12 +62,7 @@ public class SpellManager : MonoBehaviour {
                     break;
                 }
         }
-        if (spell.tweenAnimation)
-        {
-            Transform obj = spellAnimators[count - 1].transform;
-            obj.position -= spell.targetDeltaPosition;
-            obj.DOMove(obj.position + spell.targetDeltaPosition, spell.animationTime).SetEase(spell.ease,spell.amplitude_overshoot);
-        }
+        audioPooling.PlaySoundNormalPitch(spell.audioClip);
     }
     public void CastSpell(SpellData data, SpellSpawnData spawnData, Animation[] animations, Vector3 position)
     {
@@ -110,6 +106,7 @@ public class SpellManager : MonoBehaviour {
                         break;
                     }*/
         }
+
     }
     void RemoveSpell(int index)
     {

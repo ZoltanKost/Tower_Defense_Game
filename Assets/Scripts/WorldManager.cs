@@ -19,6 +19,10 @@ public class WorldManager : MonoBehaviour {
     public TileBase BRIDGE_ON_GROUND;
     public TileBase BRIDGE_SHADOW;
     public TileBase ATTACKRANGE_SHADOW;
+    
+    [Header("Tutorial")]
+    [SerializeField] private bool tutorial;
+
     [Header("Managers")]
     [SerializeField] private FloorManager floorManager;
     // [SerializeField] private Floor nextTile;
@@ -46,6 +50,7 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private GroundArrayGenerator groundGenerator;
     [SerializeField] private GameSaveManager gameSaveManager;
     [SerializeField] private AudioManager musicManager;
+    [SerializeField] private TutorialManager tutorialManager;
     private GameState gameState;
     int wave;
     
@@ -63,12 +68,12 @@ public class WorldManager : MonoBehaviour {
         StaticTiles.Bind(BRIDGE_ON_GROUND, TileID.BridgeOnGround);
         StaticTiles.Bind(BRIDGE_SHADOW, TileID.BridgeShadow);
         StaticTiles.Bind(ATTACKRANGE_SHADOW, TileID.AttackRangeShadow);
-        temporalFloor.Init(0,"TempFloor");
-        /*bool fullscreen = true;
-        #if UNITY_WEBGL
-            fullscreen = false;
-        #endif
-        Screen.SetResolution(1366,768, fullscreen);*/
+        temporalFloor.Init(0,"UI");
+        bool fullscreen = true;
+#if UNITY_WEBGL
+        fullscreen = false;
+#endif
+        //Screen.SetResolution(1024, 576, fullscreen);
         playerHealthBar.gameObject.SetActive(true);
         playerResourceManager.Init();
         playerShopUIManager.Init(StartLevel);
@@ -111,11 +116,7 @@ public class WorldManager : MonoBehaviour {
                 ()=>{menuUIManager.gameObject.SetActive(false); gameSaveManager.gameObject.SetActive(true); }
             });
         defeatMenuManager.Init(new Action[]{Restart,Application.Quit});
-        Action playerDefeat = () => {
-            Defeat();
-            playerHealthBar.gameObject.SetActive(false);
-        };
-        playerManager.Init(playerDefeat,playerHealthBar.Set, playerManaBar.Set);
+        playerManager.Init(Defeat, playerHealthBar.Set, playerManaBar.Set);
         //playerHealthBar.gameObject.SetActive(false);
         floorManager.Init();
         enemyManager.SpawnEnemies();
@@ -142,6 +143,7 @@ public class WorldManager : MonoBehaviour {
         enemyManager.GenerateWave(1,true);
         //enemyManager.GenerateWave(1,false);
         StartLevel();
+        if(tutorial) tutorialManager.StartTutorial();
         //pathfinding.CreatePossibleStart();
     }
     public void FinishWave(){
@@ -161,7 +163,6 @@ public class WorldManager : MonoBehaviour {
         projectileManager.Switch(true);
         gameState = GameState.Wave;
         playerActionManager.Switch(gameState);
-        // playerHealthBar.Reset();
         //playerShopUIManager.StartLevel();
     }
     public void StopLevel(){
@@ -170,6 +171,18 @@ public class WorldManager : MonoBehaviour {
         archerManager.Switch(false);
         archerManager.SwitchAnimation(false);
         projectileManager.Switch(false);
+    }
+    public void StopLevelTutorialStep()
+    {
+        enemyManager.Switch(false);
+        buildingManager.Switch(false);
+        archerManager.Switch(false);
+    }
+    public void StartLevelTutorialStep()
+    {
+        enemyManager.Switch(true);
+        buildingManager.Switch(true);
+        archerManager.Switch(true);
     }
     /*public void ResetWave(){
         if ((int)gameState >= 2)
@@ -191,10 +204,10 @@ public class WorldManager : MonoBehaviour {
         //musicManager.PlayMenuMusic();
     }*/
     public void ResetLevel(){
-        if ((int)gameState >= 2)
+        /*if ((int)gameState >= 2)
         {
             playerShopUIManager.FinishLevel();
-        }
+        }*/
         shop.Hide();
         playerShopUIManager.CloseAll();
         archerManager.ClearEntities();
@@ -204,17 +217,18 @@ public class WorldManager : MonoBehaviour {
         shop.ResetGroundArrays();
         playerResourceManager.Reset();
         //musicManager.PlayMenuMusic();
-        //playerHealthBar.gameObject.SetActive(false);
+        playerHealthBar.Reset();
     }
     public void Defeat(){
         musicManager.PlayLostMusic();
         StopLevel();
+        playerActionManager.CancelBuildingAction();
         defeatMenuManager.gameObject.SetActive(true);
-        playerHealthBar.gameObject.SetActive(false);
         gameState = GameState.Defeat;
         playerActionManager.Switch(gameState);
     }
     public void Restart(){
+        musicManager.StopMusic();
         floorManager.ClearFloor();
         pathfinding.Start();
         ResetLevel();
